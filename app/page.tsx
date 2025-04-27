@@ -101,7 +101,6 @@ export default function App() {
           {activeTab === "features" && <Features setActiveTab={setActiveTab} />}
           {activeTab === "game" && <FlappyBirdComponent />}
         </main>
-
       </div>
     </div>
   );
