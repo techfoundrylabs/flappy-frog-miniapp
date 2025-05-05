@@ -815,6 +815,10 @@ export function FlappyBirdComponent() {
               debug: false,
             },
           },
+          scale: {
+            mode: Phaser.Scale.FIT,
+            autoCenter: Phaser.Scale.CENTER_BOTH,
+          },
           scene: [FlappyBirdScene],
         };
 
@@ -839,7 +843,7 @@ export function FlappyBirdComponent() {
   }, []);
 
   return (
-    <div id="phaserContainer" className="w-full flex flex-col items-center">
+    <div className="w-full flex flex-col items-center">
       <h2 className="text-xl font-bold my-4">Flappy Bird</h2>
       <div
         ref={gameContainerRef}
