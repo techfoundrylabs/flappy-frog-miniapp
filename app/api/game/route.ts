@@ -1,4 +1,4 @@
-import { env } from "@/app/env.js";
+import { env } from "@/app/env";
 import { getUserGamePlay, initUserGamePlayDaily } from "@/lib/redis/game-play";
 import { NextResponse } from "next/server";
 

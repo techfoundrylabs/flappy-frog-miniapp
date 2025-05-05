@@ -3,11 +3,11 @@
 import { type ReactNode } from "react";
 import { base } from "wagmi/chains";
 import { MiniKitProvider } from "@coinbase/onchainkit/minikit";
-import { Eruda } from "@/app/components/eruda/eruda-provider";
+import { ErudaProvider } from "@/app/components/eruda";
 
 export function Providers(props: { children: ReactNode }) {
   return (
-    <Eruda>
+    <ErudaProvider>
       <MiniKitProvider
         apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY}
         chain={base}
@@ -22,6 +22,6 @@ export function Providers(props: { children: ReactNode }) {
       >
         {props.children}
       </MiniKitProvider>
-    </Eruda>
+    </ErudaProvider>
   );
 }

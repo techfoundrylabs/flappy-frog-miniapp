@@ -11,7 +11,7 @@ export const env = createEnv({
     FARCASTER_HEADER: z.string(),
     FARCASTER_PAYLOAD: z.string(),
     FARCASTER_SIGNATURE: z.string(),
-    MAX_HEARTS: z.number().min(1),
+    MAX_HEARTS: z.string().default("5"),
     REDIS_URL: z.string().url(),
     REDIS_TOKEN: z.string(),
   },
@@ -34,7 +34,7 @@ export const env = createEnv({
    */
   runtimeEnv: {
     NEXT_PUBLIC_APP_ENV: process.env.NEXT_PUBLIC_APP_ENV,
-    
+
     FARCASTER_HEADER: process.env.FARCASTER_HEADER,
     FARCASTER_PAYLOAD: process.env.FARCASTER_PAYLOAD,
     FARCASTER_SIGNATURE: process.env.FARCASTER_SIGNATURE,

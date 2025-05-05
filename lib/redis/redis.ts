@@ -1,4 +1,4 @@
-import { env } from "@/app/env.js";
+import { env } from "@/app/env";
 import { Redis } from "@upstash/redis";
 
 if (!env.REDIS_URL || !env.REDIS_TOKEN) {
