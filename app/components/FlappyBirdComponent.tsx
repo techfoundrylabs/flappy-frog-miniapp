@@ -137,7 +137,7 @@ export function FlappyBirdComponent() {
             // Hearts.
             for (let i = 1; i < HEARTS + 1; i++) {
               const heart = this.add.image(
-                20 + i * 35,
+                10 + i * 35,
                 40,
                 i <= this.hearts ? "heartFull" : "heartEmpty",
               );
@@ -185,7 +185,7 @@ export function FlappyBirdComponent() {
           createStartOverlay() {
             if (!this.bird) return;
 
-            // Create a container for start overlay elements.
+            // Create a container for start modal elements.
             this.startOverlay = this.add.container(0, 0);
 
             // Semi-transparent black overlay.
@@ -199,20 +199,88 @@ export function FlappyBirdComponent() {
             );
             overlay.setOrigin(0, 0);
 
-            // Tap to start text.
-            const startText = this.add
+            // Modal window.
+            const modalBg = this.add.rectangle(
+              (this.game.config.width as number) * 0.5,
+              (this.game.config.height as number) * 0.5,
+              280,
+              200,
+              0xcaaa77,
+            );
+            modalBg.setOrigin(0.5);
+            modalBg.setStrokeStyle(4, 0x7f563b);
+
+            // Game title.
+            const titleText = this.add
               .bitmapText(
                 (this.game.config.width as number) * 0.5,
-                (this.game.config.height as number) * 0.5,
+                (this.game.config.height as number) * 0.5 - 140,
                 "letters",
-                "TAP TO START",
+                "FLAPPY BIRD",
+                24,
+              )
+              .setOrigin(0.5)
+              .setTint(0xffffff);
+
+            // "Tap to play" instruction text.
+            const tapText = this.add
+              .bitmapText(
+                (this.game.config.width as number) * 0.5,
+                (this.game.config.height as number) * 0.5 - 35,
+                "letters",
+                "TAP TO PLAY",
                 16,
               )
               .setOrigin(0.5)
               .setTint(0xffffff);
 
+            // Start button.
+            const startButton = this.add.rectangle(
+              (this.game.config.width as number) * 0.5,
+              (this.game.config.height as number) * 0.5 + 30,
+              180,
+              50,
+              0x4a752c,
+            );
+            startButton.setOrigin(0.5);
+            startButton.setInteractive({ useHandCursor: true });
+
+            // Start button text
+            const startButtonText = this.add
+              .bitmapText(
+                (this.game.config.width as number) * 0.5,
+                (this.game.config.height as number) * 0.5 + 30,
+                "letters",
+                "START",
+                16,
+              )
+              .setOrigin(0.5)
+              .setTint(0xffffff);
+
+            // Button hover effects
+            startButton.on("pointerover", () => {
+              startButton.setFillStyle(0x5d9639);
+            });
+            startButton.on("pointerout", () => {
+              startButton.setFillStyle(0x4a752c);
+            });
+
+            // Button click to start game
+            startButton.on("pointerdown", () => {
+              if (this.hearts > 0) {
+                this.startGame();
+              }
+            });
+
             // Add elements to container.
-            this.startOverlay.add([overlay, startText]);
+            this.startOverlay.add([
+              overlay,
+              modalBg,
+              titleText,
+              tapText,
+              startButton,
+              startButtonText,
+            ]);
 
             // Set the overlay to be on top.
             this.startOverlay.setDepth(100);
@@ -420,7 +488,7 @@ export function FlappyBirdComponent() {
             this.hearts = this.hearts - 1 > 0 ? this.hearts - 1 : 0;
             for (let i = 1; i < HEARTS + 1; i++) {
               const heart = this.add.image(
-                20 + i * 35,
+                10 + i * 35,
                 40,
                 i <= this.hearts ? "heartFull" : "heartEmpty",
               );
@@ -753,7 +821,7 @@ export function FlappyBirdComponent() {
               // Refill hearts.
               for (let i = 1; i < HEARTS + 1; i++) {
                 const heart = this.add.image(
-                  20 + i * 35,
+                  10 + i * 35,
                   40,
                   i <= this.hearts ? "heartFull" : "heartEmpty",
                 );
@@ -846,15 +914,10 @@ export function FlappyBirdComponent() {
 
   return (
     <div className="w-full flex flex-col items-center">
-      <h2 className="text-xl font-bold my-4">Flappy Bird</h2>
       <div
         ref={gameContainerRef}
         className="w-full border border-gray-200 rounded-md overflow-hidden bg-gray-50"
       />
-      <p className="mt-4 text-sm text-gray-500 text-center">
-        Press SPACE or click/tap on the screen to make the bird flap and avoid
-        obstacles!
-      </p>
     </div>
   );
 }
