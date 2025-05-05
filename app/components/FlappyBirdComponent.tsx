@@ -260,11 +260,14 @@ export function FlappyBirdComponent() {
             // Get rightmost pipe.
             let rightmostX = 0;
             if (this.pipes && this.pipes.getChildren().length > 0) {
-              this.pipes.getChildren().forEach((pipe: any) => {
-                if (pipe.x > rightmostX) {
-                  rightmostX = pipe.x;
-                }
-              });
+              this.pipes
+                .getChildren()
+                .forEach((pipe: Phaser.GameObjects.GameObject) => {
+                  const xPosition = (pipe as Phaser.Physics.Arcade.Sprite).x;
+                  if (xPosition > rightmostX) {
+                    rightmostX = xPosition;
+                  }
+                });
             }
 
             // If the rightmost pipe has moved left enough, add a new pipe.
@@ -367,18 +370,24 @@ export function FlappyBirdComponent() {
               this.physics.world.colliders.destroy();
 
               // Pause the pipes and score zones.
-              this.pipes?.getChildren().forEach((pipe: any) => {
-                pipe.setVelocityX(0);
-              });
+              this.pipes
+                ?.getChildren()
+                .forEach((pipe: Phaser.GameObjects.GameObject) => {
+                  (pipe as Phaser.Physics.Arcade.Sprite).setVelocityX(0);
+                });
 
               // Find and stop all score zones.
-              this.children.each((child: any) => {
+              this.children.each((child: Phaser.GameObjects.GameObject) => {
+                const type = (child as Phaser.Physics.Arcade.Sprite).type;
+                const textureKey = (child as Phaser.Physics.Arcade.Sprite)
+                  .texture.key;
+                const alpha = (child as Phaser.Physics.Arcade.Sprite).alpha;
                 if (
-                  child.type === "Sprite" &&
-                  child.texture.key === "tubeTop" &&
-                  child.alpha === 0
+                  type === "Sprite" &&
+                  textureKey === "tubeTop" &&
+                  alpha === 0
                 ) {
-                  child.setVelocityX(0);
+                  (child as Phaser.Physics.Arcade.Sprite).setVelocityX(0);
                 }
               });
 
@@ -518,15 +527,18 @@ export function FlappyBirdComponent() {
                 this.pipes?.clear(true, true);
 
                 // Find and destroy any remaining score zones.
-                this.children.each((child: any) => {
+                this.children.each((child: Phaser.GameObjects.GameObject) => {
+                  const type = (child as Phaser.Physics.Arcade.Sprite).type;
+                  const textureKey = (child as Phaser.Physics.Arcade.Sprite)
+                    .texture.key;
+                  const alpha = (child as Phaser.Physics.Arcade.Sprite).alpha;
                   if (
-                    child.type === "Sprite" &&
+                    type === "Sprite" &&
                     child !== this.bird &&
-                    child.texture.key === "tubeTop"
+                    textureKey === "tubeTop" &&
+                    alpha === 0
                   ) {
-                    if (child.alpha === 0) {
-                      child.destroy();
-                    }
+                    child.destroy();
                   }
                 });
 
@@ -696,15 +708,18 @@ export function FlappyBirdComponent() {
               this.pipes?.clear(true, true);
 
               // Find and destroy any remaining score zones.
-              this.children.each((child: any) => {
+              this.children.each((child: Phaser.GameObjects.GameObject) => {
+                const type = (child as Phaser.Physics.Arcade.Sprite).type;
+                const textureKey = (child as Phaser.Physics.Arcade.Sprite)
+                  .texture.key;
+                const alpha = (child as Phaser.Physics.Arcade.Sprite).alpha;
                 if (
-                  child.type === "Sprite" &&
+                  type === "Sprite" &&
                   child !== this.bird &&
-                  child.texture.key === "tubeTop"
+                  textureKey === "tubeTop" &&
+                  alpha === 0
                 ) {
-                  if (child.alpha === 0) {
-                    child.destroy();
-                  }
+                  child.destroy();
                 }
               });
 

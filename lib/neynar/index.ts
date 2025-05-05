@@ -1,9 +1,5 @@
 import { NEYNAR_API_KEY } from "@/lib/neynar/config";
-import {
-  NeynarAPIClient,
-  Configuration,
-  isApiErrorResponse,
-} from "@neynar/nodejs-sdk";
+import { NeynarAPIClient, Configuration } from "@neynar/nodejs-sdk";
 
 let client: NeynarAPIClient | undefined = undefined;
 

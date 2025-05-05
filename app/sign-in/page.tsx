@@ -1,7 +1,6 @@
 "use client";
 
 import { useAuthenticate } from "@coinbase/onchainkit/minikit";
-import { verifyMessage } from "viem";
 
 const Signin = () => {
   const { signIn } = useAuthenticate();
@@ -10,8 +9,6 @@ const Signin = () => {
     const result = await signIn();
     console.log(result);
     if (!result) throw new Error("");
-    const { message, signature } = result;
-    verify
   };
 
   return (
