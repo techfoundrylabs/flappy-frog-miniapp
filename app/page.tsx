@@ -29,5 +29,5 @@ export default function App() {
 
   if (!isFrameReady) return <Loading />;
 
-  return <FlappyBirdComponent />;
+  return !!context ? <FlappyBirdComponent /> : <Welcome />;
 }
