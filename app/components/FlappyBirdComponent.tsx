@@ -2,8 +2,6 @@
 
 import { useLayoutEffect, useRef } from "react";
 
-const FRAME_WIDTH = 424;
-const FRAME_HEIGHT = 695;
 const HEARTS = 3;
 
 export function FlappyBirdComponent() {
@@ -90,7 +88,7 @@ export function FlappyBirdComponent() {
             // Bird.
             this.bird = this.physics.add.sprite(
               100,
-              FRAME_HEIGHT * 0.5,
+              (this.game.config.height as number) * 0.5,
               "birdSpriteSheet",
             );
             this.bird.setScale(0.75);
@@ -102,7 +100,13 @@ export function FlappyBirdComponent() {
 
             // Score.
             this.scoreText = this.add
-              .bitmapText(FRAME_WIDTH * 0.5 - 10, 20, "numbers", "0", 30)
+              .bitmapText(
+                (this.game.config.width as number) * 0.5 - 10,
+                20,
+                "numbers",
+                "0",
+                30,
+              )
               .setLetterSpacing(-9)
               .setDepth(99)
               .setVisible(false);
@@ -188,8 +192,8 @@ export function FlappyBirdComponent() {
             const overlay = this.add.rectangle(
               0,
               0,
-              FRAME_WIDTH,
-              FRAME_HEIGHT,
+              this.game.config.width as number,
+              this.game.config.height as number,
               0x000000,
               0.75,
             );
@@ -198,8 +202,8 @@ export function FlappyBirdComponent() {
             // Tap to start text.
             const startText = this.add
               .bitmapText(
-                FRAME_WIDTH * 0.5,
-                FRAME_HEIGHT * 0.5,
+                (this.game.config.width as number) * 0.5,
+                (this.game.config.height as number) * 0.5,
                 "letters",
                 "TAP TO START",
                 16,
@@ -311,7 +315,11 @@ export function FlappyBirdComponent() {
             bottomPipe.body.allowGravity = false;
             bottomPipe.setVelocityX(-this.pipeSpeed);
             bottomPipe.setImmovable(true);
-            for (let y = pipeTop + yGap + 31; y < FRAME_HEIGHT + 32; y += 32) {
+            for (
+              let y = pipeTop + yGap + 31;
+              y < (this.game.config.height as number) + 32;
+              y += 32
+            ) {
               const bottomPipeBase = this.pipes.create(pipeX, y, "tubeBase");
               bottomPipeBase.body.allowGravity = false;
               bottomPipeBase.setVelocityX(-this.pipeSpeed);
@@ -428,8 +436,8 @@ export function FlappyBirdComponent() {
 
             // Create modal background.
             const modalBg = this.add.rectangle(
-              FRAME_WIDTH * 0.5,
-              FRAME_HEIGHT * 0.5,
+              (this.game.config.width as number) * 0.5,
+              (this.game.config.height as number) * 0.5,
               300,
               250,
               0xcaaa77,
@@ -440,8 +448,8 @@ export function FlappyBirdComponent() {
             // Game over text.
             const gameOverText = this.add
               .bitmapText(
-                FRAME_WIDTH * 0.5,
-                FRAME_HEIGHT * 0.5 - 75,
+                (this.game.config.width as number) * 0.5,
+                (this.game.config.height as number) * 0.5 - 75,
                 "letters",
                 "GAME OVER",
                 20,
@@ -452,8 +460,8 @@ export function FlappyBirdComponent() {
             // Score.
             const scoreText = this.add
               .bitmapText(
-                FRAME_WIDTH * 0.5,
-                FRAME_HEIGHT * 0.5 - 35,
+                (this.game.config.width as number) * 0.5,
+                (this.game.config.height as number) * 0.5 - 35,
                 "letters",
                 `SCORE: ${this.score}`,
                 16,
@@ -463,8 +471,8 @@ export function FlappyBirdComponent() {
 
             // Add retry button.
             const retryButton = this.add.rectangle(
-              FRAME_WIDTH * 0.5,
-              FRAME_HEIGHT * 0.5 + 20,
+              (this.game.config.width as number) * 0.5,
+              (this.game.config.height as number) * 0.5 + 20,
               150,
               40,
               0x4a752c,
@@ -473,8 +481,8 @@ export function FlappyBirdComponent() {
             retryButton.setInteractive({ useHandCursor: true });
             this.add
               .bitmapText(
-                FRAME_WIDTH * 0.5,
-                FRAME_HEIGHT * 0.5 + 20,
+                (this.game.config.width as number) * 0.5,
+                (this.game.config.height as number) * 0.5 + 20,
                 "letters",
                 "RETRY",
                 12,
@@ -484,8 +492,8 @@ export function FlappyBirdComponent() {
 
             // Add share button.
             const shareButton = this.add.rectangle(
-              FRAME_WIDTH * 0.5,
-              FRAME_HEIGHT * 0.5 + 70,
+              (this.game.config.width as number) * 0.5,
+              (this.game.config.height as number) * 0.5 + 70,
               150,
               40,
               0x3e84d5,
@@ -494,8 +502,8 @@ export function FlappyBirdComponent() {
             shareButton.setInteractive({ useHandCursor: true });
             this.add
               .bitmapText(
-                FRAME_WIDTH * 0.5,
-                FRAME_HEIGHT * 0.5 + 70,
+                (this.game.config.width as number) * 0.5,
+                (this.game.config.height as number) * 0.5 + 70,
                 "letters",
                 "SHARE",
                 12,
@@ -541,7 +549,10 @@ export function FlappyBirdComponent() {
                 });
 
                 // Reset bird.
-                this.bird?.setPosition(100, FRAME_HEIGHT * 0.5);
+                this.bird?.setPosition(
+                  100,
+                  (this.game.config.height as number) * 0.5,
+                );
                 this.bird?.setVelocity(0, 0);
                 this.bird?.setGravityY(0);
                 this.bird?.setAngle(0);
@@ -600,8 +611,8 @@ export function FlappyBirdComponent() {
           showPayForTryUI() {
             // Create modal.
             const modalBg = this.add.rectangle(
-              FRAME_WIDTH * 0.5,
-              FRAME_HEIGHT * 0.5,
+              (this.game.config.width as number) * 0.5,
+              (this.game.config.height as number) * 0.5,
               300,
               250,
               0xcaaa77,
@@ -613,8 +624,8 @@ export function FlappyBirdComponent() {
             // Out of tries text.
             const messageText = this.add
               .bitmapText(
-                FRAME_WIDTH * 0.5,
-                FRAME_HEIGHT * 0.5 - 75,
+                (this.game.config.width as number) * 0.5,
+                (this.game.config.height as number) * 0.5 - 75,
                 "letters",
                 "OUT OF HEARTS",
                 16,
@@ -626,8 +637,8 @@ export function FlappyBirdComponent() {
             // Explanation.
             const explanationText = this.add
               .bitmapText(
-                FRAME_WIDTH * 0.5,
-                FRAME_HEIGHT * 0.5 - 35,
+                (this.game.config.width as number) * 0.5,
+                (this.game.config.height as number) * 0.5 - 35,
                 "letters",
                 "WANNA REFILL?",
                 12,
@@ -638,8 +649,8 @@ export function FlappyBirdComponent() {
 
             // Payment button.
             const payButton = this.add.rectangle(
-              FRAME_WIDTH * 0.5,
-              FRAME_HEIGHT * 0.5 + 20,
+              (this.game.config.width as number) * 0.5,
+              (this.game.config.height as number) * 0.5 + 20,
               150,
               40,
               0x4a752c,
@@ -649,8 +660,8 @@ export function FlappyBirdComponent() {
             payButton.setDepth(101);
             const payButtonText = this.add
               .bitmapText(
-                FRAME_WIDTH * 0.5,
-                FRAME_HEIGHT * 0.5 + 20,
+                (this.game.config.width as number) * 0.5,
+                (this.game.config.height as number) * 0.5 + 20,
                 "letters",
                 "PAY",
                 12,
@@ -661,8 +672,8 @@ export function FlappyBirdComponent() {
 
             // Cancel button.
             const cancelButton = this.add.rectangle(
-              FRAME_WIDTH * 0.5,
-              FRAME_HEIGHT * 0.5 + 70,
+              (this.game.config.width as number) * 0.5,
+              (this.game.config.height as number) * 0.5 + 70,
               150,
               40,
               0xd53e3e,
@@ -672,8 +683,8 @@ export function FlappyBirdComponent() {
             cancelButton.setDepth(101);
             const cancelButtonText = this.add
               .bitmapText(
-                FRAME_WIDTH * 0.5,
-                FRAME_HEIGHT * 0.5 + 70,
+                (this.game.config.width as number) * 0.5,
+                (this.game.config.height as number) * 0.5 + 70,
                 "letters",
                 "CANCEL",
                 12,
@@ -722,7 +733,10 @@ export function FlappyBirdComponent() {
               });
 
               // Reset bird.
-              this.bird?.setPosition(100, FRAME_HEIGHT * 0.5);
+              this.bird?.setPosition(
+                100,
+                (this.game.config.height as number) * 0.5,
+              );
               this.bird?.setVelocity(0, 0);
               this.bird?.setGravityY(0);
               this.bird?.setAngle(0);
@@ -792,8 +806,6 @@ export function FlappyBirdComponent() {
 
         const config: Phaser.Types.Core.GameConfig = {
           type: Phaser.AUTO,
-          width: FRAME_WIDTH,
-          height: FRAME_HEIGHT,
           parent: gameContainerRef.current,
           pixelArt: true,
           physics: {
@@ -827,15 +839,10 @@ export function FlappyBirdComponent() {
   }, []);
 
   return (
-    <div className="w-full flex flex-col items-center">
+    <div id="phaserContainer" className="w-full flex flex-col items-center">
       <h2 className="text-xl font-bold my-4">Flappy Bird</h2>
       <div
         ref={gameContainerRef}
-        // Parametrize max width and height.
-        style={{
-          maxWidth: `${FRAME_WIDTH}px`,
-          height: `${FRAME_HEIGHT}px`,
-        }}
         className="w-full border border-gray-200 rounded-md overflow-hidden bg-gray-50"
       />
       <p className="mt-4 text-sm text-gray-500 text-center">
