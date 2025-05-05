@@ -1,4 +1,4 @@
-import { sendFrameNotification } from "@/lib/notification-client";
+import { sendFrameNotification } from "@/lib/redis/notification/notification-client";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -10,7 +10,10 @@ export async function POST(request: Request) {
       fid,
       title: notification.title,
       body: notification.body,
-      notificationDetails: notification.notificationDetails,
+      notificationDetails: {
+        url: "https://api.warpcast.com/v1/frame-notifications",
+        token: "01969fe9-bc21-8ec8-e762-a607ca1b1fd9",
+      },
     });
 
     if (result.state === "error") {

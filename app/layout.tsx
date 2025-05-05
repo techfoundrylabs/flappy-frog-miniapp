@@ -2,8 +2,15 @@ import "./theme.css";
 import "@coinbase/onchainkit/styles.css";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { Providers } from "./providers";
+import { Press_Start_2P } from "next/font/google";
+import { Providers } from "@/app/providers";
 
+// If loading a variable font, you don't need to specify the font weight
+const press_start_2P = Press_Start_2P({
+  weight: "400",
+  subsets: ["latin"],
+  style: "normal",
+});
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -41,8 +48,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-background">
-        <Providers>{children}</Providers>
+      <body className={press_start_2P.className}>
+        <Providers>
+          <div className="flex flex-col min-h-screen bg-violet-300 justify-center items-center text-6xl">
+            {children}
+          </div>
+        </Providers>
       </body>
     </html>
   );

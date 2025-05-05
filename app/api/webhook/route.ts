@@ -1,8 +1,8 @@
 import {
-  setUserNotificationDetails,
   deleteUserNotificationDetails,
-} from "@/lib/notification";
-import { sendFrameNotification } from "@/lib/notification-client";
+  setUserNotificationDetails,
+} from "@/lib/redis/notification";
+import { sendFrameNotification } from "@/lib/redis/notification/notification-client";
 import { http } from "viem";
 import { createPublicClient } from "viem";
 import { optimism } from "viem/chains";
