@@ -22,7 +22,7 @@ export function FlappyBirdComponent() {
           private gameStarted: boolean = false;
           private startOverlay: Phaser.GameObjects.Container | null = null;
           private pipeSpeed: number = 200;
-          private pipeSpacing: number = 400;
+          private pipeSpacing: number = 350;
           private hearts: number = 0;
           private nextPipeX: number = 0;
 
