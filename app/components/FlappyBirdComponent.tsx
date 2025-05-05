@@ -2,8 +2,8 @@
 
 import { useLayoutEffect, useRef } from "react";
 
-const FRAME_WIDTH = 800;
-const FRAME_HEIGHT = 600;
+const FRAME_WIDTH = 424;
+const FRAME_HEIGHT = 695;
 const HEARTS = 3;
 
 export function FlappyBirdComponent() {
@@ -102,7 +102,7 @@ export function FlappyBirdComponent() {
 
             // Score.
             this.scoreText = this.add
-              .bitmapText(FRAME_WIDTH * 0.5, 20, "numbers", "0", 36)
+              .bitmapText(FRAME_WIDTH * 0.5 - 10, 20, "numbers", "0", 30)
               .setLetterSpacing(-9)
               .setDepth(99)
               .setVisible(false);
@@ -133,11 +133,10 @@ export function FlappyBirdComponent() {
             // Hearts.
             for (let i = 1; i < HEARTS + 1; i++) {
               const heart = this.add.image(
-                35 + i * 45,
+                20 + i * 35,
                 40,
                 i <= this.hearts ? "heartFull" : "heartEmpty",
               );
-              heart.setScale(1.5);
               heart.setDepth(99);
             }
 
@@ -413,11 +412,10 @@ export function FlappyBirdComponent() {
             this.hearts = this.hearts - 1 > 0 ? this.hearts - 1 : 0;
             for (let i = 1; i < HEARTS + 1; i++) {
               const heart = this.add.image(
-                35 + i * 45,
+                20 + i * 35,
                 40,
                 i <= this.hearts ? "heartFull" : "heartEmpty",
               );
-              heart.setScale(1.5);
               heart.setDepth(99);
             }
           }
@@ -741,11 +739,10 @@ export function FlappyBirdComponent() {
               // Refill hearts.
               for (let i = 1; i < HEARTS + 1; i++) {
                 const heart = this.add.image(
-                  35 + i * 45,
+                  20 + i * 35,
                   40,
                   i <= this.hearts ? "heartFull" : "heartEmpty",
                 );
-                heart.setScale(1.5);
                 heart.setDepth(99);
               }
 
