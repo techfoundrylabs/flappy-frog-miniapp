@@ -885,7 +885,6 @@ export function FlappyBirdComponent() {
             // Payment event.
             payButton.on("pointerdown", () => {
               // TODO: Implement payment logic.
-              console.log("Payment button clicked.");
 
               // If start overlay exists, destroy it.
               this.startOverlay?.destroy();
@@ -1009,71 +1008,115 @@ export function FlappyBirdComponent() {
               "assets/fonts/numbers/numbers.png",
               "assets/fonts/numbers/numbers.xml",
             );
-            this.load.image("background", "assets/background/background.png");
           }
 
           create() {
-            // Background.
-            this.add
-              .image(0, 0, "background")
-              .setOrigin(0, 0)
-              .setDisplaySize(
-                this.game.config.width as number,
-                this.game.config.height as number,
-              );
+            const modalWidth = this.game.config.width as number;
+            const modalHeight = (this.game.config.height as number) - 80;
 
             const modalBg = this.add.rectangle(
               (this.game.config.width as number) * 0.5,
-              (this.game.config.height as number) * 0.5 - 50,
-              (this.game.config.width as number) - 50,
-              (this.game.config.height as number) - 200,
+              (this.game.config.height as number) * 0.5 - 42,
+              modalWidth,
+              modalHeight,
               0xcaaa77,
             );
             modalBg.setOrigin(0.5);
             modalBg.setStrokeStyle(4, 0x7f563b);
 
-            // Title.
+            // Leaderboard data.
+            const leaderboardData = this.getLeaderboardData();
+
+            const rowHeight = modalHeight / (leaderboardData.length + 1);
+
+            const tableLeft =
+              (this.game.config.width as number) * 0.5 - modalWidth / 2 + 20;
+            const tableWidth = modalWidth - 4;
+            const playerColPos = tableLeft + tableWidth * 0.2;
+            const scoreColPos = tableLeft + tableWidth * 0.725;
+
+            const headerBg = this.add.rectangle(
+              (this.game.config.width as number) * 0.5,
+              rowHeight * 0.5 - 2,
+              tableWidth,
+              rowHeight,
+              0x7f563b,
+            );
+            headerBg.setOrigin(0.5, 0.5);
+            // Rank header text.
+            this.add
+              .bitmapText(tableLeft, rowHeight * 0.5, "letters", "#", 12)
+              .setOrigin(0, 0.5)
+              .setTint(0xf8d86c);
+            // Player header text.
             this.add
               .bitmapText(
-                (this.game.config.width as number) * 0.5,
-                100,
+                playerColPos,
+                rowHeight * 0.5,
                 "letters",
-                "RANKING",
-                32,
+                "PLAYER",
+                12,
               )
-              .setOrigin(0.5)
-              .setTint(0xffffff);
+              .setOrigin(0, 0.5)
+              .setTint(0xf8d86c);
+            // Score header text.
+            this.add
+              .bitmapText(scoreColPos, rowHeight * 0.5, "letters", "SCORE", 12)
+              .setOrigin(0, 0.5)
+              .setTint(0xf8d86c);
 
-            // TODO: get real leaderboard data.
-            // Mock leaderboard data.
-            const leaderboardData = [
-              { name: "Lorem Ipsum #1", score: 50 },
-              { name: "Lorem Ipsum #2", score: 50 },
-              { name: "Lorem Ipsum #3", score: 50 },
-              { name: "Lorem Ipsum #4", score: 50 },
-              { name: "Lorem Ipsum #5", score: 50 },
-              { name: "Lorem Ipsum #6", score: 50 },
-              { name: "Lorem Ipsum #7", score: 50 },
-              { name: "Lorem Ipsum #8", score: 50 },
-              { name: "Lorem Ipsum #9", score: 50 },
-              { name: "Lorem Ipsum #10", score: 50 },
-            ];
-
-            // Display leaderboard.
             for (let i = 0; i < leaderboardData.length; i++) {
               const entry = leaderboardData[i];
 
-              // Rank - Name - Score.
+              // Choose text tint color based on ranking.
+              let textTint = 0xffffff;
+              if (i === 0) textTint = 0xffd700;
+              else if (i === 1) textTint = 0xc0c0c0;
+              else if (i === 2) textTint = 0xcd7f32;
+
+              const rowY = rowHeight * 0.5 - 2 + (i + 1) * rowHeight;
+
+              const maxNameLength = 10;
+              const formattedName =
+                entry.name.length > maxNameLength
+                  ? entry.name.substring(0, maxNameLength) + "..."
+                  : entry.name;
+
+              const rowBg = this.add.rectangle(
+                (this.game.config.width as number) * 0.5,
+                rowY,
+                tableWidth,
+                rowHeight,
+                i % 2 === 0 ? 0xb69865 : 0xa88c5a,
+              );
+              rowBg.setOrigin(0.5, 0.5);
+              // Rank text.
               this.add
                 .bitmapText(
-                  (this.game.config.width as number) * 0.5,
-                  150 + i * 40,
+                  tableLeft,
+                  rowY,
                   "letters",
-                  `${i + 1} ${entry.name} ${entry.score}`,
+                  `${(i + 1).toString().padEnd(2, " ")}`,
                   10,
                 )
-                .setOrigin(0.5)
-                .setTint(0xffffff);
+                .setOrigin(0, 0.5)
+                .setTint(textTint);
+              // Player text.
+              this.add
+                .bitmapText(playerColPos, rowY, "letters", formattedName, 10)
+                .setOrigin(0, 0.5)
+                .setTint(textTint);
+              // Score text.
+              this.add
+                .bitmapText(
+                  scoreColPos,
+                  rowY,
+                  "letters",
+                  entry.score.toString(),
+                  10,
+                )
+                .setOrigin(0, 0.5)
+                .setTint(textTint);
             }
 
             // Navigation bar.
@@ -1146,6 +1189,22 @@ export function FlappyBirdComponent() {
             rankingBtn.on("pointerout", () => {
               rankingBtn.setFillStyle(0x4a752c, 0.9);
             });
+          }
+
+          getLeaderboardData() {
+            // TODO: get real leaderboard data.
+            return [
+              { name: "Lorem Ipsum #1 ", score: 50 },
+              { name: "Lorem Ipsum #2 ", score: 50 },
+              { name: "Lorem Ipsum #3 ", score: 50 },
+              { name: "Lorem Ipsum #4 ", score: 50 },
+              { name: "Lorem Ipsum #5 ", score: 50 },
+              { name: "Lorem Ipsum #6 ", score: 50 },
+              { name: "Lorem Ipsum #7 ", score: 50 },
+              { name: "Lorem Ipsum #8 ", score: 50 },
+              { name: "Lorem Ipsum #9 ", score: 50 },
+              { name: "Lorem Ipsum #10", score: 50 },
+            ];
           }
         }
 
