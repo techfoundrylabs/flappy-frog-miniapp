@@ -6,7 +6,7 @@ const notificationServiceKey =
 const ONE_DAY = 60 * 60 * 24;
 
 const getUserGamePlayKey = (fid: number): string => {
-  return `${notificationServiceKey}:game-play:${fid}`;
+  return `${notificationServiceKey}:hearts:${fid}`;
 };
 
 export const setTTL = async (fid: number) => {

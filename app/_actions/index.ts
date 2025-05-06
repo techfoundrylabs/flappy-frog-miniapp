@@ -9,8 +9,6 @@ import {
 
 const MAX_USER_HEARTS = env.MAX_HEARTS;
 
-export const getMaxUserHearts = async () => MAX_USER_HEARTS;
-
 export const initGame = async (fid: number) => {
   try {
     const hearts = await getUserGamePlay(fid);
@@ -23,6 +21,14 @@ export const initGame = async (fid: number) => {
     }
 
     return hearts;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const decreaseHearts = async (fid: number, hearts: number) => {
+  try {
+    setUserGamePlay(fid, hearts);
   } catch (error) {
     console.error(error);
   }

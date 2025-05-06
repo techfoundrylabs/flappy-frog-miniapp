@@ -1,6 +1,6 @@
 "use client";
 
-import { getMaxUserHearts, initGame } from "@/app/_actions";
+import { decreaseHearts, initGame } from "@/app/_actions";
 import { useLayoutEffect, useRef } from "react";
 
 interface FlappyBirdComponentProps {
@@ -10,8 +10,7 @@ interface FlappyBirdComponentProps {
 export function FlappyBirdComponent({ fid }: FlappyBirdComponentProps) {
   const gameContainerRef = useRef<HTMLDivElement>(null);
   const gameInstanceRef = useRef<Phaser.Game | null>(null);
-  const HEARTS = getMaxUserHearts();
-  alert(HEARTS);
+  const HEARTS = Number(process.env.NEXT_PUBLIC_MAX_HEARTS) ?? 5;
 
   useLayoutEffect(() => {
     const initPhaser = async () => {
@@ -137,8 +136,7 @@ export function FlappyBirdComponent({ fid }: FlappyBirdComponentProps) {
             );
 
             // Fetch available hearts.
-            //  this.hearts = (await this.fetchAvailableHearts()) ?? HEARTS;
-            this.hearts = 10;
+            this.hearts = (await this.fetchAvailableHearts()) ?? HEARTS;
             // Hearts.
             for (let i = 1; i < HEARTS + 1; i++) {
               const heart = this.add.image(
@@ -438,7 +436,7 @@ export function FlappyBirdComponent({ fid }: FlappyBirdComponentProps) {
             return await initGame(fid);
           }
 
-          gameOverHandler() {
+          async gameOverHandler() {
             if (!this.gameStarted || this.gameOver) return;
 
             this.gameOver = true;
@@ -491,6 +489,7 @@ export function FlappyBirdComponent({ fid }: FlappyBirdComponentProps) {
 
             // Update hearts.
             this.hearts = this.hearts - 1 > 0 ? this.hearts - 1 : 0;
+            await decreaseHearts(fid, this.hearts);
             for (let i = 1; i < HEARTS + 1; i++) {
               const heart = this.add.image(
                 10 + i * 35,
