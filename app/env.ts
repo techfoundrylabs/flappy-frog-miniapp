@@ -11,7 +11,7 @@ export const env = createEnv({
     FARCASTER_HEADER: z.string(),
     FARCASTER_PAYLOAD: z.string(),
     FARCASTER_SIGNATURE: z.string(),
-    MAX_HEARTS: z.string().default("5"),
+    MAX_HEARTS: z.coerce.number().default(5),
     REDIS_URL: z.string().url(),
     REDIS_TOKEN: z.string(),
   },

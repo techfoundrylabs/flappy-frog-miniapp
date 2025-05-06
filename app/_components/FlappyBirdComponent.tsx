@@ -1,12 +1,17 @@
 "use client";
 
+import { getMaxUserHearts, initGame } from "@/app/_actions";
 import { useLayoutEffect, useRef } from "react";
 
-const HEARTS = 3;
+interface FlappyBirdComponentProps {
+  fid: number;
+}
 
-export function FlappyBirdComponent() {
+export function FlappyBirdComponent({ fid }: FlappyBirdComponentProps) {
   const gameContainerRef = useRef<HTMLDivElement>(null);
   const gameInstanceRef = useRef<Phaser.Game | null>(null);
+  const HEARTS = getMaxUserHearts();
+  alert(HEARTS);
 
   useLayoutEffect(() => {
     const initPhaser = async () => {
@@ -59,7 +64,7 @@ export function FlappyBirdComponent() {
             this.load.image("background", "assets/background/background.png");
           }
 
-          create() {
+          async create() {
             // Set debug mode.
             // this.physics.world.createDebugGraphic();
 
@@ -132,8 +137,8 @@ export function FlappyBirdComponent() {
             );
 
             // Fetch available hearts.
-            this.hearts = this.fetchAvailableHearts();
-
+            //  this.hearts = (await this.fetchAvailableHearts()) ?? HEARTS;
+            this.hearts = 10;
             // Hearts.
             for (let i = 1; i < HEARTS + 1; i++) {
               const heart = this.add.image(
@@ -428,9 +433,9 @@ export function FlappyBirdComponent() {
             );
           }
 
-          fetchAvailableHearts() {
+          async fetchAvailableHearts() {
             // TODO: fetch available hearts.
-            return HEARTS;
+            return await initGame(fid);
           }
 
           gameOverHandler() {
@@ -910,7 +915,7 @@ export function FlappyBirdComponent() {
         gameInstanceRef.current.destroy(true);
       }
     };
-  }, []);
+  }, [fid]);
 
   return (
     <div className="w-full flex flex-col items-center">

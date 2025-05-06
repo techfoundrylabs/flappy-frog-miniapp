@@ -3,7 +3,7 @@ import "@coinbase/onchainkit/styles.css";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Press_Start_2P } from "next/font/google";
-import { Providers } from "@/app/providers";
+import { Providers } from "@/app/_providers/providers";
 
 // If loading a variable font, you don't need to specify the font weight
 const press_start_2P = Press_Start_2P({
