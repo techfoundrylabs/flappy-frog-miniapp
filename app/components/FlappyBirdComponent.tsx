@@ -30,6 +30,25 @@ export function FlappyBirdComponent() {
             super({ key: "FlappyBirdScene" });
           }
 
+          init() {
+            this.score = 0;
+            this.gameOver = false;
+            this.gameStarted = false;
+            this.pipeSpeed = 200;
+            this.pipeSpacing = 350;
+            this.hearts = 0;
+            this.nextPipeX = 0;
+
+            if (this.anims) {
+              this.anims.resumeAll();
+            }
+
+            this.bird = null;
+            this.pipes = null;
+            this.scoreText = null;
+            this.startOverlay = null;
+          }
+
           preload() {
             // Load fonts.
             this.load.bitmapFont(
@@ -147,6 +166,9 @@ export function FlappyBirdComponent() {
             if (this.hearts === 0) {
               this.showPayForTryUI();
             }
+
+            // Navigation bar.
+            this.createNavigationBar();
           }
 
           update() {
@@ -184,6 +206,11 @@ export function FlappyBirdComponent() {
 
           createStartOverlay() {
             if (!this.bird) return;
+
+            if (this.startOverlay) {
+              this.startOverlay.destroy();
+              this.startOverlay = null;
+            }
 
             // Create a container for start modal elements.
             this.startOverlay = this.add.container(0, 0);
@@ -268,7 +295,40 @@ export function FlappyBirdComponent() {
             // Button click to start game
             startButton.on("pointerdown", () => {
               if (this.hearts > 0) {
-                this.startGame();
+                overlay.destroy();
+                modalBg.destroy();
+                titleText.destroy();
+                tapText.destroy();
+                startButton.destroy();
+                startButtonText.destroy();
+
+                if (this.startOverlay) {
+                  this.startOverlay.destroy();
+                  this.startOverlay = null;
+                }
+
+                // Solo dopo aver rimosso tutto, avviamo il gioco
+                this.gameStarted = true;
+                this.scoreText?.setVisible(true);
+
+                // Add gravity to bird after game starts.
+                this.bird?.setGravityY(981);
+
+                if (this.bird) {
+                  this.bird.play("fly", true);
+                  this.bird.setVelocityY(-350);
+                }
+
+                // Add first pipes immediately after starting.
+                this.addPipes();
+
+                // Setup pipe distance check.
+                this.time.addEvent({
+                  delay: 100,
+                  callback: this.checkPipeDistance,
+                  callbackScope: this,
+                  loop: true,
+                });
               }
             });
 
@@ -286,38 +346,12 @@ export function FlappyBirdComponent() {
             this.startOverlay.setDepth(100);
           }
 
-          startGame() {
-            if (this.gameStarted || this.gameOver) return;
-
-            this.gameStarted = true;
-            this.scoreText?.setVisible(true);
-
-            // Add gravity to bird after game starts.
-            this.bird?.setGravityY(981);
-
-            // Remove the start overlay.
-            this.startOverlay?.destroy();
-
-            // Add first pipes immediately after starting.
-            this.addPipes();
-
-            // Setup pipe distance check.
-            this.time.addEvent({
-              delay: 100,
-              callback: this.checkPipeDistance,
-              callbackScope: this,
-              loop: true,
-            });
-          }
-
           handlePointerDown() {
             if (this.gameOver) return;
 
-            if (!this.gameStarted && this.hearts > 0) {
-              this.startGame();
+            if (this.gameStarted) {
+              this.jump();
             }
-
-            this.jump();
           }
 
           jump() {
@@ -433,6 +467,79 @@ export function FlappyBirdComponent() {
             return HEARTS;
           }
 
+          createNavigationBar() {
+            const width = this.game.config.width as number;
+            const height = this.game.config.height as number;
+
+            // Navigation bar background.
+            const navBarBg = this.add.rectangle(
+              width * 0.5,
+              height - 40,
+              width,
+              80,
+              0x333333,
+              0.8,
+            );
+            navBarBg.setOrigin(0.5, 0.5);
+            navBarBg.setDepth(100);
+
+            // Game button (active.)
+            const gameBtn = this.add.rectangle(
+              width * 0.25,
+              height - 40,
+              width * 0.4,
+              60,
+              0x4a752c,
+              0.9,
+            );
+            gameBtn.setOrigin(0.5, 0.5);
+            gameBtn.setInteractive({ useHandCursor: true });
+            gameBtn.setDepth(100);
+            this.add
+              .bitmapText(width * 0.25, height - 40, "letters", "GAME", 16)
+              .setOrigin(0.5)
+              .setTint(0xffffff)
+              .setDepth(100);
+
+            // Ranking button.
+            const rankingBtn = this.add.rectangle(
+              width * 0.75,
+              height - 40,
+              width * 0.4,
+              60,
+              0x555555,
+              0.8,
+            );
+            rankingBtn.setOrigin(0.5, 0.5);
+            rankingBtn.setInteractive({ useHandCursor: true });
+            rankingBtn.setDepth(100);
+            this.add
+              .bitmapText(width * 0.75, height - 40, "letters", "RANKING", 16)
+              .setOrigin(0.5)
+              .setTint(0xffffff)
+              .setDepth(100);
+
+            // Game Button events.
+            gameBtn.on("pointerover", () => {
+              gameBtn.setFillStyle(0x5d9639, 0.9);
+            });
+            gameBtn.on("pointerout", () => {
+              gameBtn.setFillStyle(0x4a752c, 0.9);
+            });
+
+            // Ranking Button events.
+            rankingBtn.on("pointerdown", () => {
+              this.scene.stop("RankingScene");
+              this.scene.start("RankingScene");
+            });
+            rankingBtn.on("pointerover", () => {
+              rankingBtn.setFillStyle(0x666666, 0.9);
+            });
+            rankingBtn.on("pointerout", () => {
+              rankingBtn.setFillStyle(0x555555, 0.8);
+            });
+          }
+
           gameOverHandler() {
             if (!this.gameStarted || this.gameOver) return;
 
@@ -453,16 +560,15 @@ export function FlappyBirdComponent() {
 
               // Find and stop all score zones.
               this.children.each((child: Phaser.GameObjects.GameObject) => {
-                const type = (child as Phaser.Physics.Arcade.Sprite).type;
-                const textureKey = (child as Phaser.Physics.Arcade.Sprite)
-                  .texture.key;
-                const alpha = (child as Phaser.Physics.Arcade.Sprite).alpha;
-                if (
-                  type === "Sprite" &&
-                  textureKey === "tubeTop" &&
-                  alpha === 0
-                ) {
-                  (child as Phaser.Physics.Arcade.Sprite).setVelocityX(0);
+                if (child instanceof Phaser.Physics.Arcade.Sprite) {
+                  const sprite = child as Phaser.Physics.Arcade.Sprite;
+                  if (
+                    sprite.texture &&
+                    sprite.texture.key === "tubeTop" &&
+                    sprite.alpha === 0
+                  ) {
+                    sprite.setVelocityX(0);
+                  }
                 }
               });
 
@@ -540,7 +646,7 @@ export function FlappyBirdComponent() {
             // Add retry button.
             const retryButton = this.add.rectangle(
               (this.game.config.width as number) * 0.5,
-              (this.game.config.height as number) * 0.5 + 20,
+              (this.game.config.height as number) * 0.5 + 70,
               150,
               40,
               0x4a752c,
@@ -550,7 +656,7 @@ export function FlappyBirdComponent() {
             this.add
               .bitmapText(
                 (this.game.config.width as number) * 0.5,
-                (this.game.config.height as number) * 0.5 + 20,
+                (this.game.config.height as number) * 0.5 + 70,
                 "letters",
                 "RETRY",
                 12,
@@ -561,7 +667,7 @@ export function FlappyBirdComponent() {
             // Add share button.
             const shareButton = this.add.rectangle(
               (this.game.config.width as number) * 0.5,
-              (this.game.config.height as number) * 0.5 + 70,
+              (this.game.config.height as number) * 0.5 + 20,
               150,
               40,
               0x3e84d5,
@@ -571,7 +677,7 @@ export function FlappyBirdComponent() {
             this.add
               .bitmapText(
                 (this.game.config.width as number) * 0.5,
-                (this.game.config.height as number) * 0.5 + 70,
+                (this.game.config.height as number) * 0.5 + 20,
                 "letters",
                 "SHARE",
                 12,
@@ -602,17 +708,16 @@ export function FlappyBirdComponent() {
 
                 // Find and destroy any remaining score zones.
                 this.children.each((child: Phaser.GameObjects.GameObject) => {
-                  const type = (child as Phaser.Physics.Arcade.Sprite).type;
-                  const textureKey = (child as Phaser.Physics.Arcade.Sprite)
-                    .texture.key;
-                  const alpha = (child as Phaser.Physics.Arcade.Sprite).alpha;
-                  if (
-                    type === "Sprite" &&
-                    child !== this.bird &&
-                    textureKey === "tubeTop" &&
-                    alpha === 0
-                  ) {
-                    child.destroy();
+                  if (child instanceof Phaser.Physics.Arcade.Sprite) {
+                    const sprite = child as Phaser.Physics.Arcade.Sprite;
+                    if (
+                      sprite.texture &&
+                      sprite !== this.bird &&
+                      sprite.texture.key === "tubeTop" &&
+                      sprite.alpha === 0
+                    ) {
+                      child.destroy();
+                    }
                   }
                 });
 
@@ -629,7 +734,6 @@ export function FlappyBirdComponent() {
                 // Reset game state.
                 this.score = 0;
                 this.gameOver = false;
-                this.gameStarted = false;
                 this.pipeSpeed = 200;
                 this.nextPipeX = 0;
 
@@ -646,11 +750,28 @@ export function FlappyBirdComponent() {
 
                 if (this.scoreText) {
                   this.scoreText.setText("0");
-                  this.scoreText.setVisible(false);
+                  this.scoreText.setVisible(true);
                 }
 
-                // Create a new start overlay.
-                this.createStartOverlay();
+                this.gameStarted = true;
+
+                // Apply gravity and make the bird jump to start.
+                if (this.bird) {
+                  this.bird.setGravityY(981);
+                  this.bird.play("fly", true);
+                  this.bird.setVelocityY(-350);
+                }
+
+                // Add first pipes immediately after starting.
+                this.addPipes();
+
+                // Setup pipe distance check.
+                this.time.addEvent({
+                  delay: 100,
+                  callback: this.checkPipeDistance,
+                  callbackScope: this,
+                  loop: true,
+                });
 
                 // Resume animations and physics.
                 this.anims.resumeAll();
@@ -786,17 +907,16 @@ export function FlappyBirdComponent() {
 
               // Find and destroy any remaining score zones.
               this.children.each((child: Phaser.GameObjects.GameObject) => {
-                const type = (child as Phaser.Physics.Arcade.Sprite).type;
-                const textureKey = (child as Phaser.Physics.Arcade.Sprite)
-                  .texture.key;
-                const alpha = (child as Phaser.Physics.Arcade.Sprite).alpha;
-                if (
-                  type === "Sprite" &&
-                  child !== this.bird &&
-                  textureKey === "tubeTop" &&
-                  alpha === 0
-                ) {
-                  child.destroy();
+                if (child instanceof Phaser.Physics.Arcade.Sprite) {
+                  const sprite = child as Phaser.Physics.Arcade.Sprite;
+                  if (
+                    sprite.texture &&
+                    sprite !== this.bird &&
+                    sprite.texture.key === "tubeTop" &&
+                    sprite.alpha === 0
+                  ) {
+                    child.destroy();
+                  }
                 }
               });
 
@@ -872,6 +992,163 @@ export function FlappyBirdComponent() {
           }
         }
 
+        class RankingScene extends Phaser.Scene {
+          constructor() {
+            super({ key: "RankingScene" });
+          }
+
+          preload() {
+            // Load fonts.
+            this.load.bitmapFont(
+              "letters",
+              "assets/fonts/letters/letters.png",
+              "assets/fonts/letters/letters.xml",
+            );
+            this.load.bitmapFont(
+              "numbers",
+              "assets/fonts/numbers/numbers.png",
+              "assets/fonts/numbers/numbers.xml",
+            );
+            this.load.image("background", "assets/background/background.png");
+          }
+
+          create() {
+            // Background.
+            this.add
+              .image(0, 0, "background")
+              .setOrigin(0, 0)
+              .setDisplaySize(
+                this.game.config.width as number,
+                this.game.config.height as number,
+              );
+
+            const modalBg = this.add.rectangle(
+              (this.game.config.width as number) * 0.5,
+              (this.game.config.height as number) * 0.5 - 50,
+              (this.game.config.width as number) - 50,
+              (this.game.config.height as number) - 200,
+              0xcaaa77,
+            );
+            modalBg.setOrigin(0.5);
+            modalBg.setStrokeStyle(4, 0x7f563b);
+
+            // Title.
+            this.add
+              .bitmapText(
+                (this.game.config.width as number) * 0.5,
+                100,
+                "letters",
+                "RANKING",
+                32,
+              )
+              .setOrigin(0.5)
+              .setTint(0xffffff);
+
+            // TODO: get real leaderboard data.
+            // Mock leaderboard data.
+            const leaderboardData = [
+              { name: "Lorem Ipsum #1", score: 50 },
+              { name: "Lorem Ipsum #2", score: 50 },
+              { name: "Lorem Ipsum #3", score: 50 },
+              { name: "Lorem Ipsum #4", score: 50 },
+              { name: "Lorem Ipsum #5", score: 50 },
+              { name: "Lorem Ipsum #6", score: 50 },
+              { name: "Lorem Ipsum #7", score: 50 },
+              { name: "Lorem Ipsum #8", score: 50 },
+              { name: "Lorem Ipsum #9", score: 50 },
+              { name: "Lorem Ipsum #10", score: 50 },
+            ];
+
+            // Display leaderboard.
+            for (let i = 0; i < leaderboardData.length; i++) {
+              const entry = leaderboardData[i];
+
+              // Rank - Name - Score.
+              this.add
+                .bitmapText(
+                  (this.game.config.width as number) * 0.5,
+                  150 + i * 40,
+                  "letters",
+                  `${i + 1} ${entry.name} ${entry.score}`,
+                  10,
+                )
+                .setOrigin(0.5)
+                .setTint(0xffffff);
+            }
+
+            // Navigation bar.
+            this.createNavigationBar();
+          }
+
+          createNavigationBar() {
+            const width = this.game.config.width as number;
+            const height = this.game.config.height as number;
+
+            // Navigation bar background.
+            const navBarBg = this.add.rectangle(
+              width * 0.5,
+              height - 40,
+              width,
+              80,
+              0x333333,
+              0.8,
+            );
+            navBarBg.setOrigin(0.5, 0.5);
+
+            // Game button.
+            const gameBtn = this.add.rectangle(
+              width * 0.25,
+              height - 40,
+              width * 0.4,
+              60,
+              0x555555,
+              0.8,
+            );
+            gameBtn.setOrigin(0.5, 0.5);
+            gameBtn.setInteractive({ useHandCursor: true });
+            this.add
+              .bitmapText(width * 0.25, height - 40, "letters", "GAME", 16)
+              .setOrigin(0.5)
+              .setTint(0xffffff);
+
+            // Ranking button (active.)
+            const rankingBtn = this.add.rectangle(
+              width * 0.75,
+              height - 40,
+              width * 0.4,
+              60,
+              0x4a752c,
+              0.9,
+            );
+            rankingBtn.setOrigin(0.5, 0.5);
+            rankingBtn.setInteractive({ useHandCursor: true });
+            this.add
+              .bitmapText(width * 0.75, height - 40, "letters", "RANKING", 16)
+              .setOrigin(0.5)
+              .setTint(0xffffff);
+
+            // Game Button event.
+            gameBtn.on("pointerdown", () => {
+              this.scene.stop("FlappyBirdScene");
+              this.scene.start("FlappyBirdScene");
+            });
+            gameBtn.on("pointerover", () => {
+              gameBtn.setFillStyle(0x666666, 0.9);
+            });
+            gameBtn.on("pointerout", () => {
+              gameBtn.setFillStyle(0x555555, 0.8);
+            });
+
+            // Ranking Button event.
+            rankingBtn.on("pointerover", () => {
+              rankingBtn.setFillStyle(0x5d9639, 0.9);
+            });
+            rankingBtn.on("pointerout", () => {
+              rankingBtn.setFillStyle(0x4a752c, 0.9);
+            });
+          }
+        }
+
         const config: Phaser.Types.Core.GameConfig = {
           type: Phaser.AUTO,
           parent: gameContainerRef.current,
@@ -889,7 +1166,7 @@ export function FlappyBirdComponent() {
             width: 424,
             height: 695,
           },
-          scene: [FlappyBirdScene],
+          scene: [FlappyBirdScene, RankingScene],
         };
 
         // Destroy any existing game instance.
@@ -913,7 +1190,7 @@ export function FlappyBirdComponent() {
   }, []);
 
   return (
-    <div className="w-full flex flex-col items-center">
+    <div className="w-full flex flex-col items-center relative">
       <div
         ref={gameContainerRef}
         className="w-full border border-gray-200 rounded-md overflow-hidden bg-gray-50"
