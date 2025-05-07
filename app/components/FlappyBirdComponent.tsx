@@ -71,11 +71,15 @@ export function FlappyBirdComponent() {
                 frameHeight: 48,
               },
             );
-            this.load.image("heartFull", "assets/player/heart-full.png");
-            this.load.image("heartEmpty", "assets/player/heart-empty.png");
+            this.load.image("heartFull", "assets/hearts/heart-full.png");
+            this.load.image("heartEmpty", "assets/hearts/heart-empty.png");
             this.load.image("tubeTop", "assets/tubes/tube-top.png");
             this.load.image("tubeBase", "assets/tubes/tube-base.png");
             this.load.image("background", "assets/background/background.png");
+
+            // Navigation bar icons.
+            this.load.image("gameIcon", "assets/navbar/navbar-game.png");
+            this.load.image("rankingIcon", "assets/navbar/navbar-ranking.png");
           }
 
           create() {
@@ -124,7 +128,7 @@ export function FlappyBirdComponent() {
                 20,
                 "numbers",
                 "0",
-                30,
+                24,
               )
               .setLetterSpacing(-9)
               .setDepth(99)
@@ -157,7 +161,7 @@ export function FlappyBirdComponent() {
             for (let i = 1; i < HEARTS + 1; i++) {
               const heart = this.add.image(
                 10 + i * 35,
-                40,
+                35,
                 i <= this.hearts ? "heartFull" : "heartEmpty",
               );
               heart.setDepth(99);
@@ -183,13 +187,13 @@ export function FlappyBirdComponent() {
             // Rotate bird based on velocity.
             if (this.bird.body!.velocity.y > 0) {
               this.bird.angle = Phaser.Math.Clamp(
-                this.bird.angle + 1.0,
+                this.bird.angle + 2.5,
                 -45,
                 90,
               );
             } else {
               this.bird.angle = Phaser.Math.Clamp(
-                this.bird.angle - 2.5,
+                this.bird.angle - 4.0,
                 -45,
                 90,
               );
@@ -312,11 +316,11 @@ export function FlappyBirdComponent() {
                 this.scoreText?.setVisible(true);
 
                 // Add gravity to bird after game starts.
-                this.bird?.setGravityY(981);
+                this.bird?.setGravityY(1500);
 
                 if (this.bird) {
                   this.bird.play("fly", true);
-                  this.bird.setVelocityY(-350);
+                  this.bird.setVelocityY(-400);
                 }
 
                 // Add first pipes immediately after starting.
@@ -356,7 +360,7 @@ export function FlappyBirdComponent() {
 
           jump() {
             if (this.gameOver || !this.bird || !this.gameStarted) return;
-            this.bird.setVelocityY(-350);
+            this.bird.setVelocityY(-480);
           }
 
           checkPipeDistance() {
@@ -388,9 +392,9 @@ export function FlappyBirdComponent() {
             if (this.gameOver || !this.bird || !this.pipes || !this.gameStarted)
               return;
 
-            const yGap = 75;
+            const yGap = 100;
             const height = this.game.config.height as number;
-            const pipeTop = Phaser.Math.Between(100, height - yGap - 100);
+            const pipeTop = Phaser.Math.Between(150, height - yGap - 150);
             const pipeX = this.game.config.width as number;
 
             // Update next pipe position for tracking.
@@ -453,7 +457,7 @@ export function FlappyBirdComponent() {
                 }
 
                 // Increase pipe speed as score increases.
-                this.pipeSpeed = Math.min(500, 200 + this.score * 10);
+                this.pipeSpeed = Math.min(350, 200 + this.score * 5);
 
                 scoreZone.destroy();
               },
@@ -474,11 +478,10 @@ export function FlappyBirdComponent() {
             // Navigation bar background.
             const navBarBg = this.add.rectangle(
               width * 0.5,
-              height - 40,
+              height - 30,
               width,
-              80,
-              0x333333,
-              0.8,
+              60,
+              0xcaaa77,
             );
             navBarBg.setOrigin(0.5, 0.5);
             navBarBg.setDepth(100);
@@ -486,46 +489,55 @@ export function FlappyBirdComponent() {
             // Game button (active.)
             const gameBtn = this.add.rectangle(
               width * 0.25,
-              height - 40,
-              width * 0.4,
+              height - 30,
+              width * 0.5,
               60,
-              0x4a752c,
-              0.9,
+              0x7f563b,
             );
             gameBtn.setOrigin(0.5, 0.5);
+            gameBtn.setStrokeStyle(2, 0x7f563b);
             gameBtn.setInteractive({ useHandCursor: true });
             gameBtn.setDepth(100);
+            // Game icon.
+            const gameIcon = this.add.sprite(
+              width * 0.25,
+              height - 38,
+              "gameIcon",
+            );
+            gameIcon.setTintFill(0xcaaa77);
+            gameIcon.setDepth(100);
+            // Game text.
             this.add
-              .bitmapText(width * 0.25, height - 40, "letters", "GAME", 16)
+              .bitmapText(width * 0.25, height - 16, "letters", "GAME", 8)
               .setOrigin(0.5)
-              .setTint(0xffffff)
+              .setTint(0xcaaa77)
               .setDepth(100);
 
             // Ranking button.
             const rankingBtn = this.add.rectangle(
               width * 0.75,
-              height - 40,
-              width * 0.4,
+              height - 30,
+              width * 0.5,
               60,
-              0x555555,
-              0.8,
+              0xcaaa77,
             );
             rankingBtn.setOrigin(0.5, 0.5);
+            rankingBtn.setStrokeStyle(2, 0x7f563b);
             rankingBtn.setInteractive({ useHandCursor: true });
             rankingBtn.setDepth(100);
-            this.add
-              .bitmapText(width * 0.75, height - 40, "letters", "RANKING", 16)
+            // Ranking icon.
+            const rankingIcon = this.add.sprite(
+              width * 0.75,
+              height - 38,
+              "rankingIcon",
+            );
+            rankingIcon.setDepth(100);
+            // Ranking text.
+            const rankingIconText = this.add
+              .bitmapText(width * 0.75, height - 16, "letters", "RANKING", 8)
               .setOrigin(0.5)
-              .setTint(0xffffff)
+              .setTint(0x523449)
               .setDepth(100);
-
-            // Game Button events.
-            gameBtn.on("pointerover", () => {
-              gameBtn.setFillStyle(0x5d9639, 0.9);
-            });
-            gameBtn.on("pointerout", () => {
-              gameBtn.setFillStyle(0x4a752c, 0.9);
-            });
 
             // Ranking Button events.
             rankingBtn.on("pointerdown", () => {
@@ -533,10 +545,14 @@ export function FlappyBirdComponent() {
               this.scene.start("RankingScene");
             });
             rankingBtn.on("pointerover", () => {
-              rankingBtn.setFillStyle(0x666666, 0.9);
+              rankingBtn.setFillStyle(0x7f563b);
+              rankingIcon.setTintFill(0xcaaa77);
+              rankingIconText.setTintFill(0xcaaa77);
             });
             rankingBtn.on("pointerout", () => {
-              rankingBtn.setFillStyle(0x555555, 0.8);
+              rankingBtn.setFillStyle(0xcaaa77);
+              rankingIcon.setTintFill(0x7f563b);
+              rankingIconText.setTintFill(0x7f563b);
             });
           }
 
@@ -595,7 +611,7 @@ export function FlappyBirdComponent() {
             for (let i = 1; i < HEARTS + 1; i++) {
               const heart = this.add.image(
                 10 + i * 35,
-                40,
+                35,
                 i <= this.hearts ? "heartFull" : "heartEmpty",
               );
               heart.setDepth(99);
@@ -757,9 +773,9 @@ export function FlappyBirdComponent() {
 
                 // Apply gravity and make the bird jump to start.
                 if (this.bird) {
-                  this.bird.setGravityY(981);
+                  this.bird.setGravityY(1500);
                   this.bird.play("fly", true);
-                  this.bird.setVelocityY(-350);
+                  this.bird.setVelocityY(-400);
                 }
 
                 // Add first pipes immediately after starting.
@@ -941,7 +957,7 @@ export function FlappyBirdComponent() {
               for (let i = 1; i < HEARTS + 1; i++) {
                 const heart = this.add.image(
                   10 + i * 35,
-                  40,
+                  35,
                   i <= this.hearts ? "heartFull" : "heartEmpty",
                 );
                 heart.setDepth(99);
@@ -1008,11 +1024,15 @@ export function FlappyBirdComponent() {
               "assets/fonts/numbers/numbers.png",
               "assets/fonts/numbers/numbers.xml",
             );
+
+            // Navigation bar icons.
+            this.load.image("gameIcon", "assets/navbar/navbar-game.png");
+            this.load.image("rankingIcon", "assets/navbar/navbar-ranking.png");
           }
 
           create() {
             const modalWidth = this.game.config.width as number;
-            const modalHeight = (this.game.config.height as number) - 80;
+            const modalHeight = (this.game.config.height as number) - 60;
 
             const modalBg = this.add.rectangle(
               (this.game.config.width as number) * 0.5,
@@ -1130,45 +1150,67 @@ export function FlappyBirdComponent() {
             // Navigation bar background.
             const navBarBg = this.add.rectangle(
               width * 0.5,
-              height - 40,
+              height - 30,
               width,
-              80,
-              0x333333,
-              0.8,
+              60,
+              0xcaaa77,
             );
             navBarBg.setOrigin(0.5, 0.5);
+            navBarBg.setDepth(100);
 
             // Game button.
             const gameBtn = this.add.rectangle(
               width * 0.25,
-              height - 40,
-              width * 0.4,
+              height - 30,
+              width * 0.5,
               60,
-              0x555555,
-              0.8,
+              0xcaaa77,
             );
             gameBtn.setOrigin(0.5, 0.5);
+            gameBtn.setStrokeStyle(2, 0x7f563b);
             gameBtn.setInteractive({ useHandCursor: true });
-            this.add
-              .bitmapText(width * 0.25, height - 40, "letters", "GAME", 16)
+            gameBtn.setDepth(100);
+            // Game icon.
+            const gameIcon = this.add.sprite(
+              width * 0.25,
+              height - 38,
+              "gameIcon",
+            );
+            gameIcon.setTintFill(0x7f563b);
+            gameIcon.setDepth(100);
+            // Game text.
+            const gameIconText = this.add
+              .bitmapText(width * 0.25, height - 16, "letters", "GAME", 8)
               .setOrigin(0.5)
-              .setTint(0xffffff);
+              .setTint(0x7f563b)
+              .setDepth(100);
 
             // Ranking button (active.)
             const rankingBtn = this.add.rectangle(
               width * 0.75,
-              height - 40,
-              width * 0.4,
+              height - 30,
+              width * 0.5,
               60,
-              0x4a752c,
-              0.9,
+              0x7f563b,
             );
             rankingBtn.setOrigin(0.5, 0.5);
+            rankingBtn.setStrokeStyle(2, 0x7f563b);
             rankingBtn.setInteractive({ useHandCursor: true });
+            rankingBtn.setDepth(100);
+            // Ranking icon.
+            const rankingIcon = this.add.sprite(
+              width * 0.75,
+              height - 38,
+              "rankingIcon",
+            );
+            rankingIcon.setTintFill(0xcaaa77);
+            rankingIcon.setDepth(100);
+            // Ranking text.
             this.add
-              .bitmapText(width * 0.75, height - 40, "letters", "RANKING", 16)
+              .bitmapText(width * 0.75, height - 16, "letters", "RANKING", 8)
               .setOrigin(0.5)
-              .setTint(0xffffff);
+              .setTint(0xcaaa77)
+              .setDepth(100);
 
             // Game Button event.
             gameBtn.on("pointerdown", () => {
@@ -1176,18 +1218,14 @@ export function FlappyBirdComponent() {
               this.scene.start("FlappyBirdScene");
             });
             gameBtn.on("pointerover", () => {
-              gameBtn.setFillStyle(0x666666, 0.9);
+              gameBtn.setFillStyle(0x7f563b);
+              gameIcon.setTintFill(0xcaaa77);
+              gameIconText.setTintFill(0xcaaa77);
             });
             gameBtn.on("pointerout", () => {
-              gameBtn.setFillStyle(0x555555, 0.8);
-            });
-
-            // Ranking Button event.
-            rankingBtn.on("pointerover", () => {
-              rankingBtn.setFillStyle(0x5d9639, 0.9);
-            });
-            rankingBtn.on("pointerout", () => {
-              rankingBtn.setFillStyle(0x4a752c, 0.9);
+              gameBtn.setFillStyle(0xcaaa77);
+              gameIcon.setTintFill(0x7f563b);
+              gameIconText.setTintFill(0x7f563b);
             });
           }
 
