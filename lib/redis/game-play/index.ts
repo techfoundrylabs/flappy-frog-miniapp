@@ -6,21 +6,17 @@ const notificationServiceKey =
 const ONE_DAY = 60 * 60 * 24;
 
 const getUserGamePlayKey = (fid: number): string => {
-  return `${notificationServiceKey}:game-play:${fid}`;
+  return `${notificationServiceKey}:hearts:${fid}`;
 };
 
-export const initUserGamePlayDaily = async (fid: number, hearts: number) => {
+export const setTTL = async (fid: number) => {
   if (!redis) {
     return null;
   }
-  console.log("EEEEEE");
   try {
-    const res = await redis.set<number>(getUserGamePlayKey(fid), hearts, {
-      keepTtl: true,
-    });
     const ttl = Math.floor(Date.now() / 1000) + ONE_DAY;
     await redis.expireat(getUserGamePlayKey(fid), ttl);
-    if (res === "OK") return hearts;
+    return true;
   } catch (error) {
     console.error(error);
   }

@@ -3,7 +3,7 @@
 import { type ReactNode } from "react";
 import { base } from "wagmi/chains";
 import { MiniKitProvider } from "@coinbase/onchainkit/minikit";
-import { ErudaProvider } from "@/app/components/eruda";
+import { ErudaProvider } from "@/app/_components/eruda";
 
 export function Providers(props: { children: ReactNode }) {
   return (

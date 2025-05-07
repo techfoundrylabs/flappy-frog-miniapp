@@ -1,12 +1,16 @@
 "use client";
 
+import { decreaseHearts, initGame } from "@/app/_actions";
 import { useLayoutEffect, useRef } from "react";
 
-const HEARTS = 3;
+interface FlappyBirdComponentProps {
+  fid: number;
+}
 
-export function FlappyBirdComponent() {
+export function FlappyBirdComponent({ fid }: FlappyBirdComponentProps) {
   const gameContainerRef = useRef<HTMLDivElement>(null);
   const gameInstanceRef = useRef<Phaser.Game | null>(null);
+  const HEARTS = Number(process.env.NEXT_PUBLIC_MAX_HEARTS) ?? 5;
 
   useLayoutEffect(() => {
     const initPhaser = async () => {
@@ -82,7 +86,7 @@ export function FlappyBirdComponent() {
             this.load.image("rankingIcon", "assets/navbar/navbar-ranking.png");
           }
 
-          create() {
+          async create() {
             // Set debug mode.
             // this.physics.world.createDebugGraphic();
 
@@ -155,8 +159,7 @@ export function FlappyBirdComponent() {
             );
 
             // Fetch available hearts.
-            this.hearts = this.fetchAvailableHearts();
-
+            this.hearts = (await this.fetchAvailableHearts()) ?? HEARTS;
             // Hearts.
             for (let i = 1; i < HEARTS + 1; i++) {
               const heart = this.add.image(
@@ -466,9 +469,9 @@ export function FlappyBirdComponent() {
             );
           }
 
-          fetchAvailableHearts() {
+          async fetchAvailableHearts() {
             // TODO: fetch available hearts.
-            return HEARTS;
+            return await initGame(fid);
           }
 
           createNavigationBar() {
@@ -556,7 +559,7 @@ export function FlappyBirdComponent() {
             });
           }
 
-          gameOverHandler() {
+          async gameOverHandler() {
             if (!this.gameStarted || this.gameOver) return;
 
             this.gameOver = true;
@@ -608,6 +611,7 @@ export function FlappyBirdComponent() {
 
             // Update hearts.
             this.hearts = this.hearts - 1 > 0 ? this.hearts - 1 : 0;
+            await decreaseHearts(fid, this.hearts);
             for (let i = 1; i < HEARTS + 1; i++) {
               const heart = this.add.image(
                 10 + i * 35,
@@ -1284,7 +1288,7 @@ export function FlappyBirdComponent() {
         gameInstanceRef.current.destroy(true);
       }
     };
-  }, []);
+  }, [fid]);
 
   return (
     <div className="w-full flex flex-col items-center relative">
