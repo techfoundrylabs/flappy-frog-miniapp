@@ -816,6 +816,7 @@ export function FlappyBirdComponent({
 
             // Share event.
             shareButton.on("pointerdown", async () => {
+              console.log("Share Button Clicked!");
               await this.shareResult();
             });
             shareButton.on("pointerover", () => {
