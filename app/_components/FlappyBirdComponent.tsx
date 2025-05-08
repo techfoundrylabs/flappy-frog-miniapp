@@ -1021,6 +1021,7 @@ export function FlappyBirdComponent({
           }
 
           async shareResult() {
+            console.log("shareResult()");
             await shareCast();
           }
         }
