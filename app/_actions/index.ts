@@ -73,10 +73,12 @@ export const getTopPlayers = async () => {
 
 export const shareCast = async () => {
   try {
+    console.log("Before composeCast()");
     await sdk.actions.composeCast({
       text: "Check out this game!",
       embeds: [],
     });
+    console.log("After composeCast()");
   } catch (error) {
     console.error(error);
   }
