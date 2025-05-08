@@ -817,7 +817,7 @@ export function FlappyBirdComponent({
             // Share event.
             shareButton.on("pointerdown", async () => {
               console.log("Share Button Clicked!");
-              await this.shareResult();
+              console.log(await this.shareResult());
             });
             shareButton.on("pointerover", () => {
               shareButton.setFillStyle(0x6b96c7);
@@ -1021,8 +1021,7 @@ export function FlappyBirdComponent({
           }
 
           async shareResult() {
-            console.log("shareResult()");
-            await shareCast();
+            return (await shareCast()) ?? undefined;
           }
         }
 
@@ -1254,7 +1253,6 @@ export function FlappyBirdComponent({
           }
 
           async getLeaderboardData() {
-            await shareCast();
             return (await getTopPlayers()) ?? [];
           }
         }
