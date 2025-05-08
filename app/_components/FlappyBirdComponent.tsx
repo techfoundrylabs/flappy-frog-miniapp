@@ -1269,8 +1269,7 @@ export function FlappyBirdComponent({
             },
           },
           scale: {
-            mode: Phaser.Scale.ENVELOP,
-            autoCenter: Phaser.Scale.CENTER_BOTH,
+            mode: Phaser.Scale.FIT,
             width: 424,
             height: 695,
           },
