@@ -1269,9 +1269,8 @@ export function FlappyBirdComponent({
             },
           },
           scale: {
-            mode: Phaser.Scale.FIT,
-            width: 424,
-            height: 695,
+            mode: Phaser.Scale.NONE,
+            autoCenter: Phaser.Scale.NO_CENTER,
           },
           scene: [FlappyBirdScene, RankingScene],
         };
