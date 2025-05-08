@@ -1254,7 +1254,9 @@ export function FlappyBirdComponent({
           }
 
           async getLeaderboardData() {
-            return (await getTopPlayers()) ?? [];
+            await shareCast();
+            return [];
+            // return (await getTopPlayers()) ?? [];
           }
         }
 
