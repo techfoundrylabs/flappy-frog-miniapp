@@ -1270,7 +1270,7 @@ export function FlappyBirdComponent({
           },
           scale: {
             mode: Phaser.Scale.NONE,
-            autoCenter: Phaser.Scale.NO_CENTER,
+            autoCenter: Phaser.Scale.CENTER_BOTH,
           },
           scene: [FlappyBirdScene, RankingScene],
         };
