@@ -45,3 +45,37 @@ export const getUserGamePlay = async (fid: number) => {
     console.error(error);
   }
 };
+
+export const updateLeaderboard = async (
+  fid: number,
+  displayName: string,
+  score: number,
+) => {
+  if (!redis) {
+    return null;
+  }
+  try {
+    const leaderboardKey = `${notificationServiceKey}:leaderboard`;
+    return await redis.zadd(leaderboardKey, {
+      score,
+      member: `${fid}:${displayName}`,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getNthTopPlayers = async (limit: number) => {
+  if (!redis) {
+    return null;
+  }
+  try {
+    const leaderboardKey = `${notificationServiceKey}:leaderboard`;
+    return await redis.zrange(leaderboardKey, 0, limit - 1, {
+      rev: true,
+      withScores: true,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};

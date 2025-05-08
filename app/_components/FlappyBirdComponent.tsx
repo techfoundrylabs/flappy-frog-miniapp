@@ -1,16 +1,27 @@
 "use client";
 
-import { decreaseHearts, initGame } from "@/app/_actions";
+import {
+  decreaseHearts,
+  initGame,
+  setScoreInLeaderboard,
+  getTopPlayers,
+  shareCast,
+} from "@/app/_actions";
 import { useLayoutEffect, useRef } from "react";
+
+const HEARTS = Number(process.env.NEXT_PUBLIC_MAX_HEARTS) ?? 3;
 
 interface FlappyBirdComponentProps {
   fid: number;
+  displayName: string;
 }
 
-export function FlappyBirdComponent({ fid }: FlappyBirdComponentProps) {
+export function FlappyBirdComponent({
+  fid,
+  displayName,
+}: FlappyBirdComponentProps) {
   const gameContainerRef = useRef<HTMLDivElement>(null);
   const gameInstanceRef = useRef<Phaser.Game | null>(null);
-  const HEARTS = Number(process.env.NEXT_PUBLIC_MAX_HEARTS) ?? 5;
 
   useLayoutEffect(() => {
     const initPhaser = async () => {
@@ -299,7 +310,7 @@ export function FlappyBirdComponent({ fid }: FlappyBirdComponentProps) {
               startButton.setFillStyle(0x4a752c);
             });
 
-            // Button click to start game
+            // Button click to start game.
             startButton.on("pointerdown", () => {
               if (this.hearts > 0) {
                 overlay.destroy();
@@ -470,7 +481,6 @@ export function FlappyBirdComponent({ fid }: FlappyBirdComponentProps) {
           }
 
           async fetchAvailableHearts() {
-            // TODO: fetch available hearts.
             return await initGame(fid);
           }
 
@@ -620,6 +630,9 @@ export function FlappyBirdComponent({ fid }: FlappyBirdComponentProps) {
               );
               heart.setDepth(99);
             }
+
+            // Put the user score in the leaderboard.
+            await setScoreInLeaderboard(fid, displayName, this.score);
           }
 
           showGameOverUI() {
@@ -707,10 +720,6 @@ export function FlappyBirdComponent({ fid }: FlappyBirdComponentProps) {
 
             // Restart event.
             retryButton.on("pointerdown", () => {
-              // TODO: check if the user has any attempts left. If so, let
-              // the user try again. Otherwise, ask them if they wants to
-              // pay for another try.
-
               modalBg.destroy();
               retryButton.destroy();
               shareButton.destroy();
@@ -806,8 +815,8 @@ export function FlappyBirdComponent({ fid }: FlappyBirdComponentProps) {
             });
 
             // Share event.
-            shareButton.on("pointerdown", () => {
-              // TODO: Implement share logic.
+            shareButton.on("pointerdown", async () => {
+              await this.shareResult();
             });
             shareButton.on("pointerover", () => {
               shareButton.setFillStyle(0x6b96c7);
@@ -1009,6 +1018,10 @@ export function FlappyBirdComponent({ fid }: FlappyBirdComponentProps) {
               cancelButton.setFillStyle(0xd53e3e);
             });
           }
+
+          async shareResult() {
+            await shareCast();
+          }
         }
 
         class RankingScene extends Phaser.Scene {
@@ -1034,9 +1047,9 @@ export function FlappyBirdComponent({ fid }: FlappyBirdComponentProps) {
             this.load.image("rankingIcon", "assets/navbar/navbar-ranking.png");
           }
 
-          create() {
+          async create() {
             const modalWidth = this.game.config.width as number;
-            const modalHeight = (this.game.config.height as number) - 60;
+            const modalHeight = (this.game.config.height as number) - 40;
 
             const modalBg = this.add.rectangle(
               (this.game.config.width as number) * 0.5,
@@ -1046,16 +1059,18 @@ export function FlappyBirdComponent({ fid }: FlappyBirdComponentProps) {
               0xcaaa77,
             );
             modalBg.setOrigin(0.5);
-            modalBg.setStrokeStyle(4, 0x7f563b);
+            modalBg.setStrokeStyle(2, 0x7f563b);
 
             // Leaderboard data.
-            const leaderboardData = this.getLeaderboardData();
+            const leaderboardData = (await this.getLeaderboardData()) as Record<
+              string,
+              string
+            >[];
 
-            const rowHeight = modalHeight / (leaderboardData.length + 1);
-
+            const rowHeight = modalHeight / 11;
             const tableLeft =
-              (this.game.config.width as number) * 0.5 - modalWidth / 2 + 20;
-            const tableWidth = modalWidth - 4;
+              (this.game.config.width as number) * 0.5 - modalWidth * 0.5 + 20;
+            const tableWidth = modalWidth - 2;
             const playerColPos = tableLeft + tableWidth * 0.2;
             const scoreColPos = tableLeft + tableWidth * 0.725;
 
@@ -1092,11 +1107,14 @@ export function FlappyBirdComponent({ fid }: FlappyBirdComponentProps) {
             for (let i = 0; i < leaderboardData.length; i++) {
               const entry = leaderboardData[i];
 
-              // Choose text tint color based on ranking.
-              let textTint = 0xffffff;
-              if (i === 0) textTint = 0xffd700;
-              else if (i === 1) textTint = 0xc0c0c0;
-              else if (i === 2) textTint = 0xcd7f32;
+              // Rank tint color.
+              let rankTint = 0xffffff;
+              if (i === 0) rankTint = 0xffd700;
+              else if (i === 1) rankTint = 0xc0c0c0;
+              else if (i === 2) rankTint = 0xcd7f32;
+
+              // Player - Score tint color.
+              const textTint = 0xffffff;
 
               const rowY = rowHeight * 0.5 - 2 + (i + 1) * rowHeight;
 
@@ -1124,7 +1142,7 @@ export function FlappyBirdComponent({ fid }: FlappyBirdComponentProps) {
                   10,
                 )
                 .setOrigin(0, 0.5)
-                .setTint(textTint);
+                .setTint(rankTint);
               // Player text.
               this.add
                 .bitmapText(playerColPos, rowY, "letters", formattedName, 10)
@@ -1233,20 +1251,8 @@ export function FlappyBirdComponent({ fid }: FlappyBirdComponentProps) {
             });
           }
 
-          getLeaderboardData() {
-            // TODO: get real leaderboard data.
-            return [
-              { name: "Lorem Ipsum #1 ", score: 50 },
-              { name: "Lorem Ipsum #2 ", score: 50 },
-              { name: "Lorem Ipsum #3 ", score: 50 },
-              { name: "Lorem Ipsum #4 ", score: 50 },
-              { name: "Lorem Ipsum #5 ", score: 50 },
-              { name: "Lorem Ipsum #6 ", score: 50 },
-              { name: "Lorem Ipsum #7 ", score: 50 },
-              { name: "Lorem Ipsum #8 ", score: 50 },
-              { name: "Lorem Ipsum #9 ", score: 50 },
-              { name: "Lorem Ipsum #10", score: 50 },
-            ];
+          async getLeaderboardData() {
+            return (await getTopPlayers()) ?? [];
           }
         }
 
@@ -1288,7 +1294,7 @@ export function FlappyBirdComponent({ fid }: FlappyBirdComponentProps) {
         gameInstanceRef.current.destroy(true);
       }
     };
-  }, [fid]);
+  }, [fid, displayName]);
 
   return (
     <div className="w-full flex flex-col items-center relative">

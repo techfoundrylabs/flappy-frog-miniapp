@@ -50,7 +50,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={press_start_2P.className}>
         <Providers>
-          <div className="flex flex-col min-h-screen bg-violet-300 justify-center items-center text-6xl">
+          <div className="w-screen h-screen flex flex-col min-h-screen bg-violet-300 justify-center items-center text-6xl">
             {children}
           </div>
         </Providers>
