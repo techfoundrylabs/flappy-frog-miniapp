@@ -414,7 +414,7 @@ export function FlappyFrogComponent({
             if (this.gameOver || !this.frog || !this.pipes || !this.gameStarted)
               return;
 
-            const yGap = 80;
+            const yGap = 100;
             const height = this.game.config.height as number;
             const pipeTop = Phaser.Math.Between(150, height - yGap - 150);
             const pipeX = this.game.config.width as number;
