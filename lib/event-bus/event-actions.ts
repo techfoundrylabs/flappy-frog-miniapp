@@ -1,6 +1,6 @@
 import sdk from "@farcaster/frame-sdk";
 
-const URL = process.env.NEXT_PUBLIC_SPLASH_URL ?? "";
+const URL = process.env.NEXT_PUBLIC_URL ?? "";
 
 export const shareCast = async (score: number) => {
   try {
