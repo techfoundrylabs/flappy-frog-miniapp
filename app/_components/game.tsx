@@ -1,5 +1,9 @@
+"use client";
+
 import { FlappyBirdComponent } from "@/app/_components/FlappyBirdComponent";
 import { Loading } from "@/app/_components/loading";
+import { EventBus } from "@/lib/event-bus";
+import { shareCast } from "@/lib/event-bus/event-actions";
 import { useMiniKit, useAddFrame } from "@coinbase/onchainkit/minikit";
 
 import { useEffect } from "react";
@@ -23,10 +27,28 @@ export const Game = () => {
     }
   }, [addFrame, context]);
 
-  if (!context) return <Loading />;
+  useEffect(() => {
+    const handleShare = async (score: number) => {
+      try {
+        console.log("Chiamata a shareCast...");
+        await shareCast(score);
+        console.log("Funzione shareCast eseguita");
+      } catch (error) {
+        console.error("Errore durante la chiamata a shareCast:", error);
+      }
+    };
+
+    EventBus.on("share", (score: number) => handleShare(score));
+
+    return () => {
+      EventBus.removeAllListeners();
+    };
+  }, []);
 
   const fid = context.user.fid;
   const displayName = context.user.username ?? context.user.fid.toString();
+
+  if (!context) return <Loading />;
 
   return (
     <div className="flex flex-col justify-center items-center gap-y-4 text-xs">

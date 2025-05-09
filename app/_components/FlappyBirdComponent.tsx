@@ -5,8 +5,8 @@ import {
   initGame,
   setScoreInLeaderboard,
   getTopPlayers,
-  shareCast,
 } from "@/app/_actions";
+import { EventBus } from "@/lib/event-bus";
 import { useLayoutEffect, useRef } from "react";
 
 const HEARTS = Number(process.env.NEXT_PUBLIC_MAX_HEARTS) ?? 3;
@@ -817,7 +817,7 @@ export function FlappyBirdComponent({
             // Share event.
             shareButton.on("pointerdown", async () => {
               console.log("Share Button Clicked!");
-              console.log(await this.shareResult());
+              EventBus.emit("share", this.score);
             });
             shareButton.on("pointerover", () => {
               shareButton.setFillStyle(0x6b96c7);
@@ -1018,10 +1018,6 @@ export function FlappyBirdComponent({
             cancelButton.on("pointerout", () => {
               cancelButton.setFillStyle(0xd53e3e);
             });
-          }
-
-          async shareResult() {
-            return (await shareCast()) ?? undefined;
           }
         }
 

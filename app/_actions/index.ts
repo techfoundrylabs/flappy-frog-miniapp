@@ -8,7 +8,6 @@ import {
   updateLeaderboard,
   getNthTopPlayers,
 } from "@/lib/redis/game-play";
-import { sdk } from "@farcaster/frame-sdk";
 
 const MAX_USER_HEARTS = env.MAX_HEARTS;
 const LEADERBOARD_LIMIT = 10;
@@ -66,17 +65,6 @@ export const getTopPlayers = async () => {
       },
       [],
     );
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-export const shareCast = async () => {
-  try {
-    return await sdk.actions.composeCast({
-      text: "Check out this game!",
-      embeds: [],
-    });
   } catch (error) {
     console.error(error);
   }
