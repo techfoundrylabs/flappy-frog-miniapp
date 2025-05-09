@@ -30,11 +30,9 @@ export const Game = () => {
   useEffect(() => {
     const handleShare = async (score: number) => {
       try {
-        console.log("Chiamata a shareCast...");
         await shareCast(score);
-        console.log("Funzione shareCast eseguita");
       } catch (error) {
-        console.error("Errore durante la chiamata a shareCast:", error);
+        console.error("Error sharing score: ", error);
       }
     };
 
@@ -45,10 +43,10 @@ export const Game = () => {
     };
   }, []);
 
+  if (!context) return <Loading />;
+
   const fid = context.user.fid;
   const displayName = context.user.username ?? context.user.fid.toString();
-
-  if (!context) return <Loading />;
 
   return (
     <div className="flex flex-col justify-center items-center gap-y-4 text-xs">

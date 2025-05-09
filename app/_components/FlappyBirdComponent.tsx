@@ -325,7 +325,6 @@ export function FlappyBirdComponent({
                   this.startOverlay = null;
                 }
 
-                // Solo dopo aver rimosso tutto, avviamo il gioco
                 this.gameStarted = true;
                 this.scoreText?.setVisible(true);
 
@@ -816,7 +815,6 @@ export function FlappyBirdComponent({
 
             // Share event.
             shareButton.on("pointerdown", async () => {
-              console.log("Share Button Clicked!");
               EventBus.emit("share", this.score);
             });
             shareButton.on("pointerover", () => {
