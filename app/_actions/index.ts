@@ -43,7 +43,7 @@ export const setScoreInLeaderboard = async (
   score: number,
 ) => {
   try {
-    updateLeaderboard(fid, displayName, score);
+    return updateLeaderboard(fid, displayName, score);
   } catch (error) {
     console.error(error);
   }

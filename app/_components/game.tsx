@@ -1,6 +1,6 @@
 "use client";
 
-import { FlappyBirdComponent } from "@/app/_components/FlappyBirdComponent";
+import { FlappyFrogComponent } from "@/app/_components/FlappyFrogComponent";
 import { Loading } from "@/app/_components/loading";
 import { EventBus } from "@/lib/event-bus";
 import { shareCast } from "@/lib/event-bus/event-actions";
@@ -50,7 +50,7 @@ export const Game = () => {
 
   return (
     <div className="flex flex-col justify-center items-center gap-y-4 text-xs">
-      <FlappyBirdComponent fid={fid} displayName={displayName} />
+      <FlappyFrogComponent fid={fid} displayName={displayName} />
     </div>
   );
 };

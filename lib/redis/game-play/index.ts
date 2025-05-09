@@ -56,16 +56,22 @@ export const updateLeaderboard = async (
   }
   try {
     const leaderboardKey = `${notificationServiceKey}:leaderboard`;
-    // Check if the user already exists in the leaderboard.
+
     const existingScore = await redis.zscore(leaderboardKey, `${fid}:${displayName}`);
-    if (existingScore !== null) {
-      // If the user exists and the score is higher than the existing one, update it.
-      if (existingScore < score) {
-        await redis.zadd(leaderboardKey, {
-          score,
-          member: `${fid}:${displayName}`,
-        });
+    if (existingScore === null || existingScore < score) {
+      // If the user doesn't exist or the score is higher than the existing one, add or update it.
+      await redis.zadd(leaderboardKey, {
+        score,
+        member: `${fid}:${displayName}`,
+      });
+      return {
+        updated: true,
+        personalRecord: true,
       }
+    }
+    return {
+      updated: false,
+      personalRecord: false,
     }
   } catch (error) {
     console.error(error);

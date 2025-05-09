@@ -11,15 +11,15 @@ import { useLayoutEffect, useRef } from "react";
 
 const HEARTS = Number(process.env.NEXT_PUBLIC_MAX_HEARTS) ?? 3;
 
-interface FlappyBirdComponentProps {
+interface FlappyFrogComponentProps {
   fid: number;
   displayName: string;
 }
 
-export function FlappyBirdComponent({
+export function FlappyFrogComponent({
   fid,
   displayName,
-}: FlappyBirdComponentProps) {
+}: FlappyFrogComponentProps) {
   const gameContainerRef = useRef<HTMLDivElement>(null);
   const gameInstanceRef = useRef<Phaser.Game | null>(null);
 
@@ -28,8 +28,8 @@ export function FlappyBirdComponent({
       if (typeof window !== "undefined" && gameContainerRef.current) {
         const Phaser = (await import("phaser")).default;
 
-        class FlappyBirdScene extends Phaser.Scene {
-          private bird: Phaser.Physics.Arcade.Sprite | null = null;
+        class FlappyFrogScene extends Phaser.Scene {
+          private frog: Phaser.Physics.Arcade.Sprite | null = null;
           private pipes: Phaser.Physics.Arcade.Group | null = null;
           private score: number = 0;
           private scoreText: Phaser.GameObjects.BitmapText | null = null;
@@ -40,9 +40,10 @@ export function FlappyBirdComponent({
           private pipeSpacing: number = 350;
           private hearts: number = 0;
           private nextPipeX: number = 0;
+          private personalRecord: Phaser.Physics.Arcade.Sprite | null = null;
 
           constructor() {
-            super({ key: "FlappyBirdScene" });
+            super({ key: "FlappyFrogScene" });
           }
 
           init() {
@@ -58,7 +59,7 @@ export function FlappyBirdComponent({
               this.anims.resumeAll();
             }
 
-            this.bird = null;
+            this.frog = null;
             this.pipes = null;
             this.scoreText = null;
             this.startOverlay = null;
@@ -79,11 +80,19 @@ export function FlappyBirdComponent({
 
             // Load images and spritesheets.
             this.load.spritesheet(
-              "birdSpriteSheet",
-              "assets/player/bird-flap-tilemap.png",
+              "frogSpriteSheet",
+              "assets/player/frog-flap-tilemap.png",
               {
-                frameWidth: 68,
-                frameHeight: 48,
+                frameWidth: 84,
+                frameHeight: 60,
+              },
+            );
+            this.load.spritesheet(
+              "recordSpriteSheet",
+              "assets/misc/record-tilemap.png",
+              {
+                frameWidth: 17,
+                frameHeight: 9,
               },
             );
             this.load.image("heartFull", "assets/hearts/heart-full.png");
@@ -112,10 +121,10 @@ export function FlappyBirdComponent({
                 this.game.config.height as number,
               );
 
-            // Bird flapping animation.
+            // frog flapping animation.
             this.anims.create({
               key: "fly",
-              frames: this.anims.generateFrameNumbers("birdSpriteSheet", {
+              frames: this.anims.generateFrameNumbers("frogSpriteSheet", {
                 start: 0,
                 end: 2,
               }),
@@ -123,15 +132,15 @@ export function FlappyBirdComponent({
               repeat: -1,
             });
 
-            // Bird.
-            this.bird = this.physics.add.sprite(
+            // Frog.
+            this.frog = this.physics.add.sprite(
               100,
               (this.game.config.height as number) * 0.5,
-              "birdSpriteSheet",
+              "frogSpriteSheet",
             );
-            this.bird.setScale(0.75);
-            this.bird.setDepth(99);
-            this.bird.play("fly");
+            this.frog.setScale(0.75);
+            this.frog.setDepth(99);
+            this.frog.play("fly");
 
             // Physics Group objects.
             this.pipes = this.physics.add.group();
@@ -162,7 +171,7 @@ export function FlappyBirdComponent({
 
             // Add collision detection.
             this.physics.add.collider(
-              this.bird,
+              this.frog,
               this.pipes,
               this.gameOverHandler,
               undefined,
@@ -190,40 +199,40 @@ export function FlappyBirdComponent({
           }
 
           update() {
-            if (this.gameOver || !this.bird) return;
+            if (this.gameOver || !this.frog) return;
 
             if (!this.gameStarted) {
-              // If game hasn't started, make the bird float up and down.
-              this.bird.y += Math.sin(this.time.now / 500) * 0.5;
+              // If game hasn't started, make the frog float up and down.
+              this.frog.y += Math.sin(this.time.now / 500) * 0.5;
               return;
             }
 
-            // Rotate bird based on velocity.
-            if (this.bird.body!.velocity.y > 0) {
-              this.bird.angle = Phaser.Math.Clamp(
-                this.bird.angle + 2.5,
-                -45,
-                90,
+            // Rotate frog based on velocity.
+            if (this.frog.body!.velocity.y > 0) {
+              this.frog.angle = Phaser.Math.Clamp(
+                this.frog.angle + 2.5,
+                -10,
+                40,
               );
             } else {
-              this.bird.angle = Phaser.Math.Clamp(
-                this.bird.angle - 4.0,
-                -45,
-                90,
+              this.frog.angle = Phaser.Math.Clamp(
+                this.frog.angle - 4.0,
+                -10,
+                40,
               );
             }
 
-            // Game over if bird goes out of bounds.
+            // Game over if frog goes out of bounds.
             if (
-              this.bird.y > (this.game.config.height as number) ||
-              this.bird.y < 0
+              this.frog.y > (this.game.config.height as number) ||
+              this.frog.y < 0
             ) {
               this.gameOverHandler();
             }
           }
 
           createStartOverlay() {
-            if (!this.bird) return;
+            if (!this.frog) return;
 
             if (this.startOverlay) {
               this.startOverlay.destroy();
@@ -261,7 +270,7 @@ export function FlappyBirdComponent({
                 (this.game.config.width as number) * 0.5,
                 (this.game.config.height as number) * 0.5 - 140,
                 "letters",
-                "FLAPPY BIRD",
+                "FLAPPY FROG",
                 24,
               )
               .setOrigin(0.5)
@@ -328,12 +337,12 @@ export function FlappyBirdComponent({
                 this.gameStarted = true;
                 this.scoreText?.setVisible(true);
 
-                // Add gravity to bird after game starts.
-                this.bird?.setGravityY(1500);
+                // Add gravity to frog after game starts.
+                this.frog?.setGravityY(1500);
 
-                if (this.bird) {
-                  this.bird.play("fly", true);
-                  this.bird.setVelocityY(-400);
+                if (this.frog) {
+                  this.frog.play("fly", true);
+                  this.frog.setVelocityY(-400);
                 }
 
                 // Add first pipes immediately after starting.
@@ -372,12 +381,12 @@ export function FlappyBirdComponent({
           }
 
           jump() {
-            if (this.gameOver || !this.bird || !this.gameStarted) return;
-            this.bird.setVelocityY(-480);
+            if (this.gameOver || !this.frog || !this.gameStarted) return;
+            this.frog.setVelocityY(-480);
           }
 
           checkPipeDistance() {
-            if (this.gameOver || !this.bird) return;
+            if (this.gameOver || !this.frog) return;
 
             // Get rightmost pipe.
             let rightmostX = 0;
@@ -402,10 +411,10 @@ export function FlappyBirdComponent({
           }
 
           addPipes() {
-            if (this.gameOver || !this.bird || !this.pipes || !this.gameStarted)
+            if (this.gameOver || !this.frog || !this.pipes || !this.gameStarted)
               return;
 
-            const yGap = 100;
+            const yGap = 80;
             const height = this.game.config.height as number;
             const pipeTop = Phaser.Math.Between(150, height - yGap - 150);
             const pipeX = this.game.config.width as number;
@@ -459,7 +468,7 @@ export function FlappyBirdComponent({
 
             // Increment score when passing through the score zone.
             this.physics.add.overlap(
-              this.bird,
+              this.frog,
               scoreZone,
               () => {
                 if (this.gameOver) return;
@@ -573,7 +582,7 @@ export function FlappyBirdComponent({
 
             this.gameOver = true;
 
-            if (this.bird && this.pipes) {
+            if (this.frog && this.pipes) {
               this.anims.pauseAll();
 
               // Disable all collisions
@@ -600,14 +609,14 @@ export function FlappyBirdComponent({
                 }
               });
 
-              // Let the bird fall down with gravity. When it hits the ground,
+              // Let the frog fall down with gravity. When it hits the ground,
               // show the game over UI.
               const gameOverTimer = this.time.addEvent({
                 delay: 250,
                 callback: () => {
                   if (
-                    this.bird &&
-                    this.bird.y > (this.game.config.height as number) + 50
+                    this.frog &&
+                    this.frog.y > (this.game.config.height as number) + 50
                   ) {
                     this.showGameOverUI();
                     gameOverTimer.destroy();
@@ -631,11 +640,36 @@ export function FlappyBirdComponent({
             }
 
             // Put the user score in the leaderboard.
-            await setScoreInLeaderboard(fid, displayName, this.score);
+            const leaderBoardResult = await setScoreInLeaderboard(fid, displayName, this.score);
+            if (leaderBoardResult?.personalRecord === true && this.score > 0) {
+              this.anims.resumeAll();
+
+              this.time.delayedCall(500, () => {
+                this.anims.create({
+                  key: "record",
+                  frames: this.anims.generateFrameNumbers("recordSpriteSheet", {
+                    start: 0,
+                    end: 1,
+                  }),
+                  frameRate: 2,
+                  repeat: -1,
+                });
+
+                // Personal record.
+                this.personalRecord = this.physics.add.sprite(
+                  (this.game.config.width as number) * 0.5,
+                  (this.game.config.height as number) * 0.5 - 125,
+                  "recordSpriteSheet",
+                );
+                this.personalRecord.setScale(3);
+                this.personalRecord.setDepth(99);
+                this.personalRecord.play("record");
+              }, [], this);
+            }
           }
 
           showGameOverUI() {
-            if (!this.bird) return;
+            if (!this.frog) return;
 
             // Now pause physics completely.
             this.physics.pause();
@@ -685,7 +719,7 @@ export function FlappyBirdComponent({
             );
             retryButton.setOrigin(0.5);
             retryButton.setInteractive({ useHandCursor: true });
-            this.add
+            const retryButtonText = this.add
               .bitmapText(
                 (this.game.config.width as number) * 0.5,
                 (this.game.config.height as number) * 0.5 + 70,
@@ -706,7 +740,7 @@ export function FlappyBirdComponent({
             );
             shareButton.setOrigin(0.5);
             shareButton.setInteractive({ useHandCursor: true });
-            this.add
+            const shareButtonText = this.add
               .bitmapText(
                 (this.game.config.width as number) * 0.5,
                 (this.game.config.height as number) * 0.5 + 20,
@@ -721,9 +755,12 @@ export function FlappyBirdComponent({
             retryButton.on("pointerdown", () => {
               modalBg.destroy();
               retryButton.destroy();
+              retryButtonText.destroy();
               shareButton.destroy();
+              shareButtonText.destroy();
               gameOverText.destroy();
               scoreText.destroy();
+              this.personalRecord?.destroy();
 
               if (this.hearts == 0) {
                 this.showPayForTryUI();
@@ -740,7 +777,7 @@ export function FlappyBirdComponent({
                     const sprite = child as Phaser.Physics.Arcade.Sprite;
                     if (
                       sprite.texture &&
-                      sprite !== this.bird &&
+                      sprite !== this.frog &&
                       sprite.texture.key === "tubeTop" &&
                       sprite.alpha === 0
                     ) {
@@ -749,15 +786,15 @@ export function FlappyBirdComponent({
                   }
                 });
 
-                // Reset bird.
-                this.bird?.setPosition(
+                // Reset frog.
+                this.frog?.setPosition(
                   100,
                   (this.game.config.height as number) * 0.5,
                 );
-                this.bird?.setVelocity(0, 0);
-                this.bird?.setGravityY(0);
-                this.bird?.setAngle(0);
-                this.bird?.clearTint();
+                this.frog?.setVelocity(0, 0);
+                this.frog?.setGravityY(0);
+                this.frog?.setAngle(0);
+                this.frog?.clearTint();
 
                 // Reset game state.
                 this.score = 0;
@@ -766,9 +803,9 @@ export function FlappyBirdComponent({
                 this.nextPipeX = 0;
 
                 // Re-add collision detection.
-                if (this.bird && this.pipes) {
+                if (this.frog && this.pipes) {
                   this.physics.add.collider(
-                    this.bird,
+                    this.frog,
                     this.pipes,
                     this.gameOverHandler,
                     undefined,
@@ -783,11 +820,11 @@ export function FlappyBirdComponent({
 
                 this.gameStarted = true;
 
-                // Apply gravity and make the bird jump to start.
-                if (this.bird) {
-                  this.bird.setGravityY(1500);
-                  this.bird.play("fly", true);
-                  this.bird.setVelocityY(-400);
+                // Apply gravity and make the frog jump to start.
+                if (this.frog) {
+                  this.frog.setGravityY(1500);
+                  this.frog.play("fly", true);
+                  this.frog.setVelocityY(-400);
                 }
 
                 // Add first pipes immediately after starting.
@@ -938,7 +975,7 @@ export function FlappyBirdComponent({
                   const sprite = child as Phaser.Physics.Arcade.Sprite;
                   if (
                     sprite.texture &&
-                    sprite !== this.bird &&
+                    sprite !== this.frog &&
                     sprite.texture.key === "tubeTop" &&
                     sprite.alpha === 0
                   ) {
@@ -947,15 +984,15 @@ export function FlappyBirdComponent({
                 }
               });
 
-              // Reset bird.
-              this.bird?.setPosition(
+              // Reset frog.
+              this.frog?.setPosition(
                 100,
                 (this.game.config.height as number) * 0.5,
               );
-              this.bird?.setVelocity(0, 0);
-              this.bird?.setGravityY(0);
-              this.bird?.setAngle(0);
-              this.bird?.clearTint();
+              this.frog?.setVelocity(0, 0);
+              this.frog?.setGravityY(0);
+              this.frog?.setAngle(0);
+              this.frog?.clearTint();
 
               // Reset game state.
               this.score = 0;
@@ -976,9 +1013,9 @@ export function FlappyBirdComponent({
               }
 
               // Re-add collision detection.
-              if (this.bird && this.pipes) {
+              if (this.frog && this.pipes) {
                 this.physics.add.collider(
-                  this.bird,
+                  this.frog,
                   this.pipes,
                   this.gameOverHandler,
                   undefined,
@@ -1231,8 +1268,8 @@ export function FlappyBirdComponent({
 
             // Game Button event.
             gameBtn.on("pointerdown", () => {
-              this.scene.stop("FlappyBirdScene");
-              this.scene.start("FlappyBirdScene");
+              this.scene.stop("FlappyFrogScene");
+              this.scene.start("FlappyFrogScene");
             });
             gameBtn.on("pointerover", () => {
               gameBtn.setFillStyle(0x7f563b);
@@ -1266,7 +1303,7 @@ export function FlappyBirdComponent({
             width: 424,
             height: 695,
           },
-          scene: [FlappyBirdScene, RankingScene],
+          scene: [FlappyFrogScene, RankingScene],
         };
 
         // Destroy any existing game instance.
