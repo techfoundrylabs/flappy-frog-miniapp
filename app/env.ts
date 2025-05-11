@@ -38,7 +38,6 @@ export const env = createEnv({
       .enum(["mainnet", "testnet"])
       .optional()
       .default("testnet"),
-    NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID: z.string(),
     NEXT_PUBLIC_TREASURY_CONTRACT_ADDRESS: z.string().startsWith("0x"),
   },
   /*
@@ -60,8 +59,6 @@ export const env = createEnv({
     NEXT_PUBLIC_ICON_URL: process.env.NEXT_PUBLIC_ICON_URL,
     NEXT_PUBLIC_VERSION: process.env.NEXT_PUBLIC_VERSION,
     NEXT_PUBLIC_NETWORK: process.env.NEXT_PUBLIC_NETWORK,
-    NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID:
-      process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
     NEXT_PUBLIC_TREASURY_CONTRACT_ADDRESS:
       process.env.NEXT_PUBLIC_TREASURY_CONTRACT_ADDRESS,
 
