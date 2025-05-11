@@ -15,3 +15,5 @@ export const TREASURY_CONTRACT_ADDRESS =
   env.NEXT_PUBLIC_TREASURY_CONTRACT_ADDRESS;
 
 export const IS_MAINNET = NETWORK === "mainnet";
+
+export const WARPCASTER_URL = "https://warpcast.com";
