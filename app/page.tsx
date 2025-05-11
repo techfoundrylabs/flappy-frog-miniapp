@@ -10,6 +10,7 @@ const Game = dynamic(
   () => import("@/components/game").then((mod) => mod.Game),
   {
     ssr: false,
+    loading: () => <Loading />,
   },
 );
 
