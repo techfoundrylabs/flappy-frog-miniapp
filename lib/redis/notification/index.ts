@@ -1,8 +1,8 @@
+import { ONCHAINKIT_PROJECT_NAME } from "@/config/constants";
 import { redis } from "@/lib/redis/redis";
 import type { FrameNotificationDetails } from "@farcaster/frame-sdk";
 
-const notificationServiceKey =
-  process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME ?? "minikit";
+const notificationServiceKey = ONCHAINKIT_PROJECT_NAME;
 
 function getUserNotificationDetailsKey(fid: number): string {
   return `${notificationServiceKey}:user:${fid}`;

@@ -1,3 +1,4 @@
+import { APP_URL } from "@/config/constants";
 import {
   FrameNotificationDetails,
   type SendNotificationRequest,
@@ -5,7 +6,7 @@ import {
 } from "@farcaster/frame-sdk";
 import { getUserNotificationDetails } from "lib/redis/notification";
 
-const appUrl = process.env.NEXT_PUBLIC_URL || "";
+const appUrl = APP_URL;
 
 type SendFrameNotificationResult =
   | {

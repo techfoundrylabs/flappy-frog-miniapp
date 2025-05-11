@@ -15,15 +15,26 @@ const LEADERBOARD_LIMIT = 10;
 export const initGame = async (fid: number) => {
   try {
     const hearts = await getUserGamePlay(fid);
-    if (!hearts) {
+    if (hearts === null) {
       const res = await setUserGamePlay(fid, MAX_USER_HEARTS);
       if (res === "OK") {
         setTTL(fid);
         return MAX_USER_HEARTS;
       }
     }
-
     return hearts;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const resetGame = async (fid: number) => {
+  try {
+    const res = await setUserGamePlay(fid, MAX_USER_HEARTS);
+    if (res === "OK") {
+      setTTL(fid);
+      return MAX_USER_HEARTS;
+    }
   } catch (error) {
     console.error(error);
   }
@@ -65,6 +76,19 @@ export const getTopPlayers = async () => {
       },
       [],
     );
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const refillHearts = async (fid: number) => {
+  try {
+    const res = await setUserGamePlay(fid, MAX_USER_HEARTS);
+    if (res !== "OK") {
+      throw new Error("error");
+    }
+
+    return MAX_USER_HEARTS;
   } catch (error) {
     console.error(error);
   }

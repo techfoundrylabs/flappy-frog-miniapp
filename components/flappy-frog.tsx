@@ -3,25 +3,28 @@
 import {
   decreaseHearts,
   initGame,
+  resetGame,
   setScoreInLeaderboard,
   getTopPlayers,
-} from "@/app/_actions";
+} from "@/actions";
+import { useMiniappWallet } from "@/hooks/use-miniapp-wallet";
 import { EventBus } from "@/lib/event-bus";
-import { useLayoutEffect, useRef } from "react";
+
+import { useEffect, useLayoutEffect, useRef } from "react";
+import { reset } from "viem/actions";
 
 const HEARTS = Number(process.env.NEXT_PUBLIC_MAX_HEARTS) ?? 3;
 
-interface FlappyFrogComponentProps {
+interface FlappyFrogProps {
   fid: number;
   displayName: string;
 }
 
-export function FlappyFrogComponent({
-  fid,
-  displayName,
-}: FlappyFrogComponentProps) {
+export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
   const gameContainerRef = useRef<HTMLDivElement>(null);
   const gameInstanceRef = useRef<Phaser.Game | null>(null);
+
+  const { pay, address, formattedBalance } = useMiniappWallet();
 
   useLayoutEffect(() => {
     const initPhaser = async () => {
@@ -95,15 +98,19 @@ export function FlappyFrogComponent({
                 frameHeight: 9,
               },
             );
+            this.load.spritesheet(
+              "loadingSpriteSheet",
+              "assets/misc/loading-tilemap.png",
+              {
+                frameWidth: 6,
+                frameHeight: 6,
+              },
+            )
             this.load.image("heartFull", "assets/hearts/heart-full.png");
             this.load.image("heartEmpty", "assets/hearts/heart-empty.png");
             this.load.image("tubeTop", "assets/tubes/tube-top.png");
             this.load.image("tubeBase", "assets/tubes/tube-base.png");
             this.load.image("background", "assets/background/background.png");
-
-            // Navigation bar icons.
-            this.load.image("gameIcon", "assets/navbar/navbar-game.png");
-            this.load.image("rankingIcon", "assets/navbar/navbar-ranking.png");
           }
 
           async create() {
@@ -193,9 +200,6 @@ export function FlappyFrogComponent({
             if (this.hearts === 0) {
               this.showPayForTryUI();
             }
-
-            // Navigation bar.
-            this.createNavigationBar();
           }
 
           update() {
@@ -355,6 +359,8 @@ export function FlappyFrogComponent({
                   callbackScope: this,
                   loop: true,
                 });
+              } else {
+                this.showPayForTryUI();
               }
             });
 
@@ -492,91 +498,6 @@ export function FlappyFrogComponent({
             return await initGame(fid);
           }
 
-          createNavigationBar() {
-            const width = this.game.config.width as number;
-            const height = this.game.config.height as number;
-
-            // Navigation bar background.
-            const navBarBg = this.add.rectangle(
-              width * 0.5,
-              height - 30,
-              width,
-              60,
-              0xcaaa77,
-            );
-            navBarBg.setOrigin(0.5, 0.5);
-            navBarBg.setDepth(100);
-
-            // Game button (active.)
-            const gameBtn = this.add.rectangle(
-              width * 0.25,
-              height - 30,
-              width * 0.5,
-              60,
-              0x7f563b,
-            );
-            gameBtn.setOrigin(0.5, 0.5);
-            gameBtn.setStrokeStyle(2, 0x7f563b);
-            gameBtn.setInteractive({ useHandCursor: true });
-            gameBtn.setDepth(100);
-            // Game icon.
-            const gameIcon = this.add.sprite(
-              width * 0.25,
-              height - 38,
-              "gameIcon",
-            );
-            gameIcon.setTintFill(0xcaaa77);
-            gameIcon.setDepth(100);
-            // Game text.
-            this.add
-              .bitmapText(width * 0.25, height - 16, "letters", "GAME", 8)
-              .setOrigin(0.5)
-              .setTint(0xcaaa77)
-              .setDepth(100);
-
-            // Ranking button.
-            const rankingBtn = this.add.rectangle(
-              width * 0.75,
-              height - 30,
-              width * 0.5,
-              60,
-              0xcaaa77,
-            );
-            rankingBtn.setOrigin(0.5, 0.5);
-            rankingBtn.setStrokeStyle(2, 0x7f563b);
-            rankingBtn.setInteractive({ useHandCursor: true });
-            rankingBtn.setDepth(100);
-            // Ranking icon.
-            const rankingIcon = this.add.sprite(
-              width * 0.75,
-              height - 38,
-              "rankingIcon",
-            );
-            rankingIcon.setDepth(100);
-            // Ranking text.
-            const rankingIconText = this.add
-              .bitmapText(width * 0.75, height - 16, "letters", "RANKING", 8)
-              .setOrigin(0.5)
-              .setTint(0x523449)
-              .setDepth(100);
-
-            // Ranking Button events.
-            rankingBtn.on("pointerdown", () => {
-              this.scene.stop("RankingScene");
-              this.scene.start("RankingScene");
-            });
-            rankingBtn.on("pointerover", () => {
-              rankingBtn.setFillStyle(0x7f563b);
-              rankingIcon.setTintFill(0xcaaa77);
-              rankingIconText.setTintFill(0xcaaa77);
-            });
-            rankingBtn.on("pointerout", () => {
-              rankingBtn.setFillStyle(0xcaaa77);
-              rankingIcon.setTintFill(0x7f563b);
-              rankingIconText.setTintFill(0x7f563b);
-            });
-          }
-
           async gameOverHandler() {
             if (!this.gameStarted || this.gameOver) return;
 
@@ -640,31 +561,43 @@ export function FlappyFrogComponent({
             }
 
             // Put the user score in the leaderboard.
-            const leaderBoardResult = await setScoreInLeaderboard(fid, displayName, this.score);
+            const leaderBoardResult = await setScoreInLeaderboard(
+              fid,
+              displayName,
+              this.score,
+            );
             if (leaderBoardResult?.personalRecord === true && this.score > 0) {
               this.anims.resumeAll();
 
-              this.time.delayedCall(500, () => {
-                this.anims.create({
-                  key: "record",
-                  frames: this.anims.generateFrameNumbers("recordSpriteSheet", {
-                    start: 0,
-                    end: 1,
-                  }),
-                  frameRate: 2,
-                  repeat: -1,
-                });
+              this.time.delayedCall(
+                500,
+                () => {
+                  this.anims.create({
+                    key: "record",
+                    frames: this.anims.generateFrameNumbers(
+                      "recordSpriteSheet",
+                      {
+                        start: 0,
+                        end: 1,
+                      },
+                    ),
+                    frameRate: 2,
+                    repeat: -1,
+                  });
 
-                // Personal record.
-                this.personalRecord = this.physics.add.sprite(
-                  (this.game.config.width as number) * 0.5,
-                  (this.game.config.height as number) * 0.5 - 125,
-                  "recordSpriteSheet",
-                );
-                this.personalRecord.setScale(3);
-                this.personalRecord.setDepth(99);
-                this.personalRecord.play("record");
-              }, [], this);
+                  // Personal record.
+                  this.personalRecord = this.physics.add.sprite(
+                    (this.game.config.width as number) * 0.5,
+                    (this.game.config.height as number) * 0.5 - 125,
+                    "recordSpriteSheet",
+                  );
+                  this.personalRecord.setScale(3);
+                  this.personalRecord.setDepth(99);
+                  this.personalRecord.play("record");
+                },
+                [],
+                this,
+              );
             }
           }
 
@@ -862,7 +795,7 @@ export function FlappyFrogComponent({
             });
           }
 
-          showPayForTryUI() {
+          async showPayForTryUI() {
             // Create modal.
             const modalBg = this.add.rectangle(
               (this.game.config.width as number) * 0.5,
@@ -948,9 +881,48 @@ export function FlappyFrogComponent({
               .setDepth(101);
 
             // Payment event.
-            payButton.on("pointerdown", () => {
-              // TODO: Implement payment logic.
+            payButton.on("pointerdown", async () => {
+              payButtonText.destroy();
 
+              this.anims.create({
+                key: "loading",
+                frames: this.anims.generateFrameNumbers(
+                  "loadingSpriteSheet",
+                  {
+                    start: 0,
+                    end: 7,
+                  },
+                ),
+                frameRate: 4,
+                repeat: -1,
+              });
+
+              // Loading animation.
+              const loadingIcon = this.physics.add.sprite(
+                (this.game.config.width as number) * 0.5,
+                (this.game.config.height as number) * 0.5 + 20,
+                "loadingSpriteSheet",
+              );
+              loadingIcon.setScale(3);
+              loadingIcon.setDepth(101);
+              loadingIcon.play("loading");
+
+              // Payment process.
+              const paymentResult = await pay();
+              if (paymentResult) {
+                await resetGame(fid);
+              }
+
+            });
+            payButton.on("pointerover", () => {
+              payButton.setFillStyle(0x5d9639);
+            });
+            payButton.on("pointerout", () => {
+              payButton.setFillStyle(0x4a752c);
+            });
+
+            // Payment cancellation event.
+            cancelButton.on("pointerdown", () => {
               // If start overlay exists, destroy it.
               this.startOverlay?.destroy();
 
@@ -964,7 +936,9 @@ export function FlappyFrogComponent({
               cancelButtonText.destroy();
 
               // Destroy all physics objects including pipes and score zones.
-              this.physics.world.colliders.destroy();
+              if (this.physics) {
+                this.physics.world.colliders.destroy();
+              }
 
               // Destroy all game objects in the pipes group.
               this.pipes?.clear(true, true);
@@ -1000,17 +974,6 @@ export function FlappyFrogComponent({
               this.gameStarted = false;
               this.pipeSpeed = 200;
               this.nextPipeX = 0;
-              this.hearts = HEARTS;
-
-              // Refill hearts.
-              for (let i = 1; i < HEARTS + 1; i++) {
-                const heart = this.add.image(
-                  10 + i * 35,
-                  35,
-                  i <= this.hearts ? "heartFull" : "heartEmpty",
-                );
-                heart.setDepth(99);
-              }
 
               // Re-add collision detection.
               if (this.frog && this.pipes) {
@@ -1034,18 +997,6 @@ export function FlappyFrogComponent({
               // Resume animations and physics.
               this.anims.resumeAll();
               this.physics.resume();
-            });
-            payButton.on("pointerover", () => {
-              payButton.setFillStyle(0x5d9639);
-            });
-            payButton.on("pointerout", () => {
-              payButton.setFillStyle(0x4a752c);
-            });
-
-            // Payment cancellation event.
-            cancelButton.on("pointerdown", () => {
-              // TODO: Implement payment cancellation logic.
-              return;
             });
             cancelButton.on("pointerover", () => {
               cancelButton.setFillStyle(0xde5a5a);
@@ -1073,10 +1024,6 @@ export function FlappyFrogComponent({
               "assets/fonts/numbers/numbers.png",
               "assets/fonts/numbers/numbers.xml",
             );
-
-            // Navigation bar icons.
-            this.load.image("gameIcon", "assets/navbar/navbar-game.png");
-            this.load.image("rankingIcon", "assets/navbar/navbar-ranking.png");
           }
 
           async create() {
@@ -1192,95 +1139,6 @@ export function FlappyFrogComponent({
                 .setOrigin(0, 0.5)
                 .setTint(textTint);
             }
-
-            // Navigation bar.
-            this.createNavigationBar();
-          }
-
-          createNavigationBar() {
-            const width = this.game.config.width as number;
-            const height = this.game.config.height as number;
-
-            // Navigation bar background.
-            const navBarBg = this.add.rectangle(
-              width * 0.5,
-              height - 30,
-              width,
-              60,
-              0xcaaa77,
-            );
-            navBarBg.setOrigin(0.5, 0.5);
-            navBarBg.setDepth(100);
-
-            // Game button.
-            const gameBtn = this.add.rectangle(
-              width * 0.25,
-              height - 30,
-              width * 0.5,
-              60,
-              0xcaaa77,
-            );
-            gameBtn.setOrigin(0.5, 0.5);
-            gameBtn.setStrokeStyle(2, 0x7f563b);
-            gameBtn.setInteractive({ useHandCursor: true });
-            gameBtn.setDepth(100);
-            // Game icon.
-            const gameIcon = this.add.sprite(
-              width * 0.25,
-              height - 38,
-              "gameIcon",
-            );
-            gameIcon.setTintFill(0x7f563b);
-            gameIcon.setDepth(100);
-            // Game text.
-            const gameIconText = this.add
-              .bitmapText(width * 0.25, height - 16, "letters", "GAME", 8)
-              .setOrigin(0.5)
-              .setTint(0x7f563b)
-              .setDepth(100);
-
-            // Ranking button (active.)
-            const rankingBtn = this.add.rectangle(
-              width * 0.75,
-              height - 30,
-              width * 0.5,
-              60,
-              0x7f563b,
-            );
-            rankingBtn.setOrigin(0.5, 0.5);
-            rankingBtn.setStrokeStyle(2, 0x7f563b);
-            rankingBtn.setInteractive({ useHandCursor: true });
-            rankingBtn.setDepth(100);
-            // Ranking icon.
-            const rankingIcon = this.add.sprite(
-              width * 0.75,
-              height - 38,
-              "rankingIcon",
-            );
-            rankingIcon.setTintFill(0xcaaa77);
-            rankingIcon.setDepth(100);
-            // Ranking text.
-            this.add
-              .bitmapText(width * 0.75, height - 16, "letters", "RANKING", 8)
-              .setOrigin(0.5)
-              .setTint(0xcaaa77)
-              .setDepth(100);
-
-            // Game Button event.
-            gameBtn.on("pointerdown", () => {
-              this.scene.stop("FlappyFrogScene");
-              this.scene.start("FlappyFrogScene");
-            });
-            gameBtn.on("pointerover", () => {
-              gameBtn.setFillStyle(0x7f563b);
-              gameIcon.setTintFill(0xcaaa77);
-              gameIconText.setTintFill(0xcaaa77);
-            });
-            gameBtn.on("pointerout", () => {
-              gameBtn.setFillStyle(0xcaaa77);
-              gameIcon.setTintFill(0x7f563b);
-              gameIconText.setTintFill(0x7f563b);
-            });
           }
 
           async getLeaderboardData() {
@@ -1288,10 +1146,267 @@ export function FlappyFrogComponent({
           }
         }
 
+        class UserScene extends Phaser.Scene {
+          constructor() {
+            super({ key: "UserScene" });
+          }
+
+          preload() {
+            // Load fonts.
+            this.load.bitmapFont(
+              "letters",
+              "assets/fonts/letters/letters.png",
+              "assets/fonts/letters/letters.xml",
+            );
+            this.load.bitmapFont(
+              "numbers",
+              "assets/fonts/numbers/numbers.png",
+              "assets/fonts/numbers/numbers.xml",
+            );
+          }
+
+          create() {
+            const modalWidth = this.game.config.width as number;
+            const modalHeight = (this.game.config.height as number) - 40;
+
+            const modalBg = this.add.rectangle(
+              (this.game.config.width as number) * 0.5,
+              (this.game.config.height as number) * 0.5 - 42,
+              modalWidth,
+              modalHeight,
+              0xcaaa77,
+            );
+            modalBg.setOrigin(0.5);
+            modalBg.setStrokeStyle(2, 0x7f563b);
+
+            // Format address to show only first and last 5 characters.
+            const formattedAddress = address
+              ? `${address.substring(0, 5)}...${address.substring(address.length - 5)}`
+              : "";
+
+            // User address.
+            this.add
+              .bitmapText(
+                30,
+                50,
+                "letters",
+                `Address: ${formattedAddress}`,
+                12,
+              )
+              .setOrigin(0, 0.5)
+              .setTint(0xffffff)
+              .setDepth(100);
+
+            // User balance.
+            this.add
+              .bitmapText(
+                30,
+                80,
+                "letters",
+                `Balance: ${parseFloat(formattedBalance).toFixed(4)} ETH`,
+                12,
+              )
+              .setOrigin(0, 0.5)
+              .setTint(0xffffff)
+              .setDepth(100);
+          }
+        }
+
+        type NavigationButton = {
+          btn: Phaser.GameObjects.Rectangle;
+          icon: Phaser.GameObjects.Sprite;
+          text: Phaser.GameObjects.BitmapText;
+        };
+
+        class NavigationScene extends Phaser.Scene {
+
+          private buttons: {
+            gameButton: NavigationButton;
+            rankingButton: NavigationButton;
+            userButton: NavigationButton;
+          } | null = null;
+
+          private activeTab: string = "game";
+
+          constructor() {
+            super({ key: "NavigationScene" });
+          }
+
+          preload() {
+            // Load font.
+            this.load.bitmapFont(
+              "letters",
+              "assets/fonts/letters/letters.png",
+              "assets/fonts/letters/letters.xml"
+            );
+
+            // Icons.
+            this.load.image("gameIcon", "assets/navbar/navbar-game.png");
+            this.load.image("rankingIcon", "assets/navbar/navbar-ranking.png");
+            this.load.image("userIcon", "assets/navbar/navbar-user.png");
+          }
+
+          create() {
+            const width = this.game.config.width as number;
+            const height = this.game.config.height as number;
+
+            const navBarBg = this.add.rectangle(
+              width * 0.5,
+              height - 30,
+              width,
+              60,
+              0xcaaa77
+            );
+            navBarBg.setOrigin(0.5, 0.5);
+            navBarBg.setDepth(100);
+
+            const createButton = (
+              position: number,
+              iconKey: string,
+              label: string,
+              sceneKey: string,
+              tabKey: string
+            ) => {
+              const isActive = this.activeTab === tabKey;
+
+              const btnColor = isActive ? 0x7f563b : 0xcaaa77;
+              const textColor = isActive ? 0xcaaa77 : 0x7f563b;
+
+              // Button
+              const btn = this.add.rectangle(
+                width * position,
+                height - 30,
+                width * (1 / 3),
+                60,
+                btnColor
+              );
+              btn.setOrigin(0.5, 0.5);
+              btn.setStrokeStyle(2, 0x7f563b);
+              btn.setInteractive({ useHandCursor: true });
+              btn.setDepth(100);
+
+              // Icon.
+              const icon = this.add.sprite(
+                width * position,
+                height - 38,
+                iconKey
+              );
+              icon.setTintFill(isActive ? 0xcaaa77 : 0x7f563b);
+              icon.setDepth(100);
+
+              // Text.
+              const text = this.add
+                .bitmapText(width * position, height - 16, "letters", label, 8)
+                .setOrigin(0.5)
+                .setTint(textColor)
+                .setDepth(100);
+
+              // Hover events.
+              btn.on("pointerover", () => {
+                btn.setFillStyle(0x7f563b);
+                icon.setTintFill(0xcaaa77);
+                text.setTintFill(0xcaaa77);
+              });
+
+              btn.on("pointerout", () => {
+                if (this.activeTab !== tabKey) {
+                  btn.setFillStyle(0xcaaa77);
+                  icon.setTintFill(0x7f563b);
+                  text.setTintFill(0x7f563b);
+                }
+              });
+
+              // Switch scene events.
+              btn.on("pointerdown", () => {
+                if (this.activeTab !== tabKey) {
+                  // Update active tab.
+                  this.activeTab = tabKey;
+                  // Switch to the target scene.
+                  this.switchToScene(sceneKey);
+                  // Update button states.
+                  this.updateButtonStates();
+                }
+              });
+
+              return { btn, icon, text };
+            };
+
+            // Buttons.
+            this.buttons = {
+              gameButton: createButton(1 / 6, "gameIcon", "GAME", "FlappyFrogScene", "game"),
+              rankingButton: createButton(3 / 6, "rankingIcon", "RANKING", "RankingScene", "ranking"),
+              userButton: createButton(5 / 6, "userIcon", "USER", "UserScene", "user")
+            };
+
+            // Make sure the initial scene is active (GameScene, by default.)
+            this.scene.bringToTop();
+          }
+
+          switchToScene(sceneKey: string) {
+            // Put all game scenes to sleep except the target one.
+            const gameScenes = ["FlappyFrogScene", "RankingScene", "UserScene"];
+            gameScenes.forEach(scene => {
+              if (scene !== sceneKey) {
+                if (this.scene.isActive(scene)) {
+                  this.scene.sleep(scene);
+                }
+              }
+            });
+
+            // Start or wake the target scene.
+            if (this.scene.isSleeping(sceneKey)) {
+              this.scene.wake(sceneKey);
+            } else if (!this.scene.isActive(sceneKey)) {
+              this.scene.launch(sceneKey);
+            }
+
+            // Ensure NavigationScene stays on top.
+            this.scene.bringToTop();
+          }
+
+          updateButtonStates() {
+            if (!this.buttons) return;
+
+            const { gameButton, rankingButton, userButton } = this.buttons;
+
+            // Reset all buttons.
+            [gameButton, rankingButton, userButton].forEach(button => {
+              button.btn.setFillStyle(0xcaaa77);
+              button.icon.setTintFill(0x7f563b);
+              button.text.setTintFill(0x7f563b);
+            });
+
+            // Activate the correct button.
+            switch (this.activeTab) {
+              case "game":
+                gameButton.btn.setFillStyle(0x7f563b);
+                gameButton.icon.setTintFill(0xcaaa77);
+                gameButton.text.setTintFill(0xcaaa77);
+                break;
+              case "ranking":
+                rankingButton.btn.setFillStyle(0x7f563b);
+                rankingButton.icon.setTintFill(0xcaaa77);
+                rankingButton.text.setTintFill(0xcaaa77);
+                break;
+              case "user":
+                userButton.btn.setFillStyle(0x7f563b);
+                userButton.icon.setTintFill(0xcaaa77);
+                userButton.text.setTintFill(0xcaaa77);
+                break;
+            }
+          }
+        }
+
         const config: Phaser.Types.Core.GameConfig = {
           type: Phaser.AUTO,
           parent: gameContainerRef.current,
+          width: window.innerWidth < 480 ? window.innerWidth : 480,
+          height: window.innerHeight,
           pixelArt: true,
+          scale: {
+            mode: Phaser.Scale.FIT,
+            autoCenter: Phaser.Scale.CENTER_BOTH
+          },
           physics: {
             default: "arcade",
             arcade: {
@@ -1299,11 +1414,7 @@ export function FlappyFrogComponent({
               debug: false,
             },
           },
-          scale: {
-            width: 424,
-            height: 695,
-          },
-          scene: [FlappyFrogScene, RankingScene],
+          scene: [NavigationScene, FlappyFrogScene, RankingScene, UserScene],
         };
 
         // Destroy any existing game instance.
@@ -1313,6 +1424,11 @@ export function FlappyFrogComponent({
 
         // Create new game instance.
         gameInstanceRef.current = new Phaser.Game(config);
+
+        // Start NavigationScene.
+        const game = gameInstanceRef.current;
+        game.scene.start('NavigationScene');
+        game.scene.start('FlappyFrogScene');
       }
     };
 
@@ -1324,13 +1440,14 @@ export function FlappyFrogComponent({
         gameInstanceRef.current.destroy(true);
       }
     };
-  }, [fid, displayName]);
+  }, [fid, displayName, pay, address, formattedBalance]);
 
   return (
-    <div className="w-full flex flex-col items-center relative">
+    <div className="w-full h-full flex flex-col items-center justify-center relative">
       <div
         ref={gameContainerRef}
-        className="w-full border border-gray-200 rounded-md overflow-hidden bg-gray-50"
+        className="w-full h-full overflow-hidden"
+        style={{ maxHeight: "100vh" }}
       />
     </div>
   );

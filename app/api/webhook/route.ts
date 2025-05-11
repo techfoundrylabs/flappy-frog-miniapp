@@ -1,3 +1,4 @@
+import { ONCHAINKIT_PROJECT_NAME } from "@/config/constants";
 import {
   deleteUserNotificationDetails,
   setUserNotificationDetails,
@@ -7,7 +8,7 @@ import { http } from "viem";
 import { createPublicClient } from "viem";
 import { optimism } from "viem/chains";
 
-const appName = process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME;
+const appName = ONCHAINKIT_PROJECT_NAME;
 
 const KEY_REGISTRY_ADDRESS = "0x00000000Fc1237824fb747aBDE0FF18990E59b7e";
 

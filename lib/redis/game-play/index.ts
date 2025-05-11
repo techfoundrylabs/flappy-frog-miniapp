@@ -1,7 +1,6 @@
 import { redis } from "@/lib/redis/redis";
 
-const notificationServiceKey =
-  process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME ?? "minikit";
+const notificationServiceKey = "flappy-frog";
 
 const ONE_DAY = 60 * 60 * 24;
 
@@ -57,7 +56,10 @@ export const updateLeaderboard = async (
   try {
     const leaderboardKey = `${notificationServiceKey}:leaderboard`;
 
-    const existingScore = await redis.zscore(leaderboardKey, `${fid}:${displayName}`);
+    const existingScore = await redis.zscore(
+      leaderboardKey,
+      `${fid}:${displayName}`,
+    );
     if (existingScore === null || existingScore < score) {
       // If the user doesn't exist or the score is higher than the existing one, add or update it.
       await redis.zadd(leaderboardKey, {
@@ -67,12 +69,12 @@ export const updateLeaderboard = async (
       return {
         updated: true,
         personalRecord: true,
-      }
+      };
     }
     return {
       updated: false,
       personalRecord: false,
-    }
+    };
   } catch (error) {
     console.error(error);
   }

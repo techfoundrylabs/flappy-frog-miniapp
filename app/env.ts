@@ -25,6 +25,21 @@ export const env = createEnv({
       .enum(["development", "production"])
       .optional()
       .default("development"),
+
+    NEXT_PUBLIC_ICON_URL: z.string().url().optional(),
+    NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME: z.string().default("my-miniapp"),
+    NEXT_PUBLIC_ONCHAINKIT_API_KEY: z.string(),
+    NEXT_PUBLIC_URL: z.string().url().default("http://localhost:3000"),
+    NEXT_PUBLIC_SPLASH_IMAGE_URL: z.string().url().optional(),
+    NEXT_PUBLIC_SPLASH_BACKGROUND_COLOR: z.string().default("#FFFFFF"),
+    NEXT_PUBLIC_IMAGE_URL: z.string().url().optional(),
+    NEXT_PUBLIC_VERSION: z.string().default("1.0"),
+    NEXT_PUBLIC_NETWORK: z
+      .enum(["mainnet", "testnet"])
+      .optional()
+      .default("testnet"),
+    NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID: z.string(),
+    NEXT_PUBLIC_TREASURY_CONTRACT_ADDRESS: z.string().startsWith("0x"),
   },
   /*
    * Due to how Next.js bundles environment variables on Edge and Client,
@@ -34,6 +49,21 @@ export const env = createEnv({
    */
   runtimeEnv: {
     NEXT_PUBLIC_APP_ENV: process.env.NEXT_PUBLIC_APP_ENV,
+    NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME:
+      process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME,
+    NEXT_PUBLIC_ONCHAINKIT_API_KEY: process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY,
+    NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
+    NEXT_PUBLIC_SPLASH_IMAGE_URL: process.env.NEXT_PUBLIC_SPLASH_IMAGE_URL,
+    NEXT_PUBLIC_SPLASH_BACKGROUND_COLOR:
+      process.env.NEXT_PUBLIC_SPLASH_BACKGROUND_COLOR,
+    NEXT_PUBLIC_IMAGE_URL: process.env.NEXT_PUBLIC_IMAGE_URL,
+    NEXT_PUBLIC_ICON_URL: process.env.NEXT_PUBLIC_ICON_URL,
+    NEXT_PUBLIC_VERSION: process.env.NEXT_PUBLIC_VERSION,
+    NEXT_PUBLIC_NETWORK: process.env.NEXT_PUBLIC_NETWORK,
+    NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID:
+      process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
+    NEXT_PUBLIC_TREASURY_CONTRACT_ADDRESS:
+      process.env.NEXT_PUBLIC_TREASURY_CONTRACT_ADDRESS,
 
     FARCASTER_HEADER: process.env.FARCASTER_HEADER,
     FARCASTER_PAYLOAD: process.env.FARCASTER_PAYLOAD,
