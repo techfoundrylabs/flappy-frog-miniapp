@@ -63,12 +63,10 @@ export default function RootLayout({
       >
         <Providers>
           <div
-            className={`w-full h-full flex flex-col justify-center items-center bg-cover bg-center bg-no-repeat overflow-hidden`}
+            className={`w-full min-h-screen flex flex-col justify-center items-center bg-cover bg-center bg-no-repeat overflow-hidden`}
             style={{ backgroundImage: `url(${background.src})` }}
           >
-            <div className="w-full h-full max-w-md mx-auto">
-              {children}
-            </div>
+            {children}
           </div>
         </Providers>
       </body>

@@ -104,7 +104,7 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
                 frameWidth: 6,
                 frameHeight: 6,
               },
-            )
+            );
             this.load.image("heartFull", "assets/hearts/heart-full.png");
             this.load.image("heartEmpty", "assets/hearts/heart-empty.png");
             this.load.image("tubeTop", "assets/tubes/tube-top.png");
@@ -189,8 +189,8 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
             // Hearts.
             for (let i = 1; i < HEARTS + 1; i++) {
               const heart = this.add.image(
-                10 + i * 35,
-                35,
+                10 + i * 30,
+                30,
                 i <= this.hearts ? "heartFull" : "heartEmpty",
               );
               heart.setDepth(99);
@@ -273,8 +273,8 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
                 (this.game.config.width as number) * 0.5,
                 (this.game.config.height as number) * 0.5 - 140,
                 "letters",
-                "FLAPPY FROG",
-                24,
+                "FLAPPY BASE FROG",
+                18,
               )
               .setOrigin(0.5)
               .setTint(0xffffff);
@@ -286,7 +286,7 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
                 (this.game.config.height as number) * 0.5 - 35,
                 "letters",
                 "TAP TO PLAY",
-                16,
+                14,
               )
               .setOrigin(0.5)
               .setTint(0xffffff);
@@ -309,7 +309,7 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
                 (this.game.config.height as number) * 0.5 + 30,
                 "letters",
                 "START",
-                16,
+                14,
               )
               .setOrigin(0.5)
               .setTint(0xffffff);
@@ -552,8 +552,8 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
             await decreaseHearts(fid, this.hearts);
             for (let i = 1; i < HEARTS + 1; i++) {
               const heart = this.add.image(
-                10 + i * 35,
-                35,
+                10 + i * 30,
+                30,
                 i <= this.hearts ? "heartFull" : "heartEmpty",
               );
               heart.setDepth(99);
@@ -636,7 +636,7 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
                 (this.game.config.height as number) * 0.5 - 35,
                 "letters",
                 `SCORE: ${this.score}`,
-                16,
+                14,
               )
               .setOrigin(0.5)
               .setTint(0xffffff);
@@ -814,7 +814,7 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
                 (this.game.config.height as number) * 0.5 - 75,
                 "letters",
                 "OUT OF HEARTS",
-                16,
+                14,
               )
               .setOrigin(0.5)
               .setTint(0xffffff)
@@ -885,13 +885,10 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
 
               this.anims.create({
                 key: "loading",
-                frames: this.anims.generateFrameNumbers(
-                  "loadingSpriteSheet",
-                  {
-                    start: 0,
-                    end: 7,
-                  },
-                ),
+                frames: this.anims.generateFrameNumbers("loadingSpriteSheet", {
+                  start: 0,
+                  end: 7,
+                }),
                 frameRate: 4,
                 repeat: -1,
               });
@@ -911,7 +908,6 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
               if (paymentResult) {
                 await resetGame(fid);
               }
-
             });
             payButton.on("pointerover", () => {
               payButton.setFillStyle(0x5d9639);
@@ -1185,13 +1181,7 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
 
             // User address.
             this.add
-              .bitmapText(
-                30,
-                50,
-                "letters",
-                `Address: ${formattedAddress}`,
-                12,
-              )
+              .bitmapText(30, 50, "letters", `Address: ${formattedAddress}`, 12)
               .setOrigin(0, 0.5)
               .setTint(0xffffff)
               .setDepth(100);
@@ -1218,7 +1208,6 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
         };
 
         class NavigationScene extends Phaser.Scene {
-
           private buttons: {
             gameButton: NavigationButton;
             rankingButton: NavigationButton;
@@ -1236,7 +1225,7 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
             this.load.bitmapFont(
               "letters",
               "assets/fonts/letters/letters.png",
-              "assets/fonts/letters/letters.xml"
+              "assets/fonts/letters/letters.xml",
             );
 
             // Icons.
@@ -1254,7 +1243,7 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
               height - 30,
               width,
               60,
-              0xcaaa77
+              0xcaaa77,
             );
             navBarBg.setOrigin(0.5, 0.5);
             navBarBg.setDepth(100);
@@ -1264,7 +1253,7 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
               iconKey: string,
               label: string,
               sceneKey: string,
-              tabKey: string
+              tabKey: string,
             ) => {
               const isActive = this.activeTab === tabKey;
 
@@ -1277,7 +1266,7 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
                 height - 30,
                 width * (1 / 3),
                 60,
-                btnColor
+                btnColor,
               );
               btn.setOrigin(0.5, 0.5);
               btn.setStrokeStyle(2, 0x7f563b);
@@ -1288,7 +1277,7 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
               const icon = this.add.sprite(
                 width * position,
                 height - 38,
-                iconKey
+                iconKey,
               );
               icon.setTintFill(isActive ? 0xcaaa77 : 0x7f563b);
               icon.setDepth(100);
@@ -1302,9 +1291,11 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
 
               // Hover events.
               btn.on("pointerover", () => {
-                btn.setFillStyle(0x7f563b);
-                icon.setTintFill(0xcaaa77);
-                text.setTintFill(0xcaaa77);
+                if (this.activeTab !== tabKey) {
+                  btn.setFillStyle(0xb27752);
+                  icon.setTintFill(0xcaaa77);
+                  text.setTintFill(0xcaaa77);
+                }
               });
 
               btn.on("pointerout", () => {
@@ -1332,9 +1323,27 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
 
             // Buttons.
             this.buttons = {
-              gameButton: createButton(1 / 6, "gameIcon", "GAME", "FlappyFrogScene", "game"),
-              rankingButton: createButton(3 / 6, "rankingIcon", "RANKING", "RankingScene", "ranking"),
-              userButton: createButton(5 / 6, "userIcon", "USER", "UserScene", "user")
+              gameButton: createButton(
+                1 / 6,
+                "gameIcon",
+                "GAME",
+                "FlappyFrogScene",
+                "game",
+              ),
+              rankingButton: createButton(
+                3 / 6,
+                "rankingIcon",
+                "RANKING",
+                "RankingScene",
+                "ranking",
+              ),
+              userButton: createButton(
+                5 / 6,
+                "userIcon",
+                "USER",
+                "UserScene",
+                "user",
+              ),
             };
 
             // Make sure the initial scene is active (GameScene, by default.)
@@ -1344,7 +1353,7 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
           switchToScene(sceneKey: string) {
             // Put all game scenes to sleep except the target one.
             const gameScenes = ["FlappyFrogScene", "RankingScene", "UserScene"];
-            gameScenes.forEach(scene => {
+            gameScenes.forEach((scene) => {
               if (scene !== sceneKey) {
                 if (this.scene.isActive(scene)) {
                   this.scene.sleep(scene);
@@ -1369,7 +1378,7 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
             const { gameButton, rankingButton, userButton } = this.buttons;
 
             // Reset all buttons.
-            [gameButton, rankingButton, userButton].forEach(button => {
+            [gameButton, rankingButton, userButton].forEach((button) => {
               button.btn.setFillStyle(0xcaaa77);
               button.icon.setTintFill(0x7f563b);
               button.text.setTintFill(0x7f563b);
@@ -1404,7 +1413,7 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
           pixelArt: true,
           scale: {
             mode: Phaser.Scale.FIT,
-            autoCenter: Phaser.Scale.CENTER_BOTH
+            autoCenter: Phaser.Scale.CENTER_BOTH,
           },
           physics: {
             default: "arcade",
@@ -1426,8 +1435,8 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
 
         // Start NavigationScene.
         const game = gameInstanceRef.current;
-        game.scene.start('NavigationScene');
-        game.scene.start('FlappyFrogScene');
+        game.scene.start("NavigationScene");
+        game.scene.start("FlappyFrogScene");
       }
     };
 
