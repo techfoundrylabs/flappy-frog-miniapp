@@ -189,8 +189,8 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
             // Hearts.
             for (let i = 1; i < HEARTS + 1; i++) {
               const heart = this.add.image(
-                10 + i * 35,
-                35,
+                10 + i * 30,
+                30,
                 i <= this.hearts ? "heartFull" : "heartEmpty",
               );
               heart.setDepth(99);
@@ -273,8 +273,8 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
                 (this.game.config.width as number) * 0.5,
                 (this.game.config.height as number) * 0.5 - 140,
                 "letters",
-                "FLAPPY FROG",
-                24,
+                "FLAPPY BASE FROG",
+                18,
               )
               .setOrigin(0.5)
               .setTint(0xffffff);
@@ -286,7 +286,7 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
                 (this.game.config.height as number) * 0.5 - 35,
                 "letters",
                 "TAP TO PLAY",
-                16,
+                14,
               )
               .setOrigin(0.5)
               .setTint(0xffffff);
@@ -309,7 +309,7 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
                 (this.game.config.height as number) * 0.5 + 30,
                 "letters",
                 "START",
-                16,
+                14,
               )
               .setOrigin(0.5)
               .setTint(0xffffff);
@@ -552,8 +552,8 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
             await decreaseHearts(fid, this.hearts);
             for (let i = 1; i < HEARTS + 1; i++) {
               const heart = this.add.image(
-                10 + i * 35,
-                35,
+                10 + i * 30,
+                30,
                 i <= this.hearts ? "heartFull" : "heartEmpty",
               );
               heart.setDepth(99);
@@ -636,7 +636,7 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
                 (this.game.config.height as number) * 0.5 - 35,
                 "letters",
                 `SCORE: ${this.score}`,
-                16,
+                14,
               )
               .setOrigin(0.5)
               .setTint(0xffffff);
@@ -814,7 +814,7 @@ export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
                 (this.game.config.height as number) * 0.5 - 75,
                 "letters",
                 "OUT OF HEARTS",
-                16,
+                14,
               )
               .setOrigin(0.5)
               .setTint(0xffffff)

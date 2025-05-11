@@ -10,7 +10,7 @@ const Game = dynamic(
   () => import("@/components/game").then((mod) => mod.Game),
   {
     ssr: false,
-    loading: () => <Loading  />,
+    loading: () => <Loading />,
   },
 );
 
@@ -25,11 +25,5 @@ export default function App() {
 
   if (!isFrameReady) return <Loading />;
 
-  return !!context ? (
-    <div className="w-full h-full max-w-md mx-auto">
-      <Game />
-    </div>
-  ) : (
-    <Welcome />
-  );
+  return !!context ? <Game /> : <Welcome />;
 }
