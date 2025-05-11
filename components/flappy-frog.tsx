@@ -10,8 +10,7 @@ import {
 import { useMiniappWallet } from "@/hooks/use-miniapp-wallet";
 import { EventBus } from "@/lib/event-bus";
 
-import { useEffect, useLayoutEffect, useRef } from "react";
-import { reset } from "viem/actions";
+import { useLayoutEffect, useRef } from "react";
 
 const HEARTS = Number(process.env.NEXT_PUBLIC_MAX_HEARTS) ?? 3;
 
