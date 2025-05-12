@@ -39,6 +39,8 @@ export const env = createEnv({
       .optional()
       .default("testnet"),
     NEXT_PUBLIC_TREASURY_CONTRACT_ADDRESS: z.string().startsWith("0x"),
+    NEXT_PUBLIC_GAME_PRICE_USD: z.coerce.number().default(1),
+    NEXT_PUBLIC_MAX_HEARTS: z.coerce.number().default(5),
   },
   /*
    * Due to how Next.js bundles environment variables on Edge and Client,
@@ -61,6 +63,8 @@ export const env = createEnv({
     NEXT_PUBLIC_NETWORK: process.env.NEXT_PUBLIC_NETWORK,
     NEXT_PUBLIC_TREASURY_CONTRACT_ADDRESS:
       process.env.NEXT_PUBLIC_TREASURY_CONTRACT_ADDRESS,
+    NEXT_PUBLIC_GAME_PRICE_USD: process.env.NEXT_PUBLIC_GAME_PRICE_USD,
+    NEXT_PUBLIC_MAX_HEARTS: process.env.NEXT_PUBLIC_MAX_HEARTS,
 
     FARCASTER_HEADER: process.env.FARCASTER_HEADER,
     FARCASTER_PAYLOAD: process.env.FARCASTER_PAYLOAD,

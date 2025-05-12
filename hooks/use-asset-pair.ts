@@ -1,3 +1,4 @@
+import { GAME_PRICE_USD } from "@/config/constants";
 import { useQuery } from "@tanstack/react-query";
 
 interface CoinbaseAsssetPair {
@@ -34,7 +35,7 @@ export const useEthUsdPair = () => {
 
   const getUsdPrice = () => {
     if (!price) throw new Error("No price retrieve");
-    return 1 / Number(price);
+    return GAME_PRICE_USD / Number(price);
   };
 
   return { getUsdPrice };

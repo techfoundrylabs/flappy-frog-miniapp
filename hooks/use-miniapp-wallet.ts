@@ -10,6 +10,7 @@ import {
   useBalance,
   useChainId,
   useConnect,
+  usePublicClient,
   useSendTransaction,
   useSwitchChain,
   useWaitForTransactionReceipt,
@@ -25,6 +26,7 @@ export const useMiniappWallet = () => {
   const { connectAsync, connectors } = useConnect();
   const { address, isConnected, isConnecting } = useAccount();
   const chainId = useChainId();
+  const publicClient = usePublicClient();
   const { switchChainAsync } = useSwitchChain();
   const { data: balance, refetch } = useBalance({ address, chainId: CHAIN.id });
 
@@ -96,11 +98,12 @@ export const useMiniappWallet = () => {
   const pay = async () => {
     try {
       const amount = getUsdPrice();
-      return await sendTransactionAsync({
+      const trxHash = await sendTransactionAsync({
         to: TREASURY_CONTRACT_ADDRESS as `0x${string}`,
         value: parseEther(amount.toString()),
         chainId,
       });
+      return await publicClient?.waitForTransactionReceipt({ hash: trxHash });
     } catch (error) {
       console.error(error);
     }

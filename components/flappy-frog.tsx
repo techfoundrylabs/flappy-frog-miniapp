@@ -7,23 +7,31 @@ import {
   setScoreInLeaderboard,
   getTopPlayers,
 } from "@/actions";
-import { useMiniappWallet } from "@/hooks/use-miniapp-wallet";
+import { MAX_HEARTS } from "@/config/constants";
 import { EventBus } from "@/lib/event-bus";
 
 import { useLayoutEffect, useRef } from "react";
+import { TransactionReceipt } from "viem";
 
-const HEARTS = Number(process.env.NEXT_PUBLIC_MAX_HEARTS) ?? 3;
+const HEARTS = MAX_HEARTS ?? 3;
 
 interface FlappyFrogProps {
   fid: number;
   displayName: string;
+  address: `0x${string}`;
+  formattedBalance: string;
+  pay: () => Promise<TransactionReceipt | undefined>;
 }
 
-export function FlappyFrog({ fid, displayName }: FlappyFrogProps) {
+export function FlappyFrog({
+  fid,
+  displayName,
+  address,
+  formattedBalance,
+  pay,
+}: FlappyFrogProps) {
   const gameContainerRef = useRef<HTMLDivElement>(null);
   const gameInstanceRef = useRef<Phaser.Game | null>(null);
-
-  const { pay, address, formattedBalance } = useMiniappWallet();
 
   useLayoutEffect(() => {
     const initPhaser = async () => {
