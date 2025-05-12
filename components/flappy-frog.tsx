@@ -20,6 +20,7 @@ interface FlappyFrogProps {
   displayName: string;
   address: `0x${string}`;
   formattedBalance: string;
+  treasuryValue: string;
   pay: () => Promise<TransactionReceipt | undefined>;
 }
 
@@ -28,6 +29,7 @@ export function FlappyFrog({
   displayName,
   address,
   formattedBalance,
+  //treasuryValue,
   pay,
 }: FlappyFrogProps) {
   const gameContainerRef = useRef<HTMLDivElement>(null);
@@ -1456,7 +1458,8 @@ export function FlappyFrog({
         gameInstanceRef.current.destroy(true);
       }
     };
-  }, [fid, displayName, pay, address, formattedBalance]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center relative">
