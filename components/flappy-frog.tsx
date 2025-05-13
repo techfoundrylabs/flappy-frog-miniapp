@@ -196,8 +196,7 @@ export function FlappyFrog({
             );
 
             // Fetch available hearts.
-            // this.hearts = (await this.fetchAvailableHearts()) ?? HEARTS;
-            this.hearts = HEARTS;
+            this.hearts = (await this.fetchAvailableHearts()) ?? HEARTS;
             // Hearts.
             for (let i = 1; i < HEARTS + 1; i++) {
               const heart = this.add.image(
