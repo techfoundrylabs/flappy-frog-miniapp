@@ -93,10 +93,10 @@ export function FlappyFrog({
             // Load images and spritesheets.
             this.load.spritesheet(
               "frogSpriteSheet",
-              "assets/player/frog-flap-tilemap.png",
+              "assets/player/frog-hat-flap-tilemap.png",
               {
-                frameWidth: 84,
-                frameHeight: 60,
+                frameWidth: 88,
+                frameHeight: 68,
               },
             );
             this.load.spritesheet(
@@ -115,6 +115,7 @@ export function FlappyFrog({
                 frameHeight: 6,
               },
             );
+            this.load.image("title", "assets/misc/title.png");
             this.load.image("heartFull", "assets/hearts/heart-full.png");
             this.load.image("heartEmpty", "assets/hearts/heart-empty.png");
             this.load.image("tubeTop", "assets/tubes/tube-top.png");
@@ -195,12 +196,13 @@ export function FlappyFrog({
             );
 
             // Fetch available hearts.
-            this.hearts = (await this.fetchAvailableHearts()) ?? HEARTS;
+            // this.hearts = (await this.fetchAvailableHearts()) ?? HEARTS;
+            this.hearts = HEARTS;
             // Hearts.
             for (let i = 1; i < HEARTS + 1; i++) {
               const heart = this.add.image(
-                10 + i * 30,
-                30,
+                i * 30,
+                35,
                 i <= this.hearts ? "heartFull" : "heartEmpty",
               );
               heart.setDepth(99);
@@ -279,15 +281,12 @@ export function FlappyFrog({
 
             // Game title.
             const titleText = this.add
-              .bitmapText(
+              .sprite(
                 (this.game.config.width as number) * 0.5,
-                (this.game.config.height as number) * 0.5 - 140,
-                "letters",
-                "FLAPPY BASE FROG",
-                18,
+                (this.game.config.height as number) * 0.5 - 160,
+                "title",
               )
-              .setOrigin(0.5)
-              .setTint(0xffffff);
+              .setOrigin(0.5);
 
             // "Tap to play" instruction text.
             const tapText = this.add
@@ -562,8 +561,8 @@ export function FlappyFrog({
             await decreaseHearts(fid, this.hearts);
             for (let i = 1; i < HEARTS + 1; i++) {
               const heart = this.add.image(
-                10 + i * 30,
-                30,
+                i * 30,
+                35,
                 i <= this.hearts ? "heartFull" : "heartEmpty",
               );
               heart.setDepth(99);
@@ -1458,7 +1457,7 @@ export function FlappyFrog({
         gameInstanceRef.current.destroy(true);
       }
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

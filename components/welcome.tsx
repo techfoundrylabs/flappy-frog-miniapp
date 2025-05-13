@@ -20,7 +20,7 @@ export const Welcome = () => {
           <Image
             src={FlappyFrogPoster}
             alt="Flappy Frog"
-            className="h-[600px] w-[500px] shadow-lg shadow-violet-500 rounded-2xl"
+            className="h-[839px] w-[512px] shadow-lg shadow-violet-500 rounded-2xl"
             priority={true}
             onLoad={() => setIsImgLoaded(true)}
           />
@@ -32,17 +32,15 @@ export const Welcome = () => {
               Welcome to
             </h1>
             <h1 className="text-lg md:text-5xl text-center font-semibold">
-              Flappy Base Frog
+              Flappy Frog
             </h1>
           </div>
           <p className="text-sm md:text-[16px] font-light px-6 md:px-24  md:text-center">
-            Experience the classic thrill of Flappy Bird reimagined on the Base
-            chain. Guide our feathered hero through a gauntlet of pipes,
+            Guide our "froggy" hero through a gauntlet of pipes,
             collecting points as you soar through the obstacles. Climb your way
             to the top of the leaderboard, challenge your friends, and prove
             your skill. The ultimate champion at the top of the leaderboard will
-            claim the Treasury Pool, earning glory and rewards in Ethereum (ETH)
-            on the Base chain
+            claim the Treasury Pool, earning glory and rewards.
           </p>
           <Link
             href={WARPCASTER_URL}
