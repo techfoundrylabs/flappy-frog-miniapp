@@ -7,7 +7,7 @@ import {
 } from "wagmi";
 import { abi as TREASURY_POOL_ABI } from "@/lib/chain/abi/treasury-pool-abi";
 import { Abi, formatEther, parseEther } from "viem";
-import { useEthUsdPair } from "@/hooks/use-asset-pair";
+import { getEthUsdPrice } from "@/lib/base";
 
 interface ContractCommonParams {
   address: `0x${string}`;
@@ -20,14 +20,13 @@ const commonContractParams: ContractCommonParams = {
 
 export const useDepositIntoTreasury = () => {
   const publicClient = usePublicClient();
-  const { getUsdPrice } = useEthUsdPair();
   const chainId = useChainId();
 
   const { writeContractAsync } = useWriteContract();
 
   const handlePayGame = async () => {
     try {
-      const amount = getUsdPrice();
+      const amount = (await getEthUsdPrice()) ?? 0;
       const trxHash = await writeContractAsync({
         ...commonContractParams,
         chainId,

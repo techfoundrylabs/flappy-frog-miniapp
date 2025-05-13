@@ -1,6 +1,6 @@
 import { refillHearts } from "@/actions";
 import { IS_MAINNET, TREASURY_CONTRACT_ADDRESS } from "@/config/constants";
-import { useEthUsdPair } from "@/hooks/use-asset-pair";
+import { getEthUsdPrice } from "@/lib/base";
 import { useAddFrame, useMiniKit } from "@coinbase/onchainkit/minikit";
 import { useCallback, useEffect } from "react";
 import { base, baseSepolia } from "viem/chains";
@@ -30,7 +30,6 @@ export const useMiniappWallet = () => {
   const { switchChainAsync } = useSwitchChain();
   const { data: balance, refetch } = useBalance({ address, chainId: CHAIN.id });
 
-  const { getUsdPrice } = useEthUsdPair();
   const { data: hash, sendTransactionAsync } = useSendTransaction();
   const {
     data: trxResult,
@@ -97,7 +96,7 @@ export const useMiniappWallet = () => {
 
   const pay = async () => {
     try {
-      const amount = getUsdPrice();
+      const amount = (await getEthUsdPrice()) ?? 0;
       const trxHash = await sendTransactionAsync({
         to: TREASURY_CONTRACT_ADDRESS as `0x${string}`,
         value: parseEther(amount.toString()),

@@ -13,7 +13,7 @@ interface CoinbaseAsssetPairResponse {
 
 const API_BASE_URL = "https://api.coinbase.com";
 
-const getEthUsdPair = async () => {
+export const getEthUsdPrice = async () => {
   try {
     const endpoint = `${API_BASE_URL}/v2/prices/ETH-USD/spot`;
     const response = await fetch(endpoint);
@@ -21,22 +21,9 @@ const getEthUsdPair = async () => {
       throw new Error("Error to fetch data price from coinbase");
     const { data: assetPair } =
       (await response.json()) as CoinbaseAsssetPairResponse;
-    return assetPair.amount;
+    const price = assetPair.amount;
+    return GAME_PRICE_USD / Number(price);
   } catch (error) {
     console.error(error);
   }
-};
-
-export const useEthUsdPair = () => {
-  const { data: price } = useQuery({
-    queryKey: ["eth-usd-asset-price"],
-    queryFn: getEthUsdPair,
-  });
-
-  const getUsdPrice = () => {
-    if (!price) throw new Error("No price retrieve");
-    return GAME_PRICE_USD / Number(price);
-  };
-
-  return { getUsdPrice };
 };
