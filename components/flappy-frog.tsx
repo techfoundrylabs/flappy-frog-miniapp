@@ -196,8 +196,7 @@ export function FlappyFrog({
             );
 
             // Fetch available hearts.
-            // this.hearts = (await this.fetchAvailableHearts()) ?? HEARTS;
-            this.hearts = HEARTS;
+            this.hearts = (await this.fetchAvailableHearts()) ?? HEARTS;
             // Hearts.
             for (let i = 1; i < HEARTS + 1; i++) {
               const heart = this.add.image(
@@ -890,7 +889,7 @@ export function FlappyFrog({
 
             // Payment event.
             payButton.on("pointerdown", async () => {
-              payButtonText.destroy();
+              payButtonText.setVisible(false);
 
               this.anims.create({
                 key: "loading",
@@ -915,7 +914,11 @@ export function FlappyFrog({
               // Payment process.
               const paymentResult = await pay();
               if (paymentResult) {
+                loadingIcon.destroy();
                 await resetGame(fid);
+              } else {
+                loadingIcon.destroy();
+                payButtonText.setVisible(true);
               }
             });
             payButton.on("pointerover", () => {
