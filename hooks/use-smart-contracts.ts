@@ -7,7 +7,7 @@ import {
 } from "wagmi";
 import { abi as TREASURY_POOL_ABI } from "@/lib/chain/abi/treasury-pool-abi";
 import { Abi, formatEther, parseEther } from "viem";
-import { getEthUsdPrice } from "@/lib/base";
+import { useBasePairPrice } from "@/hooks/use-base-pair-price";
 
 interface ContractCommonParams {
   address: `0x${string}`;
@@ -21,12 +21,14 @@ const commonContractParams: ContractCommonParams = {
 export const useDepositIntoTreasury = () => {
   const publicClient = usePublicClient();
   const chainId = useChainId();
+  const { getUsdPrice } = useBasePairPrice();
 
   const { writeContractAsync } = useWriteContract();
 
   const handlePayGame = async () => {
     try {
-      const amount = (await getEthUsdPrice()) ?? 0;
+      const amount = (await getUsdPrice()) ?? 0;
+
       const trxHash = await writeContractAsync({
         ...commonContractParams,
         chainId,
@@ -54,6 +56,7 @@ export const useGetTreasury = () => {
     isError,
     isSuccess,
     isLoading,
+    refetch: refreshTreasury,
   } = useReadContract({
     ...commonContractParams,
     functionName: "getTreasuryBalance",
@@ -62,5 +65,11 @@ export const useGetTreasury = () => {
   const treasuryAmount = treasury ? (treasury as bigint) : BigInt("0");
   const treasuryAmountFormatted = formatEther(treasuryAmount);
 
-  return { treasuryAmountFormatted, isError, isLoading, isSuccess };
+  return {
+    treasuryAmountFormatted,
+    refreshTreasury,
+    isError,
+    isLoading,
+    isSuccess,
+  };
 };

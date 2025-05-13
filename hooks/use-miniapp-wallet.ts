@@ -30,19 +30,6 @@ export const useMiniappWallet = () => {
   const { switchChainAsync } = useSwitchChain();
   const { data: balance, refetch } = useBalance({ address, chainId: CHAIN.id });
 
-  const { data: hash, sendTransactionAsync } = useSendTransaction();
-  const {
-    data: trxResult,
-    error: trxError,
-    status: statusTrx,
-    isSuccess: isSuccessTrx,
-    isLoading: isLoadingTrx,
-    isError: isErrorTrx,
-  } = useWaitForTransactionReceipt({
-    hash,
-    chainId,
-  });
-
   const farcasterConnector = connectors[0];
 
   const formattedBalance = formatEther(balance?.value ?? BigInt(0));
@@ -89,12 +76,11 @@ export const useMiniappWallet = () => {
     handleWallectConnect,
     isConnected,
     isConnecting,
-    isSuccessTrx,
     refillHeart,
     switchChainAsync,
   ]);
 
-  const pay = async () => {
+  /*   const pay = async () => {
     try {
       const amount = (await getEthUsdPrice()) ?? 0;
       const trxHash = await sendTransactionAsync({
@@ -106,20 +92,13 @@ export const useMiniappWallet = () => {
     } catch (error) {
       console.error(error);
     }
-  };
+  }; */
 
   return {
     address,
     isConnected,
     formattedBalance,
     context,
-    pay,
-    trxError,
-    trxResult,
-    statusTrx,
-    isLoadingTrx,
-    isSuccessTrx,
-    isErrorTrx,
     refetch,
   };
 };
