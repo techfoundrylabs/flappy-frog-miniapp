@@ -196,7 +196,8 @@ export function FlappyFrog({
             );
 
             // Fetch available hearts.
-            this.hearts = (await this.fetchAvailableHearts()) ?? HEARTS;
+            // this.hearts = (await this.fetchAvailableHearts()) ?? HEARTS;
+            this.hearts = HEARTS;
             // Hearts.
             for (let i = 1; i < HEARTS + 1; i++) {
               const heart = this.add.image(
@@ -914,8 +915,90 @@ export function FlappyFrog({
               // Payment process.
               const paymentResult = await pay();
               if (paymentResult) {
-                loadingIcon.destroy();
                 await resetGame(fid);
+                this.hearts = HEARTS;
+
+                // Reset game state.
+                this.gameOver = false;
+                this.gameStarted = false;
+                this.score = 0;
+                this.pipeSpeed = 200;
+                this.nextPipeX = 0;
+
+                // Cleanup UI elements.
+                modalBg.destroy();
+                messageText.destroy();
+                explanationText.destroy();
+                payButton.destroy();
+                payButtonText.destroy();
+                cancelButton.destroy();
+                cancelButtonText.destroy();
+                loadingIcon.destroy();
+
+                // Reset physics and game objects.
+                this.physics.world.colliders.destroy();
+                this.pipes?.clear(true, true);
+
+                // Find and destroy any remaining score zones.
+                this.children.each((child: Phaser.GameObjects.GameObject) => {
+                  if (child instanceof Phaser.Physics.Arcade.Sprite) {
+                    const sprite = child as Phaser.Physics.Arcade.Sprite;
+                    if (
+                      sprite.texture &&
+                      sprite !== this.frog &&
+                      sprite.texture.key === "tubeTop" &&
+                      sprite.alpha === 0
+                    ) {
+                      child.destroy();
+                    }
+                  }
+                });
+
+                // Reset frog position and physics.
+                if (this.frog) {
+                  this.frog.setPosition(
+                    100,
+                    (this.game.config.height as number) * 0.5,
+                  );
+                  this.frog.setVelocity(0, 0);
+                  this.frog.setGravityY(0);
+                  this.frog.setAngle(0);
+                  this.frog.clearTint();
+                }
+
+                // Reset score display.
+                if (this.scoreText) {
+                  this.scoreText.setText("0");
+                  this.scoreText.setVisible(false);
+                }
+
+                // Update hearts display.
+                for (let i = 1; i < HEARTS + 1; i++) {
+                  const heart = this.add.image(
+                    i * 30,
+                    35,
+                    i <= this.hearts ? "heartFull" : "heartEmpty",
+                  );
+                  heart.setDepth(99);
+                }
+
+                // Re-add collision detection.
+                if (this.frog && this.pipes) {
+                  this.physics.add.collider(
+                    this.frog,
+                    this.pipes,
+                    this.gameOverHandler,
+                    undefined,
+                    this,
+                  );
+                }
+
+                // Create start overlay to begin a new game.
+                this.createStartOverlay();
+
+                // Resume animations and physics.
+                this.anims.resumeAll();
+                this.physics.resume();
               } else {
                 loadingIcon.destroy();
                 payButtonText.setVisible(true);
