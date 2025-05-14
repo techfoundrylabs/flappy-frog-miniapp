@@ -9,7 +9,6 @@ import {
   useBalance,
   useChainId,
   useConnect,
-  usePublicClient,
   useSwitchChain,
 } from "wagmi";
 
@@ -18,12 +17,13 @@ const CHAIN = IS_MAINNET ? base : baseSepolia;
 export const useMiniappWallet = () => {
   const { context } = useMiniKit();
 
+  const chainName = CHAIN.name;
+
   const addFrame = useAddFrame();
 
   const { connectAsync, connectors } = useConnect();
   const { address, isConnected, isConnecting } = useAccount();
   const chainId = useChainId();
-  const publicClient = usePublicClient();
   const { switchChainAsync } = useSwitchChain();
   const { data: balance, refetch: refetchBalance } = useBalance({
     address,
@@ -83,21 +83,8 @@ export const useMiniappWallet = () => {
     switchChainAsync,
   ]);
 
-  /*   const pay = async () => {
-    try {
-      const amount = (await getEthUsdPrice()) ?? 0;
-      const trxHash = await sendTransactionAsync({
-        to: TREASURY_CONTRACT_ADDRESS as `0x${string}`,
-        value: parseEther(amount.toString()),
-        chainId,
-      });
-      return await publicClient?.waitForTransactionReceipt({ hash: trxHash });
-    } catch (error) {
-      console.error(error);
-    }
-  }; */
-
   return {
+    chainName,
     address,
     isConnected,
     context,

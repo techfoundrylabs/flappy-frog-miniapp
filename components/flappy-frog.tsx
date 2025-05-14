@@ -19,6 +19,7 @@ interface FlappyFrogProps {
   fid: number;
   displayName: string;
   address: `0x${string}`;
+  chainName: string;
   getWalletBalance: () => Promise<string>;
   pay: () => Promise<TransactionReceipt | undefined>;
   getTreasuryValue: () => Promise<string>;
@@ -28,6 +29,7 @@ export function FlappyFrog({
   fid,
   displayName,
   address,
+  //chainName,
   getWalletBalance,
   //getTreasuryValue,
   pay,
