@@ -915,7 +915,7 @@ export function FlappyFrog({
 
               // Payment process.
               const paymentResult = await pay();
-              if (paymentResult) {
+              if (paymentResult && paymentResult.status === "success") {
                 await resetGame(fid);
                 this.hearts = HEARTS;
 
