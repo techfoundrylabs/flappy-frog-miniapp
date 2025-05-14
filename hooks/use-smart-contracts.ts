@@ -51,25 +51,20 @@ export const useDepositIntoTreasury = () => {
 
 export const useGetTreasury = () => {
   const chainId = useChainId();
-  const {
-    data: treasury,
-    isError,
-    isSuccess,
-    isLoading,
-    refetch: refreshTreasury,
-  } = useReadContract({
+  const { data: treasury, refetch } = useReadContract({
     ...commonContractParams,
     functionName: "getTreasuryBalance",
     chainId,
   });
-  const treasuryAmount = treasury ? (treasury as bigint) : BigInt("0");
-  const treasuryAmountFormatted = formatEther(treasuryAmount);
+
+  const getTreasuryValue = async () => {
+    await refetch();
+    const treasuryAmount = treasury ? (treasury as bigint) : BigInt("0");
+    const treasuryAmountFormatted = formatEther(treasuryAmount);
+    return treasuryAmountFormatted;
+  };
 
   return {
-    treasuryAmountFormatted,
-    refreshTreasury,
-    isError,
-    isLoading,
-    isSuccess,
+    getTreasuryValue,
   };
 };

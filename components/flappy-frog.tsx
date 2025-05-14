@@ -20,8 +20,8 @@ interface FlappyFrogProps {
   displayName: string;
   address: `0x${string}`;
   formattedBalance: string;
-  treasuryValue: string;
   pay: () => Promise<TransactionReceipt | undefined>;
+  getTreasuryValue: () => Promise<string>;
 }
 
 export function FlappyFrog({
@@ -29,7 +29,7 @@ export function FlappyFrog({
   displayName,
   address,
   formattedBalance,
-  //treasuryValue,
+  //getTreasuryValue,
   pay,
 }: FlappyFrogProps) {
   const gameContainerRef = useRef<HTMLDivElement>(null);
