@@ -25,7 +25,7 @@ export const useMiniappWallet = () => {
   const { address, isConnected, isConnecting } = useAccount();
   const chainId = useChainId();
   const { switchChainAsync } = useSwitchChain();
-  const { data: balance, refetch: refetchBalance } = useBalance({
+  const { refetch: refetchBalance } = useBalance({
     address,
     chainId: CHAIN.id,
   });
@@ -33,7 +33,7 @@ export const useMiniappWallet = () => {
   const farcasterConnector = connectors[0];
 
   const getWalletBalance = async () => {
-    await refetchBalance();
+    const { data: balance } = await refetchBalance();
     const formattedBalance = formatEther(balance?.value ?? BigInt(0));
     return formattedBalance;
   };

@@ -1209,13 +1209,13 @@ export function FlappyFrog({
                   rowY,
                   "letters",
                   `${(i + 1).toString().padEnd(2, " ")}`,
-                  10,
+                  11,
                 )
                 .setOrigin(0, 0.5)
                 .setTint(rankTint);
               // Player text.
               this.add
-                .bitmapText(playerColPos, rowY, "letters", formattedName, 10)
+                .bitmapText(playerColPos, rowY, "letters", formattedName, 11)
                 .setOrigin(0, 0.5)
                 .setTint(textTint);
               // Score text.
@@ -1225,7 +1225,7 @@ export function FlappyFrog({
                   rowY,
                   "letters",
                   entry.score.toString(),
-                  10,
+                  11,
                 )
                 .setOrigin(0, 0.5)
                 .setTint(textTint);
