@@ -19,7 +19,7 @@ interface FlappyFrogProps {
   fid: number;
   displayName: string;
   address: `0x${string}`;
-  formattedBalance: string;
+  getWalletBalance: () => Promise<string>;
   pay: () => Promise<TransactionReceipt | undefined>;
   getTreasuryValue: () => Promise<string>;
 }
@@ -28,7 +28,7 @@ export function FlappyFrog({
   fid,
   displayName,
   address,
-  formattedBalance,
+  getWalletBalance,
   //getTreasuryValue,
   pay,
 }: FlappyFrogProps) {
@@ -1254,7 +1254,7 @@ export function FlappyFrog({
             );
           }
 
-          create() {
+          async create() {
             const modalWidth = this.game.config.width as number;
             const modalHeight = (this.game.config.height as number) - 40;
 
@@ -1286,7 +1286,7 @@ export function FlappyFrog({
                 30,
                 80,
                 "letters",
-                `Balance: ${parseFloat(formattedBalance).toFixed(4)} ETH`,
+                `Balance: ${parseFloat(await getWalletBalance()).toFixed(4)} ETH`,
                 12,
               )
               .setOrigin(0, 0.5)

@@ -1,19 +1,16 @@
 import { refillHearts } from "@/actions";
-import { IS_MAINNET, TREASURY_CONTRACT_ADDRESS } from "@/config/constants";
-import { getEthUsdPrice } from "@/lib/base";
+import { IS_MAINNET } from "@/config/constants";
 import { useAddFrame, useMiniKit } from "@coinbase/onchainkit/minikit";
 import { useCallback, useEffect } from "react";
 import { base, baseSepolia } from "viem/chains";
-import { formatEther, parseEther } from "viem/utils";
+import { formatEther } from "viem/utils";
 import {
   useAccount,
   useBalance,
   useChainId,
   useConnect,
   usePublicClient,
-  useSendTransaction,
   useSwitchChain,
-  useWaitForTransactionReceipt,
 } from "wagmi";
 
 const CHAIN = IS_MAINNET ? base : baseSepolia;
@@ -28,11 +25,18 @@ export const useMiniappWallet = () => {
   const chainId = useChainId();
   const publicClient = usePublicClient();
   const { switchChainAsync } = useSwitchChain();
-  const { data: balance, refetch } = useBalance({ address, chainId: CHAIN.id });
+  const { data: balance, refetch: refetchBalance } = useBalance({
+    address,
+    chainId: CHAIN.id,
+  });
 
   const farcasterConnector = connectors[0];
 
-  const formattedBalance = formatEther(balance?.value ?? BigInt(0));
+  const getWalletBalance = async () => {
+    await refetchBalance();
+    const formattedBalance = formatEther(balance?.value ?? BigInt(0));
+    return formattedBalance;
+  };
 
   const handleWallectConnect = useCallback(async () => {
     try {
@@ -54,10 +58,9 @@ export const useMiniappWallet = () => {
 
   const refillHeart = useCallback(async () => {
     if (!!context) {
-      await refetch();
       await refillHearts(context.user.fid);
     }
-  }, [context, refetch]);
+  }, [context]);
 
   useEffect(() => {
     if (chainId !== CHAIN.id) {
@@ -97,8 +100,7 @@ export const useMiniappWallet = () => {
   return {
     address,
     isConnected,
-    formattedBalance,
     context,
-    refetch,
+    getWalletBalance,
   };
 };

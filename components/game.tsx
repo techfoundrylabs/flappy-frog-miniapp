@@ -10,7 +10,7 @@ import {
 export const Game = () => {
   useEventHandler();
 
-  const { address, formattedBalance, isConnected, context } =
+  const { address, isConnected, context , getWalletBalance} =
     useMiniappWallet();
   const { handlePayGame } = useDepositIntoTreasury();
   const { getTreasuryValue } = useGetTreasury();
@@ -26,7 +26,7 @@ export const Game = () => {
         fid={fid}
         displayName={userName}
         address={address}
-        formattedBalance={formattedBalance}
+        getWalletBalance={getWalletBalance}
         getTreasuryValue={getTreasuryValue}
         pay={handlePayGame}
       />
