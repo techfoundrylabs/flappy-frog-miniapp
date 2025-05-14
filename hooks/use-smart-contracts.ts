@@ -27,7 +27,7 @@ export const useDepositIntoTreasury = () => {
 
   const handlePayGame = async () => {
     try {
-      const amount = (await getUsdPrice()) ?? 0;
+      const amount = await getUsdPrice();
 
       const trxHash = await writeContractAsync({
         ...commonContractParams,

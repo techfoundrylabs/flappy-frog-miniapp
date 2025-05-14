@@ -1,6 +1,3 @@
-import { GAME_PRICE_USD } from "@/config/constants";
-import { useQuery } from "@tanstack/react-query";
-
 interface CoinbaseAsssetPair {
   amount: string;
   base: string;
@@ -21,8 +18,7 @@ export const getEthUsdPrice = async () => {
       throw new Error("Error to fetch data price from coinbase");
     const { data: assetPair } =
       (await response.json()) as CoinbaseAsssetPairResponse;
-    const price = assetPair.amount;
-    return GAME_PRICE_USD / Number(price);
+    return assetPair.amount;
   } catch (error) {
     console.error(error);
   }
