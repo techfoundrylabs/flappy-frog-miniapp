@@ -13,7 +13,7 @@ import { EventBus } from "@/lib/event-bus";
 import { useLayoutEffect, useRef } from "react";
 import { TransactionReceipt } from "viem";
 
-const HEARTS = MAX_HEARTS ?? 3;
+const HEARTS = MAX_HEARTS ?? 5;
 
 interface FlappyFrogProps {
   fid: number;
@@ -29,9 +29,9 @@ export function FlappyFrog({
   fid,
   displayName,
   address,
-  //chainName,
+  chainName,
   getWalletBalance,
-  //getTreasuryValue,
+  getTreasuryValue,
   pay,
 }: FlappyFrogProps) {
   const gameContainerRef = useRef<HTMLDivElement>(null);
@@ -1137,7 +1137,7 @@ export function FlappyFrog({
               string
             >[];
 
-            const rowHeight = modalHeight / 11;
+            const rowHeight = modalHeight / 12.5;
             const tableLeft =
               (this.game.config.width as number) * 0.5 - modalWidth * 0.5 + 20;
             const tableWidth = modalWidth - 2;
@@ -1230,6 +1230,19 @@ export function FlappyFrog({
                 .setOrigin(0, 0.5)
                 .setTint(textTint);
             }
+
+            // Treasury pool.
+            this.add
+              .bitmapText(
+                (this.game.config.width as number) * 0.5,
+                rowHeight * 0.5 - 2 + (10 + 1) * rowHeight,
+                "letters",
+                `TREASURY POOL: ${parseFloat(
+                  await getTreasuryValue(),
+                ).toFixed(4)} ETH`,
+                10,
+              )
+              .setOrigin(0.5, 0.5)
           }
 
           async getLeaderboardData() {
@@ -1275,9 +1288,22 @@ export function FlappyFrog({
               ? `${address.substring(0, 5)}...${address.substring(address.length - 5)}`
               : "";
 
+            // Chain Name.
+            this.add
+              .bitmapText(
+                30,
+                50,
+                "letters",
+                `Chain: ${chainName}`,
+                12,
+              )
+              .setOrigin(0, 0.5)
+              .setTint(0xffffff)
+              .setDepth(100);
+
             // User address.
             this.add
-              .bitmapText(30, 50, "letters", `Address: ${formattedAddress}`, 12)
+              .bitmapText(30, 80, "letters", `Address: ${formattedAddress}`, 12)
               .setOrigin(0, 0.5)
               .setTint(0xffffff)
               .setDepth(100);
@@ -1286,7 +1312,7 @@ export function FlappyFrog({
             this.add
               .bitmapText(
                 30,
-                80,
+                110,
                 "letters",
                 `Balance: ${parseFloat(await getWalletBalance()).toFixed(4)} ETH`,
                 12,
