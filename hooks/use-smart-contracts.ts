@@ -51,20 +51,29 @@ export const useDepositIntoTreasury = () => {
 
 export const useGetTreasury = () => {
   const chainId = useChainId();
-  const { refetch } = useReadContract({
+  const { data, refetch } = useReadContract({
     ...commonContractParams,
     functionName: "getTreasuryBalance",
     chainId,
+    query: { refetchInterval: 5000 },
   });
 
-  const getTreasuryValue = async () => {
-    const { data: treasury } = await refetch();
-    const treasuryAmount = treasury ? (treasury as bigint) : BigInt("0");
+  const getFormatEth = (value: bigint | undefined) => {
+    const treasuryAmount = value ? (value as bigint) : BigInt("0");
     const treasuryAmountFormatted = formatEther(treasuryAmount);
     return treasuryAmountFormatted;
   };
 
+  const treasuryValue = getFormatEth(data as bigint | undefined);
+
+  const getTreasuryValue = async () => {
+    const { data: treasury } = await refetch();
+    const treasuryAmount = getFormatEth(treasury as bigint | undefined);
+    return treasuryAmount;
+  };
+
   return {
+    treasuryValue,
     getTreasuryValue,
   };
 };

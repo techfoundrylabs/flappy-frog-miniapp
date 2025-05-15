@@ -6,12 +6,17 @@ import Link from "next/link";
 import { useState } from "react";
 import { Loading } from "@/components/loading";
 import { WARPCASTER_URL } from "@/config/constants";
+import { useGetTreasury } from "@/hooks/use-smart-contracts";
 
 export const Welcome = () => {
   const [isImgLoaded, setIsImgLoaded] = useState(false);
+  const { treasuryValue } = useGetTreasury();
 
   return (
     <>
+      <div className="self-start pt-8 px-2 text-white/90">
+        Treasury value: {parseFloat(treasuryValue).toFixed(4)} ETH
+      </div>
       <Loading className={!isImgLoaded ? "flex" : "hidden"} />
       <div
         className={`${isImgLoaded ? "flex" : "hidden"} w-full flex-col md:flex-row md:p-12 gap-12`}
