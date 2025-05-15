@@ -18,4 +18,4 @@ export const TREASURY_CONTRACT_ADDRESS =
 
 export const IS_MAINNET = NETWORK === "mainnet";
 
-export const WARPCASTER_URL = "https://warpcast.com";
+export const WARPCASTER_URL = "https://warpcast.com/miniapps/8NDoX-86JBe1/flappy-frog";

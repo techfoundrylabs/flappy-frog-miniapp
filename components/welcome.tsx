@@ -14,9 +14,9 @@ export const Welcome = () => {
     <>
       <Loading className={!isImgLoaded ? "flex" : "hidden"} />
       <div
-        className={`${isImgLoaded ? "flex" : "hidden"} w-full flex-col md:flex-row p-12 gap-12`}
+        className={`${isImgLoaded ? "flex" : "hidden"} w-full flex-col md:flex-row md:p-12 gap-12`}
       >
-        <div className="flex items-center justify-center  z-10 bg-red  md:w-2/3">
+        <div className="flex items-center justify-center  z-10 md:w-2/3">
           <Image
             src={FlappyFrogPoster}
             alt="Flappy Frog"
@@ -26,8 +26,8 @@ export const Welcome = () => {
           />
         </div>
 
-        <div className="mt-12 hidden md:flex w-full flex-col gap-y-4 items-center justify-center text-[#EA7B00]">
-          <div className="flex flex-col gap-y-2">
+        <div className="mt-12 flex w-full flex-col gap-y-4 items-center justify-center text-[#EA7B00]">
+          <div className="hidden md:flex flex-col gap-y-2">
             <h1 className="text-center text-lg md:text-5xl font-semibold">
               Welcome to
             </h1>
@@ -36,10 +36,10 @@ export const Welcome = () => {
             </h1>
           </div>
           <p className="text-sm md:text-[16px] font-light px-6 md:px-24  md:text-center text-white/80">
-            Guide our froggy hero through a gauntlet of pipes, collecting
-            points as you soar through the obstacles. Climb your way to the top
-            of the leaderboard, challenge your friends, and prove your skill.
-            The ultimate champion at the top of the leaderboard will claim the
+            Guide our froggy hero through a gauntlet of pipes, collecting points
+            as you soar through the obstacles. Climb your way to the top of the
+            leaderboard, challenge your friends, and prove your skill. The
+            ultimate champion at the top of the leaderboard will claim the
             Treasury Pool, earning glory and rewards.
           </p>
           <Link
