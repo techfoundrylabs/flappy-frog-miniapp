@@ -14,7 +14,7 @@ export const Welcome = () => {
 
   return (
     <>
-      <div className="self-start pt-8 px-2 text-white/90">
+      <div className="self-start py-8 px-2 text-white/90">
         Treasury value: {parseFloat(treasuryValue).toFixed(4)} ETH
       </div>
       <Loading className={!isImgLoaded ? "flex" : "hidden"} />
