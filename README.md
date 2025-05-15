@@ -80,5 +80,3 @@ The app is wrapped with `MiniKitProvider` in `providers.tsx`, configured with:
 - Sets up Wagmi Connectors
 - Sets up Frame SDK listeners
 - Applies Safe Area Insets
-
-
