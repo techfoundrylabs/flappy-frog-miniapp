@@ -539,8 +539,8 @@ export function FlappyFrog({
                 }
               });
 
-              // Let the frog fall down with gravity. When it hits the ground,
-              // show the game over UI.
+              // Let the frog fall down with gravity. When it hits the 
+              // ground, show the game over UI.
               const gameOverTimer = this.time.addEvent({
                 delay: 250,
                 callback: () => {
