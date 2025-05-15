@@ -859,7 +859,7 @@ export function FlappyFrog({
                 (this.game.config.width as number) * 0.5,
                 (this.game.config.height as number) * 0.5 + 20,
                 "letters",
-                "PAY 1.00 $",
+                "PAY 1$",
                 12,
               )
               .setOrigin(0.5)
