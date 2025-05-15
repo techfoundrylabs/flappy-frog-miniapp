@@ -141,3 +141,4 @@ Please check our [contributing guidelines](CONTRIBUTING.md) for development setu
 Flappy Frog proves that blockchain games don't need complex tokenomics to be valuable. Our vision is simple: create a game where achievements are permanent, competition is fair, and the community has real ownership. As we progress toward full on-chain functionality, players can be confident that their skills, scores, and accomplishments will live forever on the blockchain.
 
 The integration with Farcaster Frames makes the game inherently social and viral, allowing players to share their achievements and compete with friends directly in their social feeds. This creates a perfect bridge between web2 social engagement and web3 ownership.
+
