@@ -11,9 +11,9 @@
     "frames": "frames"
   },
   "dependencies": {
-    "@coinbase/onchainkit": "latest",
-    "@farcaster/frame-sdk": "0.0.38",
-    "@farcaster/frame-wagmi-connector": "^0.0.26",
+    "@coinbase/onchainkit": "^0.38.13",
+    "@farcaster/frame-sdk": "^0.0.41",
+    "@farcaster/frame-wagmi-connector": "^0.0.30",
     "@frames.js/debugger": "^0.5.0",
     "@neynar/nodejs-sdk": "^2.33.1",
     "@t3-oss/env-nextjs": "^0.13.4",
