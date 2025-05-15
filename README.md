@@ -34,6 +34,12 @@ NEXT_PUBLIC_IMAGE_URL=
 NEXT_PUBLIC_SPLASH_IMAGE_URL=
 NEXT_PUBLIC_SPLASH_BACKGROUND_COLOR=
 
+# Required for the game
+NEXT_PUBLIC_NETWORK=testnet
+NEXT_PUBLIC_TREASURY_CONTRACT_ADDRESS=
+NEXT_PUBLIC_GAME_PRICE_USD=1
+NEXT_PUBLIC_MAX_HEARTS=$MAX_HEARTS
+
 # Required to allow users to add your frame
 FARCASTER_HEADER=
 FARCASTER_PAYLOAD=
@@ -49,27 +55,3 @@ REDIS_TOKEN=
 ```bash
 npm run dev
 ```
-
-## Template Features
-
-### Frame Configuration
-
-- `.well-known/farcaster.json` endpoint configured for Frame metadata and account association
-- Frame metadata automatically added to page headers in `layout.tsx`
-
-### Background Notifications
-
-- Redis-backed notification system using Upstash
-- Ready-to-use notification endpoints in `api/notify` and `api/webhook`
-- Notification client utilities in `lib/notification-client.ts`
-
-
-### MiniKit Provider
-
-The app is wrapped with `MiniKitProvider` in `providers.tsx`, configured with:
-
-- OnchainKit integration
-- Access to Frames context
-- Sets up Wagmi Connectors
-- Sets up Frame SDK listeners
-- Applies Safe Area Insets
