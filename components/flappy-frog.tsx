@@ -31,7 +31,7 @@ export function FlappyFrog({
   displayName,
   address,
   chainName,
-  //dateEndOfGame,
+  dateEndOfGame,
   getWalletBalance,
   getTreasuryValue,
   pay,
@@ -1101,6 +1101,9 @@ export function FlappyFrog({
         }
 
         class RankingScene extends Phaser.Scene {
+          private poolCloseInText: Phaser.GameObjects.BitmapText | null = null;
+          private poolCloseIn: number = 0;
+
           constructor() {
             super({ key: "RankingScene" });
           }
@@ -1139,7 +1142,7 @@ export function FlappyFrog({
               string
             >[];
 
-            const rowHeight = modalHeight / 12.5;
+            const rowHeight = modalHeight / 13;
             const tableLeft =
               (this.game.config.width as number) * 0.5 - modalWidth * 0.5 + 20;
             const tableWidth = modalWidth - 2;
@@ -1245,6 +1248,46 @@ export function FlappyFrog({
                 10,
               )
               .setOrigin(0.5, 0.5);
+
+            const currentDate = new Date();
+            const poolCloseDate = new Date(dateEndOfGame!);
+
+            this.poolCloseIn =
+              (poolCloseDate.getTime() - currentDate.getTime()) / 1000;
+
+            this.poolCloseInText = this.add
+              .bitmapText(
+                (this.game.config.width as number) * 0.5,
+                rowHeight * 0.5 - 2 + (10 + 2) * rowHeight - 20,
+                "letters",
+                `${this.formatClosingTime()}`,
+                10,
+              )
+              .setOrigin(0.5, 0.5);
+          }
+
+          update() {
+            // Update the countdown text.
+            const currentDate = new Date();
+            const poolCloseDate = new Date(dateEndOfGame!);
+
+            this.poolCloseIn =
+              (poolCloseDate.getTime() - currentDate.getTime()) / 1000;
+
+            this.poolCloseInText?.setText(this.formatClosingTime());
+          }
+
+          formatClosingTime() {
+            if (!this.poolCloseIn || this.poolCloseIn <= 0) {
+              return "CLOSED";
+            }
+
+            const days = Math.floor(this.poolCloseIn / 86400);
+            const hours = Math.floor((this.poolCloseIn % 86400) / 3600);
+            const minutes = Math.floor((this.poolCloseIn % 3600) / 60);
+            const seconds = Math.floor(this.poolCloseIn % 60);
+
+            return `${String(days).padStart(2, "0")}d ${String(hours).padStart(2, "0")}h ${String(minutes).padStart(2, "0")}m ${String(seconds).padStart(2, "0")}s`;
           }
 
           async getLeaderboardData() {
@@ -1319,6 +1362,116 @@ export function FlappyFrog({
           }
         }
 
+        class HelpScene extends Phaser.Scene {
+          constructor() {
+            super({ key: "HelpScene" });
+          }
+
+          preload() {
+            // Load fonts.
+            this.load.bitmapFont(
+              "letters",
+              "assets/fonts/letters/letters.png",
+              "assets/fonts/letters/letters.xml",
+            );
+            this.load.bitmapFont(
+              "numbers",
+              "assets/fonts/numbers/numbers.png",
+              "assets/fonts/numbers/numbers.xml",
+            );
+          }
+
+          async create() {
+            const modalWidth = this.game.config.width as number;
+            const modalHeight = (this.game.config.height as number) - 40;
+
+            const modalBg = this.add.rectangle(
+              (this.game.config.width as number) * 0.5,
+              (this.game.config.height as number) * 0.5 - 42,
+              modalWidth,
+              modalHeight,
+              0xcaaa77,
+            );
+            modalBg.setOrigin(0.5);
+            modalBg.setStrokeStyle(2, 0x7f563b);
+
+            // Title.
+            this.add
+              .bitmapText(
+                (this.game.config.width as number) * 0.5,
+                50,
+                "letters",
+                "HOW TO PLAY",
+                14,
+              )
+              .setOrigin(0.5)
+              .setTint(0xffffff)
+              .setDepth(101);
+
+            const startY = 100;
+            const lineSpacing = 20;
+            const leftMargin = 25;
+            const textSize = 7;
+
+            // Controls section.
+            this.add
+              .bitmapText(leftMargin, startY, "letters", "CONTROLS:", 11)
+              .setOrigin(0, 0.5)
+              .setTint(0xffffff)
+              .setDepth(101);
+            this.add
+              .bitmapText(
+                leftMargin,
+                startY + lineSpacing,
+                "letters",
+                "TAP OR PRESS SPACE TO FLAP",
+                textSize,
+              )
+              .setOrigin(0, 0.5)
+              .setTint(0xffffff)
+              .setDepth(101);
+
+            // Explanation.
+            this.add
+              .bitmapText(
+                leftMargin,
+                startY + lineSpacing * 3,
+                "letters",
+                "GAMEPLAY:",
+                11,
+              )
+              .setOrigin(0, 0.5)
+              .setTint(0xffffff)
+              .setDepth(101);
+
+            const gameplayLines = [
+              "Guide your frog through pipes to score ",
+              "points. Every day, you get 5 hearts to ",
+              "use.",
+              "",
+              "Need more? Pay 1$ to refill your hearts",
+              "Each dollar spent is split between the ",
+              "treasury pool and the devs with a 60/40",
+              "ratio.",
+              "",
+              "At the end of the treasury pool period,",
+              "the player with the highest score wins ",
+              "the treasury pool prize.",
+              "",
+              "THAT'S IT. HAVE FUN!",
+            ];
+
+            gameplayLines.forEach((line, index) => {
+              const y = startY + lineSpacing * 4 + index * lineSpacing;
+              this.add
+                .bitmapText(leftMargin, y, "letters", line, textSize)
+                .setOrigin(0, 0.5)
+                .setTint(0xffffff)
+                .setDepth(101);
+            });
+          }
+        }
+
         type NavigationButton = {
           btn: Phaser.GameObjects.Rectangle;
           icon: Phaser.GameObjects.Sprite;
@@ -1330,6 +1483,7 @@ export function FlappyFrog({
             gameButton: NavigationButton;
             rankingButton: NavigationButton;
             userButton: NavigationButton;
+            helpButton: NavigationButton;
           } | null = null;
 
           private activeTab: string = "game";
@@ -1350,6 +1504,7 @@ export function FlappyFrog({
             this.load.image("gameIcon", "assets/navbar/navbar-game.png");
             this.load.image("rankingIcon", "assets/navbar/navbar-ranking.png");
             this.load.image("userIcon", "assets/navbar/navbar-user.png");
+            this.load.image("helpIcon", "assets/navbar/navbar-help.png");
           }
 
           create() {
@@ -1366,8 +1521,11 @@ export function FlappyFrog({
             navBarBg.setOrigin(0.5, 0.5);
             navBarBg.setDepth(100);
 
+            const buttonCount = 4;
+            const buttonWidth = width / buttonCount;
+
             const createButton = (
-              position: number,
+              index: number,
               iconKey: string,
               label: string,
               sceneKey: string,
@@ -1378,11 +1536,14 @@ export function FlappyFrog({
               const btnColor = isActive ? 0x7f563b : 0xcaaa77;
               const textColor = isActive ? 0xcaaa77 : 0x7f563b;
 
-              // Button
+              // Calculate the x position for the button.
+              const xPosition = buttonWidth * (index + 0.5);
+
+              // Button.
               const btn = this.add.rectangle(
-                width * position,
+                xPosition,
                 height - 30,
-                width * (1 / 3),
+                buttonWidth,
                 60,
                 btnColor,
               );
@@ -1391,18 +1552,14 @@ export function FlappyFrog({
               btn.setInteractive({ useHandCursor: true });
               btn.setDepth(100);
 
-              // Icon.
-              const icon = this.add.sprite(
-                width * position,
-                height - 38,
-                iconKey,
-              );
+              // Icon - centered horizontally in the button.
+              const icon = this.add.sprite(xPosition, height - 38, iconKey);
               icon.setTintFill(isActive ? 0xcaaa77 : 0x7f563b);
               icon.setDepth(100);
 
-              // Text.
+              // Text - centered horizontally below the icon.
               const text = this.add
-                .bitmapText(width * position, height - 16, "letters", label, 8)
+                .bitmapText(xPosition, height - 16, "letters", label, 8)
                 .setOrigin(0.5)
                 .setTint(textColor)
                 .setDepth(100);
@@ -1442,25 +1599,32 @@ export function FlappyFrog({
             // Buttons.
             this.buttons = {
               gameButton: createButton(
-                1 / 6,
+                0,
                 "gameIcon",
                 "GAME",
                 "FlappyFrogScene",
                 "game",
               ),
               rankingButton: createButton(
-                3 / 6,
+                1,
                 "rankingIcon",
                 "RANKING",
                 "RankingScene",
                 "ranking",
               ),
               userButton: createButton(
-                5 / 6,
+                2,
                 "userIcon",
                 "USER",
                 "UserScene",
                 "user",
+              ),
+              helpButton: createButton(
+                3,
+                "helpIcon",
+                "HELP",
+                "HelpScene",
+                "help",
               ),
             };
 
@@ -1470,7 +1634,12 @@ export function FlappyFrog({
 
           switchToScene(sceneKey: string) {
             // Put all game scenes to sleep except the target one.
-            const gameScenes = ["FlappyFrogScene", "RankingScene", "UserScene"];
+            const gameScenes = [
+              "FlappyFrogScene",
+              "RankingScene",
+              "UserScene",
+              "HelpScene",
+            ];
             gameScenes.forEach((scene) => {
               if (scene !== sceneKey) {
                 if (this.scene.isActive(scene)) {
@@ -1493,14 +1662,17 @@ export function FlappyFrog({
           updateButtonStates() {
             if (!this.buttons) return;
 
-            const { gameButton, rankingButton, userButton } = this.buttons;
+            const { gameButton, rankingButton, userButton, helpButton } =
+              this.buttons;
 
             // Reset all buttons.
-            [gameButton, rankingButton, userButton].forEach((button) => {
-              button.btn.setFillStyle(0xcaaa77);
-              button.icon.setTintFill(0x7f563b);
-              button.text.setTintFill(0x7f563b);
-            });
+            [gameButton, rankingButton, userButton, helpButton].forEach(
+              (button) => {
+                button.btn.setFillStyle(0xcaaa77);
+                button.icon.setTintFill(0x7f563b);
+                button.text.setTintFill(0x7f563b);
+              },
+            );
 
             // Activate the correct button.
             switch (this.activeTab) {
@@ -1518,6 +1690,11 @@ export function FlappyFrog({
                 userButton.btn.setFillStyle(0x7f563b);
                 userButton.icon.setTintFill(0xcaaa77);
                 userButton.text.setTintFill(0xcaaa77);
+                break;
+              case "help":
+                helpButton.btn.setFillStyle(0x7f563b);
+                helpButton.icon.setTintFill(0xcaaa77);
+                helpButton.text.setTintFill(0xcaaa77);
                 break;
             }
           }
@@ -1540,7 +1717,13 @@ export function FlappyFrog({
               debug: false,
             },
           },
-          scene: [NavigationScene, FlappyFrogScene, RankingScene, UserScene],
+          scene: [
+            NavigationScene,
+            FlappyFrogScene,
+            RankingScene,
+            UserScene,
+            HelpScene,
+          ],
         };
 
         // Destroy any existing game instance.
