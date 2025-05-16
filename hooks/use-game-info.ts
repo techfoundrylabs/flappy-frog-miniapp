@@ -12,14 +12,10 @@ const fetchDateEndOfGame = async () => {
 };
 
 export const useDateEndOfGame = () => {
-  const {
-    data: dateEndOfGame,
-    error,
-    isLoading,
-  } = useQuery({
+  const { data: dateEndOfGame } = useQuery({
     queryKey: ["end-of-game"],
     queryFn: fetchDateEndOfGame,
     staleTime: Infinity,
   });
-  return { dateEndOfGame, error, isLoading };
+  return { dateEndOfGame };
 };

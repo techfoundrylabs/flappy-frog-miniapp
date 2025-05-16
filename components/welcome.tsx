@@ -12,7 +12,7 @@ import { useDateEndOfGame } from "@/hooks/use-game-info";
 export const Welcome = () => {
   const [isImgLoaded, setIsImgLoaded] = useState(false);
   const { treasuryValue } = useGetTreasury();
-  const { data } = useDateEndOfGame();
+  const { dateEndOfGame } = useDateEndOfGame();
 
   return (
     <>
@@ -20,7 +20,7 @@ export const Welcome = () => {
         <span className="text-sm md:text-base">
           Treasury value: {parseFloat(treasuryValue).toFixed(4)} ETH
         </span>
-        <span className="text-xs">Next winner announced {data}</span>
+        <span className="text-xs">Next winner announced {dateEndOfGame}</span>
       </div>
       <Loading className={!isImgLoaded ? "flex" : "hidden"} />
       <div
