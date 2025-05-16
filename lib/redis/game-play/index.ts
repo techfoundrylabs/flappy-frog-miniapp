@@ -94,3 +94,16 @@ export const getNthTopPlayers = async (limit: number) => {
     console.error(error);
   }
 };
+
+export const getEndOfGame = async () => {
+  if (!redis) {
+    return null;
+  }
+  try {
+    const endOfGameKey = `${notificationServiceKey}:end-of-game`;
+    console.log("A", endOfGameKey);
+    return await redis.get(endOfGameKey);
+  } catch (error) {
+    console.error(error);
+  }
+};
