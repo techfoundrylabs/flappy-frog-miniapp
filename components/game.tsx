@@ -15,7 +15,7 @@ export const Game = () => {
     useMiniappWallet();
   const { handlePayGame } = useDepositIntoTreasury();
   const { getTreasuryValue } = useGetTreasury();
-  const { dateEndOfGame } = useDateEndOfGame();
+  const { getDateEndOfGame } = useDateEndOfGame();
 
   if (!context || !isConnected || !address) return <Loading />;
 
@@ -29,7 +29,7 @@ export const Game = () => {
         displayName={userName}
         address={address}
         chainName={chainName}
-        dateEndOfGame={dateEndOfGame}
+        getDateEndOfGame={getDateEndOfGame}
         getWalletBalance={getWalletBalance}
         getTreasuryValue={getTreasuryValue}
         pay={handlePayGame}

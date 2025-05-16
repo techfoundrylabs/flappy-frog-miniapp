@@ -8,14 +8,19 @@ const fetchDateEndOfGame = async () => {
     throw new Error("Error to retrieve data");
   }
   const { date } = (await response.json()) as DateEndOfGameResponse;
-  return new Date(date * 1000).toLocaleDateString();
+  return date * 1000;
 };
 
 export const useDateEndOfGame = () => {
-  const { data: dateEndOfGame } = useQuery({
+  const { data: date, refetch } = useQuery({
     queryKey: ["end-of-game"],
     queryFn: fetchDateEndOfGame,
     staleTime: Infinity,
   });
-  return { dateEndOfGame };
+  const getDateEndOfGame = async () => {
+    const { data: dateEndOfGame } = await refetch();
+    return dateEndOfGame;
+  };
+  const dateEndOfGame = new Date(date!).toLocaleDateString();
+  return { dateEndOfGame, getDateEndOfGame };
 };

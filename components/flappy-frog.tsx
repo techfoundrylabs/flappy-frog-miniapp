@@ -20,7 +20,7 @@ interface FlappyFrogProps {
   displayName: string;
   address: `0x${string}`;
   chainName: string;
-  dateEndOfGame: string | undefined;
+  getDateEndOfGame: () => Promise<number | undefined>;
   getWalletBalance: () => Promise<string>;
   pay: () => Promise<TransactionReceipt | undefined>;
   getTreasuryValue: () => Promise<string>;
@@ -31,7 +31,7 @@ export function FlappyFrog({
   displayName,
   address,
   chainName,
-  dateEndOfGame,
+  getDateEndOfGame,
   getWalletBalance,
   getTreasuryValue,
   pay,
@@ -1250,6 +1250,7 @@ export function FlappyFrog({
               .setOrigin(0.5, 0.5);
 
             const currentDate = new Date();
+            const dateEndOfGame = await getDateEndOfGame();
             const poolCloseDate = new Date(dateEndOfGame!);
 
             this.poolCloseIn =
@@ -1266,11 +1267,11 @@ export function FlappyFrog({
               .setOrigin(0.5, 0.5);
           }
 
-          update() {
+          async update() {
             // Update the countdown text.
             const currentDate = new Date();
+            const dateEndOfGame = await getDateEndOfGame();
             const poolCloseDate = new Date(dateEndOfGame!);
-
             this.poolCloseIn =
               (poolCloseDate.getTime() - currentDate.getTime()) / 1000;
 

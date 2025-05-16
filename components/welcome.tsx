@@ -8,8 +8,10 @@ import { Loading } from "@/components/loading";
 import { WARPCASTER_URL } from "@/config/constants";
 import { useGetTreasury } from "@/hooks/use-smart-contracts";
 import { useDateEndOfGame } from "@/hooks/use-game-info";
+import { useMiniappWallet } from "@/hooks/use-miniapp-wallet";
 
 export const Welcome = () => {
+  const { chainName } = useMiniappWallet();
   const [isImgLoaded, setIsImgLoaded] = useState(false);
   const { treasuryValue } = useGetTreasury();
   const { dateEndOfGame } = useDateEndOfGame();
@@ -18,7 +20,8 @@ export const Welcome = () => {
     <>
       <div className="w-full flex flex-col px-2 text-white/90  text-center py-4 md:pt-2">
         <span className="text-sm md:text-base">
-          Treasury value: {parseFloat(treasuryValue).toFixed(4)} ETH
+          Treasury value({chainName}): {parseFloat(treasuryValue).toFixed(4)}{" "}
+          ETH
         </span>
         <span className="text-xs">Next winner announced {dateEndOfGame}</span>
       </div>
