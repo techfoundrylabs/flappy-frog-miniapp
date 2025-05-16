@@ -35,6 +35,26 @@ export const abi = [
   {
     anonymous: false,
     inputs: [
+      { indexed: true, internalType: "address", name: "from", type: "address" },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "timestamp",
+        type: "uint256",
+      },
+    ],
+    name: "GiftReceived",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
       {
         indexed: true,
         internalType: "address",
@@ -96,6 +116,31 @@ export const abi = [
     name: "TeamAddressUpdated",
     type: "event",
   },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "oldEarn",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "newEarn",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "timestamp",
+        type: "uint256",
+      },
+    ],
+    name: "TeamEarnUpdated",
+    type: "event",
+  },
   { stateMutability: "payable", type: "fallback" },
   {
     inputs: [],
@@ -130,6 +175,13 @@ export const abi = [
   {
     inputs: [],
     name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_teamEarn", type: "uint256" }],
+    name: "setTeamEarn",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
