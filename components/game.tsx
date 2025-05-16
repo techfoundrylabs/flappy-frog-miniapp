@@ -1,6 +1,7 @@
 import { FlappyFrog } from "@/components/flappy-frog";
 import { Loading } from "@/components/loading";
 import { useEventHandler } from "@/hooks/use-event-handler";
+import { useDateEndOfGame } from "@/hooks/use-game-info";
 import { useMiniappWallet } from "@/hooks/use-miniapp-wallet";
 import {
   useDepositIntoTreasury,
@@ -14,6 +15,7 @@ export const Game = () => {
     useMiniappWallet();
   const { handlePayGame } = useDepositIntoTreasury();
   const { getTreasuryValue } = useGetTreasury();
+  const { dateEndOfGame } = useDateEndOfGame();
 
   if (!context || !isConnected || !address) return <Loading />;
 
@@ -27,6 +29,7 @@ export const Game = () => {
         displayName={userName}
         address={address}
         chainName={chainName}
+        dateEndOfGame={dateEndOfGame}
         getWalletBalance={getWalletBalance}
         getTreasuryValue={getTreasuryValue}
         pay={handlePayGame}

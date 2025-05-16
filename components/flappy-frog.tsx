@@ -20,6 +20,7 @@ interface FlappyFrogProps {
   displayName: string;
   address: `0x${string}`;
   chainName: string;
+  dateEndOfGame: string | undefined;
   getWalletBalance: () => Promise<string>;
   pay: () => Promise<TransactionReceipt | undefined>;
   getTreasuryValue: () => Promise<string>;
@@ -30,6 +31,7 @@ export function FlappyFrog({
   displayName,
   address,
   chainName,
+  //dateEndOfGame,
   getWalletBalance,
   getTreasuryValue,
   pay,
@@ -539,7 +541,7 @@ export function FlappyFrog({
                 }
               });
 
-              // Let the frog fall down with gravity. When it hits the 
+              // Let the frog fall down with gravity. When it hits the
               // ground, show the game over UI.
               const gameOverTimer = this.time.addEvent({
                 delay: 250,
@@ -1237,12 +1239,12 @@ export function FlappyFrog({
                 (this.game.config.width as number) * 0.5,
                 rowHeight * 0.5 - 2 + (10 + 1) * rowHeight,
                 "letters",
-                `TREASURY POOL: ${parseFloat(
-                  await getTreasuryValue(),
-                ).toFixed(4)} ETH`,
+                `TREASURY POOL: ${parseFloat(await getTreasuryValue()).toFixed(
+                  4,
+                )} ETH`,
                 10,
               )
-              .setOrigin(0.5, 0.5)
+              .setOrigin(0.5, 0.5);
           }
 
           async getLeaderboardData() {
@@ -1290,13 +1292,7 @@ export function FlappyFrog({
 
             // Chain Name.
             this.add
-              .bitmapText(
-                30,
-                50,
-                "letters",
-                `Chain: ${chainName}`,
-                12,
-              )
+              .bitmapText(30, 50, "letters", `Chain: ${chainName}`, 12)
               .setOrigin(0, 0.5)
               .setTint(0xffffff)
               .setDepth(100);
