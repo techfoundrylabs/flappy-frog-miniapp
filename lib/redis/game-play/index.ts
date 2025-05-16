@@ -101,7 +101,6 @@ export const getEndOfGame = async () => {
   }
   try {
     const endOfGameKey = `${notificationServiceKey}:end-of-game`;
-    console.log("A", endOfGameKey);
     return await redis.get(endOfGameKey);
   } catch (error) {
     console.error(error);

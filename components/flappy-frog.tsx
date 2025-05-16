@@ -1445,18 +1445,18 @@ export function FlappyFrog({
               .setDepth(101);
 
             const gameplayLines = [
-              "Guide your frog through pipes to score ",
-              "points. Every day, you get 5 hearts to ",
-              "use.",
+              "GUIDE YOUR FROG THROUGH PIPES TO SCORE ",
+              "POINTS. EVERY DAY, YOU GET 5 HEARTS TO ",
+              "USE.",
               "",
-              "Need more? Pay 1$ to refill your hearts",
-              "Each dollar spent is split between the ",
-              "treasury pool and the devs with a 60/40",
-              "ratio.",
+              "NEED MORE? PAY 1$ TO REFILL YOUR HEARTS.",
+              "EACH DOLLAR SPENT IS SPLIT BETWEEN THE ",
+              "TREASURY POOL AND THE DEVS WITH A 60/40",
+              "RATIO IN FAVOR OF THE TREASURY POOL.",
               "",
-              "At the end of the treasury pool period,",
-              "the player with the highest score wins ",
-              "the treasury pool prize.",
+              "AT THE END OF THE TREASURY POOL PERIOD,",
+              "THE PLAYER WITH THE HIGHEST SCORE WINS ",
+              "THE TREASURY POOL PRICE.",
               "",
               "THAT'S IT. HAVE FUN!",
             ];
