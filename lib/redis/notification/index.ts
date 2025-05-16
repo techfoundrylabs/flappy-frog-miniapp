@@ -1,8 +1,7 @@
-import { ONCHAINKIT_PROJECT_NAME } from "@/config/constants";
 import { redis } from "@/lib/redis/redis";
 import type { FrameNotificationDetails } from "@farcaster/frame-sdk";
 
-const notificationServiceKey = ONCHAINKIT_PROJECT_NAME;
+const notificationServiceKey = "flappy-frog";
 
 function getUserNotificationDetailsKey(fid: number): string {
   return `${notificationServiceKey}:user:${fid}`;
