@@ -14,7 +14,7 @@ export const Welcome = () => {
 
   return (
     <>
-      <div className="self-start py-8 px-2 text-white/90 text-sm md:text-base">
+      <div className="w-full self-start px-2 text-white/90 text-sm md:text-base text-center py-4 md:py-2">
         Treasury value: {parseFloat(treasuryValue).toFixed(4)} ETH
       </div>
       <Loading className={!isImgLoaded ? "flex" : "hidden"} />
@@ -25,7 +25,7 @@ export const Welcome = () => {
           <Image
             src={FlappyFrogPoster}
             alt="Flappy Frog"
-            className="h-[600px] w-[500px] shadow-lg shadow-violet-500 rounded-2xl"
+            className="h-[550px] w-[450px] shadow-lg shadow-violet-500 rounded-2xl"
             priority={true}
             onLoad={() => setIsImgLoaded(true)}
           />
