@@ -80,16 +80,3 @@ export const getTopPlayers = async () => {
     console.error(error);
   }
 };
-
-export const refillHearts = async (fid: number) => {
-  try {
-    const res = await setUserGamePlay(fid, MAX_USER_HEARTS);
-    if (res !== "OK") {
-      throw new Error("error");
-    }
-
-    return MAX_USER_HEARTS;
-  } catch (error) {
-    console.error(error);
-  }
-};
