@@ -6,25 +6,14 @@ import Link from "next/link";
 import { useState } from "react";
 import { Loading } from "@/components/loading";
 import { WARPCASTER_URL } from "@/config/constants";
-import { useGetTreasury } from "@/hooks/use-smart-contracts";
-import { useDateEndOfGame } from "@/hooks/use-game-info";
-import { useMiniappWallet } from "@/hooks/use-miniapp-wallet";
+import { WelcomeHeader } from "@/components/welcome-header";
 
 export const Welcome = () => {
-  const { chainName } = useMiniappWallet();
   const [isImgLoaded, setIsImgLoaded] = useState(false);
-  const { treasuryValue } = useGetTreasury();
-  const { dateEndOfGame } = useDateEndOfGame();
 
   return (
     <>
-      <div className="w-full flex flex-col px-2 text-white/90  text-center py-4 md:pt-2">
-        <span className="text-sm md:text-base">
-          Treasury value({chainName}): {parseFloat(treasuryValue).toFixed(4)}{" "}
-          ETH
-        </span>
-        <span className="text-xs">Next winner announced {dateEndOfGame}</span>
-      </div>
+      <WelcomeHeader />
       <Loading className={!isImgLoaded ? "flex" : "hidden"} />
       <div
         className={`${isImgLoaded ? "flex" : "hidden"} w-full flex-col md:flex-row md:p-12 gap-12`}
