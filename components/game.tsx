@@ -8,9 +8,16 @@ import {
   useDepositIntoTreasury,
   useGetTreasury,
 } from "@/hooks/use-smart-contracts";
-import { useWalletClient } from "wagmi";
+import { useEffect } from "react";
+import { useAccount } from "wagmi";
 
 export const Game = () => {
+  const { address: selectedAccound } = useAccount();
+
+  useEffect(() => {
+    console.log(selectedAccound);
+  }, [selectedAccound]);
+
   useEventHandler();
 
   const { address, isConnected, context, getWalletBalance } =
@@ -21,8 +28,6 @@ export const Game = () => {
   const { dateEndOfGameUnix, isSuccess: isSuccessRetrieveDate } =
     useDateEndOfGame();
   const { chainName } = useChain();
-  const { data } = useWalletClient();
-  console.log("========>", data?.account);
 
   if (!context || !isConnected || !address || !isSuccessRetrieveDate)
     return <Loading />;
