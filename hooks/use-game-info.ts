@@ -12,15 +12,34 @@ const fetchDateEndOfGame = async () => {
 };
 
 export const useDateEndOfGame = () => {
-  const { data: date, refetch } = useQuery({
+  const {
+    data: dateEndOfGameUnix,
+    isLoading,
+    isSuccess,
+  } = useQuery({
     queryKey: ["end-of-game"],
     queryFn: fetchDateEndOfGame,
     staleTime: Infinity,
   });
-  const getDateEndOfGame = async () => {
-    const { data: dateEndOfGame } = await refetch();
-    return dateEndOfGame;
+
+  // Calculate the date plus one day
+  let nextDayTimestamp: number | undefined;
+  if (dateEndOfGameUnix) {
+    nextDayTimestamp = dateEndOfGameUnix + 24 * 60 * 60 * 1000; // Add one day in milliseconds
+  }
+
+  const dateEndOfGame = dateEndOfGameUnix
+    ? new Date(dateEndOfGameUnix).toLocaleDateString()
+    : undefined;
+  const dateEndOfGamePlusOneDay = nextDayTimestamp
+    ? new Date(nextDayTimestamp).toLocaleDateString()
+    : undefined;
+
+  return {
+    dateEndOfGameUnix,
+    dateEndOfGame,
+    dateEndOfGamePlusOneDay,
+    isLoading,
+    isSuccess,
   };
-  const dateEndOfGame = new Date(date!).toLocaleDateString();
-  return { dateEndOfGame, getDateEndOfGame };
 };
