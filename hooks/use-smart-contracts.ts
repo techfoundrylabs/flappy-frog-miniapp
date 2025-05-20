@@ -1,13 +1,9 @@
 import { TREASURY_CONTRACT_ADDRESS } from "@/config/constants";
-import {
-  useChainId,
-  usePublicClient,
-  useReadContract,
-  useWriteContract,
-} from "wagmi";
+import { usePublicClient, useReadContract, useWriteContract } from "wagmi";
 import { abi as TREASURY_POOL_ABI } from "@/lib/chain/abi/treasury-pool-abi";
 import { Abi, formatEther, parseEther } from "viem";
 import { useBasePairPrice } from "@/hooks/use-base-pair-price";
+import { useChain } from "@/hooks/use-chain";
 
 interface ContractCommonParams {
   address: `0x${string}`;
@@ -20,7 +16,7 @@ const commonContractParams: ContractCommonParams = {
 
 export const useDepositIntoTreasury = () => {
   const publicClient = usePublicClient();
-  const chainId = useChainId();
+  const { chainId } = useChain();
   const { getUsdPrice } = useBasePairPrice();
 
   const { writeContractAsync } = useWriteContract();
@@ -50,7 +46,7 @@ export const useDepositIntoTreasury = () => {
 };
 
 export const useGetTreasury = () => {
-  const chainId = useChainId();
+  const { chainId } = useChain();
   const { data, refetch } = useReadContract({
     ...commonContractParams,
     functionName: "getTreasuryBalance",
