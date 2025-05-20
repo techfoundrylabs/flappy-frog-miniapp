@@ -13,8 +13,8 @@ export const Welcome = () => {
 
   return (
     <>
-      <WelcomeHeader />
       <Loading className={!isImgLoaded ? "flex" : "hidden"} />
+      <WelcomeHeader />
       <div
         className={`${isImgLoaded ? "flex" : "hidden"} w-full flex-col lg:flex-row lg:p-12 gap-12`}
       >
