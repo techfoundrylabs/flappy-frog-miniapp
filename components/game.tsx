@@ -8,16 +8,8 @@ import {
   useDepositIntoTreasury,
   useGetTreasury,
 } from "@/hooks/use-smart-contracts";
-import { useEffect } from "react";
-import { useAccount } from "wagmi";
 
 export const Game = () => {
-  const { address: selectedAccound } = useAccount();
-
-  useEffect(() => {
-    console.log(selectedAccound);
-  }, [selectedAccound]);
-
   useEventHandler();
 
   const { address, isConnected, context, getWalletBalance } =
