@@ -14,7 +14,7 @@ import background from "@/assets/flappy-frog-bg.png";
 
 // If loading a variable font, you don't need to specify the font weight
 const press_start_2P = Press_Start_2P({
-  weight: "400",
+  weight: ["400"],
   subsets: ["latin"],
   style: "normal",
 });
