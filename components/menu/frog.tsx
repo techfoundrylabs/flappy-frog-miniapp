@@ -8,8 +8,8 @@ const Frog = forwardRef<SVGSVGElement, LucideProps>((props, ref) => (
     viewBox="0 -0.11 42 30.11"
     fill="currentColor"
     ref={ref}
-    height={50}
-    width={50}
+    height={45}
+    width={45}
     {...props}
   >
     <g

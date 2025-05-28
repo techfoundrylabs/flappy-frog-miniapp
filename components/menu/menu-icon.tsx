@@ -9,7 +9,7 @@ interface MenuIconProps {
   isActive: boolean;
 }
 
-export const MenuIcon = ({ Icon, size = 34, isActive }: MenuIconProps) => {
+export const MenuIcon = ({ Icon, size = 26, isActive }: MenuIconProps) => {
   const color = isActive ? "var(--bg-navbar)" : "var(--bg-navbar-100)";
   return <Icon size={size} color={color} />;
 };

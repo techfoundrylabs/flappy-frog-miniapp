@@ -1,7 +1,6 @@
 "use client";
 
 import { Loading } from "@/components/loading";
-import { Welcome } from "@/components/welcome";
 import { useMiniKit } from "@coinbase/onchainkit/minikit";
 import { useEffect } from "react";
 import dynamic from "next/dynamic";
@@ -15,7 +14,7 @@ const Game = dynamic(
 );
 
 export default function App() {
-  const { context, isFrameReady, setFrameReady } = useMiniKit();
+  const { isFrameReady, setFrameReady, context } = useMiniKit();
 
   useEffect(() => {
     if (!isFrameReady) {
@@ -23,7 +22,10 @@ export default function App() {
     }
   }, [isFrameReady, setFrameReady]);
 
-  if (!isFrameReady) return <Loading />;
+  if (!isFrameReady || !context) return <Loading />;
 
-  return !!context ? <Game /> : <Welcome />;
+  const fid = context.user.fid;
+  const userName = context.user.username ?? "";
+
+  return <Game fid={fid} displayName={userName} />;
 }

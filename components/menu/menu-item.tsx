@@ -35,7 +35,7 @@ export const MenuItem = ({
         {label ? (
           <span
             className={cn(
-              "text-[10px]",
+              "text-[8px]",
               !isActive ? "text-[#7f563b]" : "text-[#caaa77] ",
             )}
           >
