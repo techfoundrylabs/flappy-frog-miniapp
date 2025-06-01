@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "@coinbase/onchainkit": "^0.38.13",
-    "@farcaster/frame-sdk": "^0.0.45",
-    "@farcaster/frame-wagmi-connector": "^0.0.34",
+    "@farcaster/frame-sdk": "^0.0.53",
+    "@farcaster/frame-wagmi-connector": "^0.0.42",
     "@frames.js/debugger": "^0.5.0",
     "@t3-oss/env-nextjs": "^0.13.4",
     "@tanstack/react-query": "^5.76.1",

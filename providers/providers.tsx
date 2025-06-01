@@ -10,6 +10,7 @@ import {
 } from "@/config/constants";
 import { createConfig, http, WagmiProvider } from "wagmi";
 import { farcasterFrame as miniAppConnector } from "@farcaster/frame-wagmi-connector";
+import { MiniAppProvider } from "@/providers/mini-app-provider";
 
 const wagmiConfig = createConfig({
   chains: [baseSepolia, base],
@@ -22,19 +23,21 @@ const wagmiConfig = createConfig({
 
 export function Providers(props: { children: ReactNode }) {
   return (
-    <MiniKitProvider
-      apiKey={ONCHAINKIT_API_KEY}
-      chain={base}
-      config={{
-        appearance: {
-          mode: "auto",
-          theme: "mini-app-theme",
-          name: ONCHAINKIT_PROJECT_NAME,
-          logo: ICON_URL,
-        },
-      }}
-    >
-      <WagmiProvider config={wagmiConfig}>{props.children}</WagmiProvider>
-    </MiniKitProvider>
+    <WagmiProvider config={wagmiConfig}>
+      <MiniKitProvider
+        apiKey={ONCHAINKIT_API_KEY}
+        chain={base}
+        config={{
+          appearance: {
+            mode: "auto",
+            theme: "mini-app-theme",
+            name: ONCHAINKIT_PROJECT_NAME,
+            logo: ICON_URL,
+          },
+        }}
+      >
+        <MiniAppProvider>{props.children}</MiniAppProvider>
+      </MiniKitProvider>
+    </WagmiProvider>
   );
 }

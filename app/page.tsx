@@ -1,12 +1,13 @@
 "use client";
 
 import { Loading } from "@/components/loading";
-import { useMiniKit } from "@coinbase/onchainkit/minikit";
-import { useEffect } from "react";
+import { useDepositIntoTreasury } from "@/hooks/use-smart-contracts";
+import { useMiniApp } from "@/providers/mini-app-provider";
+
 import dynamic from "next/dynamic";
 
-const Game = dynamic(
-  () => import("@/components/game").then((mod) => mod.Game),
+const FlappyFrog = dynamic(
+  () => import("@/components/flappy-frog").then((mod) => mod.FlappyFrog),
   {
     ssr: false,
     loading: () => <Loading />,
@@ -14,18 +15,10 @@ const Game = dynamic(
 );
 
 export default function App() {
-  const { isFrameReady, setFrameReady, context } = useMiniKit();
+  const { isFrameReady, fid, userName } = useMiniApp();
 
-  useEffect(() => {
-    if (!isFrameReady) {
-      setFrameReady();
-    }
-  }, [isFrameReady, setFrameReady]);
+  const { handlePayGame } = useDepositIntoTreasury();
+  if (!isFrameReady || !fid || !userName) return <Loading />;
 
-  if (!isFrameReady || !context) return <Loading />;
-
-  const fid = context.user.fid;
-  const userName = context.user.username ?? "";
-
-  return <Game fid={fid} displayName={userName} />;
+  return <FlappyFrog fid={fid} displayName={userName} pay={handlePayGame} />;
 }

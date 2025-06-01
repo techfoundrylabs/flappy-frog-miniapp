@@ -11,6 +11,7 @@ import { EventBus } from "@/lib/event-bus";
 
 import { useLayoutEffect, useRef } from "react";
 import { TransactionReceipt } from "viem";
+import { useEventHandler } from "@/hooks/use-event-handler";
 
 const HEARTS = MAX_HEARTS ?? 5;
 
@@ -23,7 +24,7 @@ interface FlappyFrogProps {
 export function FlappyFrog({ fid, displayName, pay }: FlappyFrogProps) {
   const gameContainerRef = useRef<HTMLDivElement>(null);
   const gameInstanceRef = useRef<Phaser.Game | null>(null);
-
+  useEventHandler();
   useLayoutEffect(() => {
     const initPhaser = async () => {
       if (typeof window !== "undefined" && gameContainerRef.current) {
@@ -322,6 +323,7 @@ export function FlappyFrog({ fid, displayName, pay }: FlappyFrogProps) {
             // Button click to start game.
             startButton.on("pointerdown", () => {
               if (this.hearts > 0) {
+                EventBus.emit("play-game");
                 overlay.destroy();
                 modalBg.destroy();
                 titleText.destroy();
@@ -355,6 +357,7 @@ export function FlappyFrog({ fid, displayName, pay }: FlappyFrogProps) {
                   callbackScope: this,
                   loop: true,
                 });
+              
               } else {
                 this.showPayForTryUI();
               }
@@ -536,6 +539,7 @@ export function FlappyFrog({ fid, displayName, pay }: FlappyFrogProps) {
                     this.frog.y > (this.game.config.height as number) + 50
                   ) {
                     this.showGameOverUI();
+                  
                     gameOverTimer.destroy();
                   }
                 },
@@ -682,6 +686,7 @@ export function FlappyFrog({ fid, displayName, pay }: FlappyFrogProps) {
 
             // Restart event.
             retryButton.on("pointerdown", () => {
+              EventBus.emit("play-game");
               modalBg.destroy();
               retryButton.destroy();
               retryButtonText.destroy();
@@ -789,6 +794,8 @@ export function FlappyFrog({ fid, displayName, pay }: FlappyFrogProps) {
             shareButton.on("pointerout", () => {
               shareButton.setFillStyle(0x3e84d5);
             });
+
+            EventBus.emit("game-over");
           }
 
           async showPayForTryUI() {

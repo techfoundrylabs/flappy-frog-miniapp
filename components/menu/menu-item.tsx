@@ -26,7 +26,7 @@ export const MenuItem = ({
     <Link href={url} className="flex w-full h-full">
       <div
         className={cn(
-          "flex  w-full flex-col  h-full justify-center items-center gap-y-1",
+          "flex  w-full flex-col  h-full justify-center items-center pt-1",
           isActive ? "bg-[#7f563b]" : "bg-[#caaa77] ",
           className,
         )}
@@ -48,17 +48,13 @@ export const MenuItem = ({
 };
 
 export const BlockMenu = ({ menu, path }: BlockMenuProps) => {
-  return (
-    <div className="flex w-full justify-center items-center">
-      {menu.map((item, index) => (
-        <MenuItem
-          key={index}
-          url={item.url}
-          icon={item.icon(path === item.url)}
-          label={item.label}
-          isActive={path === item.url}
-        />
-      ))}
-    </div>
-  );
+  return menu.map((item, index) => (
+    <MenuItem
+      key={index}
+      url={item.url}
+      icon={item.icon(path === item.url)}
+      label={item.label}
+      isActive={path === item.url}
+    />
+  ));
 };
