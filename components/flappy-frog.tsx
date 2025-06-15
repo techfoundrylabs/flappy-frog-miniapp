@@ -105,7 +105,7 @@ export function FlappyFrog({ fid, displayName, pay }: FlappyFrogProps) {
                 frameHeight: 6,
               },
             );
-            this.load.image("title", "assets/misc/title.png");
+            //this.load.image("title", "assets/misc/title.png");
             this.load.image("heartFull", "assets/hearts/heart-full.png");
             this.load.image("heartEmpty", "assets/hearts/heart-empty.png");
             this.load.image("tubeTop", "assets/tubes/tube-top.png");
@@ -269,13 +269,13 @@ export function FlappyFrog({ fid, displayName, pay }: FlappyFrogProps) {
             modalBg.setStrokeStyle(4, 0x7f563b);
 
             // Game title.
-            const titleText = this.add
+/*             const titleText = this.add
               .sprite(
                 (this.game.config.width as number) * 0.5,
                 (this.game.config.height as number) * 0.5 - 160,
                 "title",
               )
-              .setOrigin(0.5);
+              .setOrigin(0.5); */
 
             // "Tap to play" instruction text.
             const tapText = this.add
@@ -326,7 +326,7 @@ export function FlappyFrog({ fid, displayName, pay }: FlappyFrogProps) {
                 EventBus.emit("play-game");
                 overlay.destroy();
                 modalBg.destroy();
-                titleText.destroy();
+                //titleText.destroy();
                 tapText.destroy();
                 startButton.destroy();
                 startButtonText.destroy();
@@ -367,7 +367,7 @@ export function FlappyFrog({ fid, displayName, pay }: FlappyFrogProps) {
             this.startOverlay.add([
               overlay,
               modalBg,
-              titleText,
+              //titleText,
               tapText,
               startButton,
               startButtonText,

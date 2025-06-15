@@ -5,7 +5,7 @@ import { IS_MAINNET } from "@/config/constants";
 import { useMiniApp } from "@/providers/mini-app-provider";
 import { formattedName } from "@/utils";
 import { useOpenUrl } from "@coinbase/onchainkit/minikit";
-import { Coins, ExternalLink, Link, Wallet } from "lucide-react";
+import { Coins, Copy, ExternalLink, Link, Wallet } from "lucide-react";
 import Image from "next/image";
 
 const UserPage = () => {
@@ -18,12 +18,18 @@ const UserPage = () => {
     formattedBalance,
   } = useMiniApp();
   const openUrl = useOpenUrl();
-  const openExplorerHandler = () => {
+
+  const handlerOpenExplorer = () => {
     const url = `${chainExplorer}/address/${address}`;
     openUrl(url);
   };
+
+  const handleCopyAddress = () => {
+    if (!!address) navigator.clipboard.writeText(address);
+  };
+
   return (
-    <BaseLayout title="User Info" className="py-8 mb-12">
+    <BaseLayout title="User Info" className="py-8 mb-16">
       <div className="w-full flex flex-col gap-y-4">
         <div className="flex w-full flex-col justify-center items-center gap-y-2">
           <div className="avatar">
@@ -55,21 +61,24 @@ const UserPage = () => {
         <InfoCard
           Icon={<Wallet className="w-4 h-4 text-white" />}
           cardTitle="Wallet"
-          cardInfo={formattedName(address)}
+          cardInfo={formattedName(address, 8)}
           addInfo={
-            <button
-              className="bg-blue-500/30 px-3 py-1 rounded-full border border-blue-400/40"
-              onClick={openExplorerHandler}
-            >
-              <ExternalLink className="w-4 h-4 text-white" />
-            </button>
+            <div className="flex w-fit justify-between space-x-6 flex-row bg-blue-500/30 px-3 py-1 rounded-full border border-blue-400/40">
+              <button onClick={handlerOpenExplorer}>
+                <ExternalLink className="w-4 h-4 text-white" />
+              </button>
+              <button onClick={handleCopyAddress}>
+                <Copy className="w-4 h-4 text-white" />
+              </button>
+            </div>
           }
         />
 
         <InfoCard
           Icon={<Coins className="w-4 h-4 text-white" />}
           cardTitle="Balance"
-          cardInfo={formattedBalance}
+          cardInfo={`${Number(formattedBalance).toFixed(8)} ETH`}
+          className="text-[16px]"
         />
       </div>
     </BaseLayout>

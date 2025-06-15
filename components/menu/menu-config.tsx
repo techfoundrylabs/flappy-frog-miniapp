@@ -1,6 +1,6 @@
 import Frog from "@/components/menu/frog";
 import { MenuIcon } from "@/components/menu/menu-icon";
-import { BookOpen, ChartNoAxesColumn, Info, User } from "lucide-react";
+import { ChartNoAxesColumn, Info, ShoppingCart, User } from "lucide-react";
 
 export interface Menu {
   label: string;
@@ -27,10 +27,10 @@ export const menu: Menu[] = [
     icon: (isActive: boolean) => <MenuIcon Icon={Frog} isActive={isActive} />,
   },
   {
-    label: "History",
-    url: "/history",
+    label: "Shop",
+    url: "/shop",
     icon: (isActive: boolean) => (
-      <MenuIcon Icon={BookOpen} isActive={isActive} />
+      <MenuIcon Icon={ShoppingCart} isActive={isActive} />
     ),
   },
   {

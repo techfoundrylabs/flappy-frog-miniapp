@@ -8,5 +8,5 @@ export function cn(...inputs: ClassValue[]) {
 export const formattedName = (name: string | undefined, maxLenght = 10) => {
   if (!name) return "";
   if (name.length < maxLenght) return name;
-  return `${name.substring(0, 10)}...${name.substring(name.length - maxLenght)}`;
+  return `${name.substring(0, maxLenght)}...${name.substring(name.length - maxLenght)}`;
 };

@@ -1,4 +1,3 @@
-import { Menu } from "@/components/menu/menu-config";
 import { cn } from "@/utils";
 import Link from "next/link";
 
@@ -8,11 +7,6 @@ interface MenuItemProps {
   label?: string;
   isActive: boolean;
   className?: string;
-}
-
-interface BlockMenuProps {
-  menu: Menu[];
-  path: string;
 }
 
 export const MenuItem = ({
@@ -26,8 +20,10 @@ export const MenuItem = ({
     <Link href={url} className="flex w-full h-full">
       <div
         className={cn(
-          "flex  w-full flex-col  h-full justify-center items-center pt-1",
-          isActive ? "bg-[#7f563b]" : "bg-[#caaa77] ",
+          "flex  w-full flex-col  h-full justify-center items-center pt-1 transition-all duration-300",
+          isActive
+            ? "bg-gradient-to-r from-blue-500/40 to-cyan-500/40 text-white border-2 border-blue-400/40 shadow-lg"
+            : "text-white/80 hover:text-white hover:bg-white/10",
           className,
         )}
       >
@@ -35,8 +31,8 @@ export const MenuItem = ({
         {label ? (
           <span
             className={cn(
-              "text-[8px]",
-              !isActive ? "text-[#7f563b]" : "text-[#caaa77] ",
+              "mt-2 text-[8px]",
+              isActive ? "text-white" : "text-white/80",
             )}
           >
             {label}
@@ -45,16 +41,4 @@ export const MenuItem = ({
       </div>
     </Link>
   );
-};
-
-export const BlockMenu = ({ menu, path }: BlockMenuProps) => {
-  return menu.map((item, index) => (
-    <MenuItem
-      key={index}
-      url={item.url}
-      icon={item.icon(path === item.url)}
-      label={item.label}
-      isActive={path === item.url}
-    />
-  ));
 };

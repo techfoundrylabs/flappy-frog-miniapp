@@ -10,6 +10,7 @@ interface MenuIconProps {
 }
 
 export const MenuIcon = ({ Icon, size = 26, isActive }: MenuIconProps) => {
-  const color = isActive ? "var(--bg-navbar)" : "var(--bg-navbar-100)";
-  return <Icon size={size} color={color} />;
+  return (
+    <Icon size={size} className={isActive ? "text-white" : "text-white/80"} />
+  );
 };
