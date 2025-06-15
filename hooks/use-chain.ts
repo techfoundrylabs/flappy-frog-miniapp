@@ -8,6 +8,7 @@ export const useChain = () => {
   const targetChain = chain.id;
   const [chainUpdated, setChainUpdated] = useState(false);
   const chainName = chain.name;
+  const chainExplorer = chain.blockExplorers.default.url;
   const { switchChain } = useSwitchChain();
   const currentChain = useChainId();
 
@@ -18,5 +19,5 @@ export const useChain = () => {
     }
   };
 
-  return { chainName, chainId: targetChain, updateChain };
+  return { chainName, chainExplorer, chainId: targetChain, updateChain };
 };

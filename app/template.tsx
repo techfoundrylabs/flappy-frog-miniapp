@@ -9,7 +9,7 @@ interface TemplateLayoutProps {
   children: ReactNode;
 }
 
-const FLAPPY_FROG_LANDING_URL = "https//flappyfrog.xyz";
+const FLAPPY_FROG_LANDING_URL = "https://flappyfrog.xyz";
 
 const Template = ({ children }: TemplateLayoutProps) => {
   const [isMiniApp, setIsMiniApp] = useState<boolean | null>(null);
@@ -38,10 +38,10 @@ const Template = ({ children }: TemplateLayoutProps) => {
   if (!isMiniApp) return <Loading />;
 
   return (
-    <div className="w-full flex flex-col justify-center items-center gap-y-4 text-xs">
+    <>
       {children}
       <NavBar />
-    </div>
+    </>
   );
 };
 

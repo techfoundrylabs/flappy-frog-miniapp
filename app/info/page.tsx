@@ -1,18 +1,15 @@
 "use client";
 import { BaseLayout } from "@/components/menu/base-layout";
-import { useMiniApp } from "@/providers/mini-app-provider";
 
 const InfoPage = () => {
-  const { address } = useMiniApp();
-  console.log("=====", address);
   return (
-    <BaseLayout title="How to play">
+    <BaseLayout title="How to play" className="py-8">
       <div className="flex w-full gap-y-1 flex-col">
-        <h1 className="uppercase">Controls:</h1>
+        <h1 className="uppercase underline underline-offset-1">Controls:</h1>
         <p className="text-[10px]">TAP OR PRESS SPACE TO FLAP</p>
       </div>
       <div className="flex w-full gap-y-1 flex-col ">
-        <h1 className="uppercase">Game play:</h1>
+        <h1 className="uppercase underline underline-offset-1">Game play:</h1>
         <div className="w-full flex flex-col gap-y-4">
           <p className="text-[10px]">
             GUIDE YOUR FROG THROUGH PIPES TO SCORE, POINTS. EVERY DAY, YOU GET 5
@@ -22,8 +19,7 @@ const InfoPage = () => {
             NEED MORE? PAY 1$ TO REFILL YOUR HEARTS.
           </p>
           <p className="text-[10px]">
-            EACH DOLLAR SPENT IS SPLIT BETWEEN THE TREASURY POOL AND THE DEVS
-            WITH A 60/40 RATIO IN FAVOR OF THE TREASURY POOL.
+            EACH DOLLAR SPENT IS SPLIT BETWEEN THE TREASURY POOL
           </p>
           <p className="text-[10px]">
             AT THE END OF THE TREASURY POOL PERIOD, THE PLAYER WITH THE HIGHEST

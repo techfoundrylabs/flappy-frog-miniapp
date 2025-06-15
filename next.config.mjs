@@ -6,7 +6,9 @@ const nextConfig = {
     config.externals.push("pino-pretty", "lokijs", "encoding");
     return config;
   },
-  
+  images: {
+    domains: ["imagedelivery.net"],
+  },
 };
 
 export default nextConfig;

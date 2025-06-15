@@ -12,11 +12,11 @@ export const useMiniappWallet = () => {
 
   const { connectAsync, connectors } = useConnect();
   const { address, isConnected, isConnecting } = useAccount();
-  const { refetch: refetchBalance } = useBalance({
+  const { data: balance, refetch: refetchBalance } = useBalance({
     address,
     chainId,
   });
-
+  const formattedBalance = formatEther(balance?.value ?? BigInt(0));
   const farcasterConnector = connectors[0];
 
   updateChain();
@@ -65,6 +65,7 @@ export const useMiniappWallet = () => {
     address,
     isConnected,
     context,
+    formattedBalance,
     getWalletBalance,
   };
 };

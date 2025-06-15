@@ -19,6 +19,10 @@ interface MiniAppContextParam {
   fid: number | undefined;
   userName: string | undefined;
   address: `0x${string}` | undefined;
+  chainExplorer: string;
+  chainName: string;
+  userAvatar: string | undefined;
+  formattedBalance: string;
   setAnimateOut: Dispatch<SetStateAction<boolean>>;
   getWalletBalance: () => Promise<string>;
 }
@@ -35,14 +39,15 @@ export const MiniAppProvider = ({ children }: MiniAppProviderProps) => {
   const { isFrameReady, setFrameReady, context } = useMiniKit();
   const [animateOut, setAnimateOut] = useState(false);
   const addFrame = useAddFrame();
-  const { chainId, updateChain } = useChain();
+  const { chainId, chainName, chainExplorer, updateChain } = useChain();
 
   const { connectAsync, connectors } = useConnect();
   const { address, isConnected, isConnecting } = useAccount();
-  const { refetch: refetchBalance } = useBalance({
+  const { data: balance, refetch: refetchBalance } = useBalance({
     address,
     chainId,
   });
+  const formattedBalance = formatEther(balance?.value ?? BigInt(0));
 
   const farcasterConnector = connectors[0];
   updateChain();
@@ -95,6 +100,7 @@ export const MiniAppProvider = ({ children }: MiniAppProviderProps) => {
 
   const fid = context?.user.fid;
   const userName = context?.user.username;
+  const userAvatar = context?.user.pfpUrl;
 
   const value = {
     animateOut,
@@ -102,6 +108,10 @@ export const MiniAppProvider = ({ children }: MiniAppProviderProps) => {
     fid,
     userName,
     address,
+    chainName,
+    chainExplorer,
+    userAvatar,
+    formattedBalance,
     setAnimateOut,
     getWalletBalance,
   };
