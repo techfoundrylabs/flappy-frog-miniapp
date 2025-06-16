@@ -1,24 +1,26 @@
 "use client";
+import { HowToPlay } from "@/components/how-to-play";
+import { BaseLayout } from "@/components/menu/base-layout";
+import { useRouter } from "next/navigation";
 
-import { Loading } from "@/components/loading";
-import { useDepositIntoTreasury } from "@/hooks/use-smart-contracts";
-import { useMiniApp } from "@/providers/mini-app-provider";
+const InfoPage = () => {
+  const router = useRouter();
 
-import dynamic from "next/dynamic";
+  const handlePlayBtn = async () => {
+    await router.push("/game");
+  };
 
-const FlappyFrog = dynamic(
-  () => import("@/components/flappy-frog").then((mod) => mod.FlappyFrog),
-  {
-    ssr: false,
-    loading: () => <Loading />,
-  },
-);
+  return (
+    <BaseLayout title="How to play" className="py-8">
+      <HowToPlay />
+      <button
+        className="my-2 btn btn-success text-white text-[12px]"
+        onClick={handlePlayBtn}
+      >
+        Ready to play...
+      </button>
+    </BaseLayout>
+  );
+};
 
-export default function App() {
-  const { isFrameReady, fid, userName } = useMiniApp();
-
-  const { handlePayGame } = useDepositIntoTreasury();
-  if (!isFrameReady || !fid || !userName) return <Loading />;
-
-  return <FlappyFrog fid={fid} displayName={userName} pay={handlePayGame} />;
-}
+export default InfoPage;
