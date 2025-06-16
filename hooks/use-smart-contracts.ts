@@ -1,13 +1,8 @@
 import { TREASURY_CONTRACT_ADDRESS } from "@/config/constants";
-import {
-  useBalance,
-  usePublicClient,
-  useReadContract,
-  useWriteContract,
-} from "wagmi";
+import { usePublicClient, useReadContract, useWriteContract } from "wagmi";
 import { abi as TREASURY_POOL_ABI } from "@/lib/chain/abi/treasury-pool-abi";
 import { Abi, formatEther, parseEther } from "viem";
-import { useBasePairPrice, useTokenPrice } from "@/hooks/use-token-price";
+import { useTokenPrice } from "@/hooks/use-token-price";
 import { useChain } from "@/hooks/use-chain";
 import { useMiniApp } from "@/providers/mini-app-provider";
 
@@ -23,7 +18,6 @@ const commonContractParams: ContractCommonParams = {
 export const useDepositIntoTreasury = () => {
   const publicClient = usePublicClient();
   const { chainId } = useChain();
-  const { getUsdPrice } = useBasePairPrice();
   const { fetchPriceFeed } = useTokenPrice();
   const { getWalletBalance } = useMiniApp();
 
@@ -59,31 +53,22 @@ export const useDepositIntoTreasury = () => {
   };
 };
 
-export const useGetTreasury = () => {
-  const { chainId } = useChain();
-  const { data, refetch } = useReadContract({
-    ...commonContractParams,
-    functionName: "getTreasuryBalance",
-    chainId,
-    query: { refetchInterval: 5000 },
+export const useGetTreasuryPoolData = () => {
+  const { data, isLoading, isSuccess } = useReadContract({
+    address: TREASURY_CONTRACT_ADDRESS as `0x${string}`,
+    abi: TREASURY_POOL_ABI,
+    functionName: "getGameInfo",
+    query: {
+      staleTime: Infinity,
+      refetchInterval: 600_000,
+    },
   });
+  const contractResponse = Array.isArray(data)
+    ? (data as [bigint, bigint])
+    : [0n, 0n];
 
-  const getFormatEth = (value: bigint | undefined) => {
-    const treasuryAmount = value ? (value as bigint) : BigInt("0");
-    const treasuryAmountFormatted = formatEther(treasuryAmount);
-    return treasuryAmountFormatted;
-  };
-
-  const treasuryValue = getFormatEth(data as bigint | undefined);
-
-  const getTreasuryValue = async () => {
-    const { data: treasury } = await refetch();
-    const treasuryAmount = getFormatEth(treasury as bigint | undefined);
-    return treasuryAmount;
-  };
-
-  return {
-    treasuryValue,
-    getTreasuryValue,
-  };
+  const [treasury, gameEnd] = contractResponse;
+  const formattedTreasury = formatEther(treasury ?? 0n);
+  const gameEndMs = gameEnd ? Number(gameEnd) : 0;
+  return { treasury, formattedTreasury, gameEndMs, isLoading, isSuccess };
 };
