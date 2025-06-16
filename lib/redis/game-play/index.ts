@@ -48,6 +48,7 @@ export const getUserGamePlay = async (fid: number) => {
 export const updateLeaderboard = async (
   fid: number,
   displayName: string,
+  avatar: string,
   score: number,
 ) => {
   if (!redis) {
@@ -58,13 +59,13 @@ export const updateLeaderboard = async (
 
     const existingScore = await redis.zscore(
       leaderboardKey,
-      `${fid}:${displayName}`,
+      `${fid}:${displayName}:${avatar}`,
     );
     if (existingScore === null || existingScore < score) {
       // If the user doesn't exist or the score is higher than the existing one, add or update it.
       await redis.zadd(leaderboardKey, {
         score,
-        member: `${fid}:${displayName}`,
+        member: `${fid}@@${displayName}@@${avatar}`,
       });
       return {
         updated: true,
