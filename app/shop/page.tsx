@@ -224,7 +224,6 @@ export default function Shop({ onNavigate }: ShopProps) {
           <div className="mb-2">
             <div className="flex items-center justify-end gap-1">
               <span className="text-green-400  text-[12px]">${item.price}</span>
-              <span className="text-green-400 text-[8px]">USDC</span>
             </div>
             {item.originalPrice && (
               <span className="text-gray-400 text-[8px] line-through">
@@ -244,7 +243,7 @@ export default function Shop({ onNavigate }: ShopProps) {
   );
 
   return (
-    <BaseLayout title="Frog Shop" className="mb-16">
+    <BaseLayout title="Flappy Frog Shop" className="mb-24">
       <div className="max-w-md mx-auto space-y-6">
         {/* Game Attempts Section */}
 
@@ -278,7 +277,7 @@ export default function Shop({ onNavigate }: ShopProps) {
         </section>
 
         {/* Special Bundles Section */}
-        <section>
+{/*         <section>
           <div className="flex items-center gap-2 mb-3">
             <Crown className="w-5 h-5 text-amber-400" />
             <h2 className="text-white text-[13px]">Special Bundles</h2>
@@ -292,7 +291,7 @@ export default function Shop({ onNavigate }: ShopProps) {
               ),
             )}
           </div>
-        </section>
+        </section> */}
       </div>
     </BaseLayout>
   );
