@@ -10,3 +10,5 @@ export const formattedName = (name: string | undefined, maxLenght = 10) => {
   if (name.length < maxLenght) return name;
   return `${name.substring(0, maxLenght)}...${name.substring(name.length - maxLenght)}`;
 };
+
+export const pad = (n: number) => n.toString().padStart(2, "0");
