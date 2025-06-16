@@ -7,7 +7,7 @@ import {
 } from "wagmi";
 import { abi as TREASURY_POOL_ABI } from "@/lib/chain/abi/treasury-pool-abi";
 import { Abi, formatEther, parseEther } from "viem";
-import { useBasePairPrice } from "@/hooks/use-base-pair-price";
+import { useBasePairPrice, useTokenPrice } from "@/hooks/use-token-price";
 import { useChain } from "@/hooks/use-chain";
 import { useMiniApp } from "@/providers/mini-app-provider";
 
@@ -24,17 +24,20 @@ export const useDepositIntoTreasury = () => {
   const publicClient = usePublicClient();
   const { chainId } = useChain();
   const { getUsdPrice } = useBasePairPrice();
+  const { fetchPriceFeed } = useTokenPrice();
   const { getWalletBalance } = useMiniApp();
 
   const { writeContractAsync } = useWriteContract();
 
   const handlePayGame = async () => {
     try {
-      const amount = await getUsdPrice();
+      const amount = await fetchPriceFeed();
 
       const balance = await getWalletBalance();
 
-      if (amount > Number(balance)) throw new Error("Insufficent balance");
+      if (!amount || amount <= 0) throw new Error("Not retrieve amount");
+      if (amount > 0 && amount > Number(balance))
+        throw new Error("Insufficent balance");
 
       const trxHash = await writeContractAsync({
         ...commonContractParams,
