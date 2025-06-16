@@ -23,7 +23,7 @@ export const menu: Menu[] = [
   },
   {
     label: "Game",
-    url: "/",
+    url: "/game",
     icon: (isActive: boolean) => <MenuIcon Icon={Frog} isActive={isActive} />,
   },
   {
