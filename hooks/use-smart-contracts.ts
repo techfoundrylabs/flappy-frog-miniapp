@@ -1,9 +1,15 @@
 import { TREASURY_CONTRACT_ADDRESS } from "@/config/constants";
-import { usePublicClient, useReadContract, useWriteContract } from "wagmi";
+import {
+  useBalance,
+  usePublicClient,
+  useReadContract,
+  useWriteContract,
+} from "wagmi";
 import { abi as TREASURY_POOL_ABI } from "@/lib/chain/abi/treasury-pool-abi";
 import { Abi, formatEther, parseEther } from "viem";
 import { useBasePairPrice } from "@/hooks/use-base-pair-price";
 import { useChain } from "@/hooks/use-chain";
+import { useMiniApp } from "@/providers/mini-app-provider";
 
 interface ContractCommonParams {
   address: `0x${string}`;
@@ -18,12 +24,17 @@ export const useDepositIntoTreasury = () => {
   const publicClient = usePublicClient();
   const { chainId } = useChain();
   const { getUsdPrice } = useBasePairPrice();
+  const { getWalletBalance } = useMiniApp();
 
   const { writeContractAsync } = useWriteContract();
 
   const handlePayGame = async () => {
     try {
       const amount = await getUsdPrice();
+
+      const balance = await getWalletBalance();
+
+      if (amount > Number(balance)) throw new Error("Insufficent balance");
 
       const trxHash = await writeContractAsync({
         ...commonContractParams,
