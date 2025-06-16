@@ -263,10 +263,10 @@ export function FlappyFrog({ fid, displayName, pay }: FlappyFrogProps) {
               (this.game.config.height as number) * 0.5,
               280,
               200,
-              0xcaaa77,
+              0x2472A8,
             );
             modalBg.setOrigin(0.5);
-            modalBg.setStrokeStyle(4, 0x7f563b);
+            modalBg.setStrokeStyle(4, 0xffffff);
 
             // Game title.
 /*             const titleText = this.add
@@ -613,10 +613,10 @@ export function FlappyFrog({ fid, displayName, pay }: FlappyFrogProps) {
               (this.game.config.height as number) * 0.5,
               300,
               250,
-              0xcaaa77,
+              0x2472A8,
             );
             modalBg.setOrigin(0.5);
-            modalBg.setStrokeStyle(4, 0x7f563b);
+            modalBg.setStrokeStyle(4, 0xffffff);
 
             // Game over text.
             const gameOverText = this.add
@@ -805,10 +805,10 @@ export function FlappyFrog({ fid, displayName, pay }: FlappyFrogProps) {
               (this.game.config.height as number) * 0.5,
               300,
               250,
-              0xcaaa77,
+              0x2472a8,
             );
             modalBg.setOrigin(0.5);
-            modalBg.setStrokeStyle(4, 0x7f563b);
+            modalBg.setStrokeStyle(4, 0xffffff);
             modalBg.setDepth(101);
 
             // Out of tries text.
