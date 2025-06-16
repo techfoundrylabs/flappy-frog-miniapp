@@ -15,10 +15,17 @@ const FlappyFrog = dynamic(
 );
 
 export default function App() {
-  const { isFrameReady, fid, userName } = useMiniApp();
+  const { isFrameReady, fid, userName, userAvatar } = useMiniApp();
 
   const { handlePayGame } = useDepositIntoTreasury();
-  if (!isFrameReady || !fid || !userName) return <Loading />;
+  if (!isFrameReady || !fid || !userName || !userAvatar) return <Loading />;
 
-  return <FlappyFrog fid={fid} displayName={userName} pay={handlePayGame} />;
+  return (
+    <FlappyFrog
+      fid={fid}
+      displayName={userName}
+      avatar={userAvatar}
+      pay={handlePayGame}
+    />
+  );
 }

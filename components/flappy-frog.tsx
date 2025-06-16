@@ -18,10 +18,11 @@ const HEARTS = MAX_HEARTS ?? 5;
 interface FlappyFrogProps {
   fid: number;
   displayName: string;
+  avatar: string;
   pay: () => Promise<TransactionReceipt | undefined>;
 }
 
-export function FlappyFrog({ fid, displayName, pay }: FlappyFrogProps) {
+export function FlappyFrog({ fid, displayName, avatar, pay }: FlappyFrogProps) {
   const gameContainerRef = useRef<HTMLDivElement>(null);
   const gameInstanceRef = useRef<Phaser.Game | null>(null);
   useEventHandler();
@@ -263,13 +264,13 @@ export function FlappyFrog({ fid, displayName, pay }: FlappyFrogProps) {
               (this.game.config.height as number) * 0.5,
               280,
               200,
-              0x2472A8,
+              0x2472a8,
             );
             modalBg.setOrigin(0.5);
             modalBg.setStrokeStyle(4, 0xffffff);
 
             // Game title.
-/*             const titleText = this.add
+            /*             const titleText = this.add
               .sprite(
                 (this.game.config.width as number) * 0.5,
                 (this.game.config.height as number) * 0.5 - 160,
@@ -357,7 +358,6 @@ export function FlappyFrog({ fid, displayName, pay }: FlappyFrogProps) {
                   callbackScope: this,
                   loop: true,
                 });
-              
               } else {
                 this.showPayForTryUI();
               }
@@ -539,7 +539,7 @@ export function FlappyFrog({ fid, displayName, pay }: FlappyFrogProps) {
                     this.frog.y > (this.game.config.height as number) + 50
                   ) {
                     this.showGameOverUI();
-                  
+
                     gameOverTimer.destroy();
                   }
                 },
@@ -564,6 +564,7 @@ export function FlappyFrog({ fid, displayName, pay }: FlappyFrogProps) {
             const leaderBoardResult = await setScoreInLeaderboard(
               fid,
               displayName,
+              avatar,
               this.score,
             );
             if (leaderBoardResult?.personalRecord === true && this.score > 0) {
@@ -613,7 +614,7 @@ export function FlappyFrog({ fid, displayName, pay }: FlappyFrogProps) {
               (this.game.config.height as number) * 0.5,
               300,
               250,
-              0x2472A8,
+              0x2472a8,
             );
             modalBg.setOrigin(0.5);
             modalBg.setStrokeStyle(4, 0xffffff);
