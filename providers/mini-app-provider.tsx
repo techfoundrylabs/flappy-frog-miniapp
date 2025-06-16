@@ -21,6 +21,7 @@ interface MiniAppContextParam {
   address: `0x${string}` | undefined;
   chainExplorer: string;
   chainName: string;
+  chainId: number;
   userAvatar: string | undefined;
   formattedBalance: string;
   setAnimateOut: Dispatch<SetStateAction<boolean>>;
@@ -109,6 +110,7 @@ export const MiniAppProvider = ({ children }: MiniAppProviderProps) => {
     userName,
     address,
     chainName,
+    chainId,
     chainExplorer,
     userAvatar,
     formattedBalance,
