@@ -23,15 +23,18 @@ export const InfoCard = ({
       )}
     >
       <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
-            {Icon}
+        <div className="flex justify-center  items-center gap-x-2">
+          {Icon}
+          <div className="flex flex-col gap-y-1">
+            <h3 className={cn(" text-white text-[12px]")}>{cardTitle}</h3>
+            <p className={cn("text-white/50 text-[9px]", className)}>
+              {cardInfo}
+            </p>
           </div>
-          <h3 className={cn(" text-white text-[12px]")}>{cardTitle}</h3>
         </div>
+
         {addInfo}
       </div>
-      <p className={cn("text-white/90 text-[10px]", className)}>{cardInfo}</p>
     </div>
   );
 };
