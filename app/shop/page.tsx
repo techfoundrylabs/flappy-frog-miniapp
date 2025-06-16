@@ -1,26 +1,20 @@
 "use client";
 
-import {
-  Sparkles,
-  Crown,
-  ShoppingCart,
-  Coins,
-  Gamepad2,
-  Zap,
-} from "lucide-react";
-import Navigation from "./components/navigation";
+import { BaseLayout } from "@/components/menu/base-layout";
+import { Crown, Gamepad2, Sparkles } from "lucide-react";
 
 interface ShopItem {
   id: string;
   name: string;
   description: string;
   price: number;
+  originalPrice?: number;
   currency: string;
-  type: "attempts" | "avatar" | "powerup" | "special";
-  image: string;
-  quantity?: number;
-  rarity?: "common" | "rare" | "epic" | "legendary";
   discount?: number;
+  popular?: boolean;
+  bestValue?: boolean;
+  type: "attempts" | "nft" | "bundle";
+  rarity?: "common" | "rare" | "epic" | "legendary";
 }
 
 interface ShopProps {
@@ -32,381 +26,274 @@ const shopItems: ShopItem[] = [
   {
     id: "attempts-5",
     name: "5 Hop Attempts",
-    description: "Continue your Flappy Frog journey",
-    price: 0.001,
-    currency: "ETH",
+    description: "Continue your journey",
+    price: 1.0,
+    currency: "USDC",
     type: "attempts",
-    image: "/placeholder.svg?height=80&width=80",
-    quantity: 5,
   },
   {
     id: "attempts-15",
     name: "15 Hop Attempts",
-    description: "Extended gameplay for serious hoppers",
-    price: 0.002,
-    currency: "ETH",
-    type: "attempts",
-    image: "/placeholder.svg?height=80&width=80",
-    quantity: 15,
+    description: "Extended gameplay",
+    price: 2.4,
+    originalPrice: 3.0,
+    currency: "USDC",
     discount: 20,
+    type: "attempts",
+    popular: true,
   },
   {
-    id: "attempts-unlimited",
-    name: "Unlimited Hops (24h)",
-    description: "Hop without limits for a full day",
-    price: 0.005,
-    currency: "ETH",
-    type: "attempts",
-    image: "/placeholder.svg?height=80&width=80",
+    id: "attempts-50",
+    name: "50 Hop Attempts",
+    description: "Mega pack",
+    price: 6.5,
+    originalPrice: 10.0,
+    currency: "USDC",
     discount: 35,
+    type: "attempts",
   },
 
-  // Frog Avatars (NFTs)
+  // NFT Avatars
   {
-    id: "avatar-golden",
-    name: "Golden Frog",
-    description: "Legendary shimmering frog avatar",
-    price: 0.05,
-    currency: "ETH",
-    type: "avatar",
-    image: "/placeholder.svg?height=80&width=80",
-    rarity: "legendary",
+    id: "nft-common",
+    name: "Pond Frog",
+    description: "Classic green frog",
+    price: 12.0,
+    currency: "USDC",
+    type: "nft",
+    rarity: "common",
   },
   {
-    id: "avatar-ninja",
+    id: "nft-rare",
+    name: "Royal Frog",
+    description: "Crowned frog with cape",
+    price: 28.0,
+    currency: "USDC",
+    type: "nft",
+    rarity: "rare",
+    popular: true,
+  },
+  {
+    id: "nft-epic",
     name: "Ninja Frog",
-    description: "Epic stealth frog with special abilities",
-    price: 0.03,
-    currency: "ETH",
-    type: "avatar",
-    image: "/placeholder.svg?height=80&width=80",
+    description: "Stealth frog with abilities",
+    price: 55.0,
+    currency: "USDC",
+    type: "nft",
     rarity: "epic",
   },
   {
-    id: "avatar-royal",
-    name: "Royal Frog",
-    description: "Rare crowned frog with royal cape",
-    price: 0.02,
-    currency: "ETH",
-    type: "avatar",
-    image: "/placeholder.svg?height=80&width=80",
-    rarity: "rare",
-  },
-  {
-    id: "avatar-cyber",
-    name: "Cyber Frog",
-    description: "Futuristic frog with neon glow",
-    price: 0.015,
-    currency: "ETH",
-    type: "avatar",
-    image: "/placeholder.svg?height=80&width=80",
-    rarity: "rare",
+    id: "nft-legendary",
+    name: "Golden Frog",
+    description: "Legendary shimmering frog",
+    price: 120.0,
+    currency: "USDC",
+    type: "nft",
+    rarity: "legendary",
   },
 
-  // Power-ups
+  // Bundles
   {
-    id: "powerup-shield",
-    name: "Lily Pad Shield",
-    description: "Protects from one collision",
-    price: 0.003,
-    currency: "ETH",
-    type: "powerup",
-    image: "/placeholder.svg?height=80&width=80",
-    quantity: 3,
-  },
-  {
-    id: "powerup-magnet",
-    name: "Fly Magnet",
-    description: "Attracts flies automatically",
-    price: 0.004,
-    currency: "ETH",
-    type: "powerup",
-    image: "/placeholder.svg?height=80&width=80",
-    quantity: 5,
-  },
-
-  // Special Bundles
-  {
-    id: "special-starter",
+    id: "bundle-starter",
     name: "Tadpole Starter Pack",
-    description: "25 Attempts + Common Frog Avatar + Shield",
-    price: 0.008,
-    currency: "ETH",
-    type: "special",
-    image: "/placeholder.svg?height=80&width=80",
-    discount: 50,
+    description: "25 Attempts + Common Avatar + Shields",
+    price: 15.0,
+    originalPrice: 19.5,
+    currency: "USDC",
+    discount: 23,
+    type: "bundle",
   },
   {
-    id: "special-master",
+    id: "bundle-gamer",
+    name: "Pro Gamer Bundle",
+    description: "50 Attempts + Rare Avatar + Power-up Combo",
+    price: 32.0,
+    originalPrice: 45.5,
+    currency: "USDC",
+    discount: 30,
+    popular: true,
+    type: "bundle",
+  },
+  {
+    id: "bundle-master",
     name: "Frog Master Bundle",
-    description: "Unlimited 24h + Epic Avatar + All Power-ups",
-    price: 0.035,
-    currency: "ETH",
-    type: "special",
-    image: "/placeholder.svg?height=80&width=80",
+    description: "Unlimited 24h + Epic Avatar + All Power-ups + Exclusive Skin",
+    price: 75.0,
+    originalPrice: 125.0,
+    currency: "USDC",
     discount: 40,
+    bestValue: true,
+    type: "bundle",
   },
 ];
 
 const getRarityColor = (rarity?: string) => {
   switch (rarity) {
     case "legendary":
-      return "from-yellow-400 to-orange-500";
+      return "border-yellow-400 bg-yellow-400/10";
     case "epic":
-      return "from-purple-400 to-pink-500";
+      return "border-purple-400 bg-purple-400/10";
     case "rare":
-      return "from-blue-400 to-cyan-500";
+      return "border-blue-400 bg-blue-400/10";
     case "common":
-      return "from-green-400 to-emerald-500";
+      return "border-green-400 bg-green-400/10";
     default:
-      return "from-white/20 to-white/10";
-  }
-};
-
-const getTypeIcon = (type: string) => {
-  switch (type) {
-    case "attempts":
-      return <Gamepad2 className="w-5 h-5 text-green-400" />;
-    case "avatar":
-      return <Sparkles className="w-5 h-5 text-purple-400" />;
-    case "powerup":
-      return <Zap className="w-5 h-5 text-yellow-400" />;
-    case "special":
-      return <Crown className="w-5 h-5 text-orange-400" />;
-    default:
-      return <ShoppingCart className="w-5 h-5" />;
+      return "border-blue-400/30 bg-blue-600/70";
   }
 };
 
 export default function Shop({ onNavigate }: ShopProps) {
   const handlePurchase = (item: ShopItem) => {
-    console.log(`Purchasing ${item.name}`);
+    console.log(`Purchasing ${item.name} for $${item.price} USDC`);
   };
 
   const attemptsItems = shopItems.filter((item) => item.type === "attempts");
-  const avatarItems = shopItems.filter((item) => item.type === "avatar");
-  const powerupItems = shopItems.filter((item) => item.type === "powerup");
-  const specialItems = shopItems.filter((item) => item.type === "special");
+  const nftItems = shopItems.filter((item) => item.type === "nft");
+  const bundleItems = shopItems.filter((item) => item.type === "bundle");
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 p-4 pb-20">
-      {/* Header */}
-      <div className="text-center mb-8 pt-8">
-        <h1 className="text-white text-3xl font-bold tracking-wider mb-2">
-          FROG SHOP
-        </h1>
-        <div className="flex items-center justify-center gap-2">
-          <ShoppingCart className="w-5 h-5 text-green-400" />
-          <span className="text-blue-200 text-sm">
-            Attempts, Avatars & Power-ups
+  const renderCompactCard = (
+    item: ShopItem,
+    buttonText: string,
+    buttonColor: string,
+  ) => (
+    <div
+      key={item.id}
+      className={`relative rounded-2xl p-4 border ${
+        item.type === "nft"
+          ? getRarityColor(item.rarity)
+          : "border-blue-400/30 bg-blue-600/70"
+      }`}
+    >
+      {/* Badges */}
+      <div className="absolute -top-2 -right-2 flex gap-1">
+        {item.bestValue && (
+          <span className="bg-amber-500 text-white text-[8px] px-2 py-1 rounded-full ">
+            BEST VALUE
           </span>
+        )}
+        {item.popular && !item.bestValue && (
+          <span className="bg-green-500 text-white text-[8px] px-2 py-1 rounded-full ">
+            POPULAR
+          </span>
+        )}
+        {item.discount && (
+          <span className="bg-red-500 text-white text-[8px] px-2 py-1 rounded-full ">
+            -{item.discount}%
+          </span>
+        )}
+      </div>
+
+      {/* Content */}
+      <div className="flex items-center gap-3">
+        {/* Icon */}
+        <div className="w-10 h-10 rounded-full bg-blue-500/50 flex items-center justify-center border border-blue-400/30 flex-shrink-0">
+          {item.type === "nft" ? (
+            <span className="text-lg">🐸</span>
+          ) : item.type === "bundle" ? (
+            <Crown className="w-5 h-5 text-amber-400" />
+          ) : (
+            <span className="text-lg">
+              <Gamepad2 className="w-5 h-5 text-green-400" />
+            </span>
+          )}
+        </div>
+
+        {/* Info */}
+        <div className="flex-1 min-w-0">
+          <h3 className="text-white  text-[10px] leading-tight">{item.name}</h3>
+          <p className="text-blue-200 text-[8px]">{item.description}</p>
+          {item.rarity && (
+            <span
+              className={`inline-block mt-1 text-[8px] px-2 py-0.5 rounded-full capitalize font-semibold ${
+                item.rarity === "legendary"
+                  ? "bg-yellow-500/20 text-yellow-300"
+                  : item.rarity === "epic"
+                    ? "bg-purple-500/20 text-purple-300"
+                    : item.rarity === "rare"
+                      ? "bg-blue-500/20 text-blue-300"
+                      : "bg-green-500/20 text-green-300"
+              }`}
+            >
+              {item.rarity}
+            </span>
+          )}
+        </div>
+
+        {/* Price & Button */}
+        <div className="text-right flex-shrink-0">
+          <div className="mb-2">
+            <div className="flex items-center justify-end gap-1">
+              <span className="text-green-400  text-[12px]">${item.price}</span>
+              <span className="text-green-400 text-[8px]">USDC</span>
+            </div>
+            {item.originalPrice && (
+              <span className="text-gray-400 text-[8px] line-through">
+                ${item.originalPrice}
+              </span>
+            )}
+          </div>
+          <button
+            onClick={() => handlePurchase(item)}
+            className={`${buttonColor} text-white px-3 py-1.5 rounded-lg  text-[8px]`}
+          >
+            {buttonText}
+          </button>
         </div>
       </div>
+    </div>
+  );
 
-      <div className="max-w-md mx-auto space-y-8">
-        {/* Attempts Section */}
+  return (
+    <BaseLayout title="Frog Shop" className="mb-16">
+      <div className="max-w-md mx-auto space-y-6">
+        {/* Game Attempts Section */}
+
         <section>
-          <div className="flex items-center gap-2 mb-4">
-            <Gamepad2 className="w-6 h-6 text-green-400" />
-            <h2 className="text-white text-xl font-bold">Game Attempts</h2>
+          <div className="flex items-center gap-2 mb-3">
+            <Gamepad2 className="w-5 h-5 text-green-400" />
+            <h2 className="text-white text-[13px] ">Game Attemps</h2>
           </div>
           <div className="space-y-3">
-            {attemptsItems.map((item) => (
-              <div
-                key={item.id}
-                className="backdrop-blur-md bg-white/10 rounded-2xl p-4 border border-white/20"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-green-400/20 to-emerald-500/20 flex items-center justify-center border border-green-400/30">
-                    <Gamepad2 className="w-8 h-8 text-green-400" />
-                    {item.quantity && (
-                      <span className="absolute text-white text-xs font-bold mt-6">
-                        x{item.quantity}
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-white font-semibold">{item.name}</h3>
-                      {item.discount && (
-                        <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full">
-                          -{item.discount}%
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-blue-200 text-sm">{item.description}</p>
-                    <div className="flex items-center gap-2 mt-2">
-                      <Coins className="w-4 h-4 text-yellow-400" />
-                      <span className="text-yellow-400 font-bold">
-                        {item.price} {item.currency}
-                      </span>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => handlePurchase(item)}
-                    className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-xl font-semibold text-sm hover:from-green-600 hover:to-emerald-700 transition-all"
-                  >
-                    Buy
-                  </button>
-                </div>
-              </div>
-            ))}
+            {attemptsItems.map((item) =>
+              renderCompactCard(item, "Buy", "bg-green-500 hover:bg-green-600"),
+            )}
           </div>
         </section>
 
-        {/* Frog Avatars Section */}
+        {/* NFT Avatars Section */}
         <section>
-          <div className="flex items-center gap-2 mb-4">
-            <Sparkles className="w-6 h-6 text-purple-400" />
-            <h2 className="text-white text-xl font-bold">Frog Avatars</h2>
+          <div className="flex items-center gap-2 mb-3">
+            <Sparkles className="w-5 h-5 text-purple-400" />
+            <h2 className="text-white text-[13px] ">Frog NFTs</h2>
           </div>
           <div className="space-y-3">
-            {avatarItems.map((item) => (
-              <div
-                key={item.id}
-                className="backdrop-blur-md bg-white/10 rounded-2xl p-4 border border-white/20"
-              >
-                <div className="flex items-center gap-4">
-                  <div
-                    className={`w-16 h-16 rounded-xl bg-gradient-to-br ${getRarityColor(item.rarity)} flex items-center justify-center border border-white/30`}
-                  >
-                    <span className="text-2xl">🐸</span>
-                  </div>
-
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-white font-semibold">{item.name}</h3>
-                      <span
-                        className={`text-xs px-2 py-1 rounded-full capitalize ${
-                          item.rarity === "legendary"
-                            ? "bg-yellow-500/20 text-yellow-400"
-                            : item.rarity === "epic"
-                              ? "bg-purple-500/20 text-purple-400"
-                              : item.rarity === "rare"
-                                ? "bg-blue-500/20 text-blue-400"
-                                : "bg-green-500/20 text-green-400"
-                        }`}
-                      >
-                        {item.rarity}
-                      </span>
-                    </div>
-                    <p className="text-blue-200 text-sm">{item.description}</p>
-                    <div className="flex items-center gap-2 mt-2">
-                      <Coins className="w-4 h-4 text-yellow-400" />
-                      <span className="text-yellow-400 font-bold">
-                        {item.price} {item.currency}
-                      </span>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => handlePurchase(item)}
-                    className="bg-gradient-to-r from-purple-500 to-pink-600 text-white px-4 py-2 rounded-xl font-semibold text-sm hover:from-purple-600 hover:to-pink-700 transition-all"
-                  >
-                    Mint
-                  </button>
-                </div>
-              </div>
-            ))}
+            {nftItems.map((item) =>
+              renderCompactCard(
+                item,
+                "Mint",
+                "bg-purple-500 hover:bg-purple-600",
+              ),
+            )}
           </div>
         </section>
 
-        {/* Power-ups Section */}
+        {/* Special Bundles Section */}
         <section>
-          <div className="flex items-center gap-2 mb-4">
-            <Zap className="w-6 h-6 text-yellow-400" />
-            <h2 className="text-white text-xl font-bold">Power-ups</h2>
+          <div className="flex items-center gap-2 mb-3">
+            <Crown className="w-5 h-5 text-amber-400" />
+            <h2 className="text-white text-[13px]">Special Bundles</h2>
           </div>
           <div className="space-y-3">
-            {powerupItems.map((item) => (
-              <div
-                key={item.id}
-                className="backdrop-blur-md bg-white/10 rounded-2xl p-4 border border-white/20"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-yellow-400/20 to-orange-500/20 flex items-center justify-center border border-yellow-400/30">
-                    <Zap className="w-8 h-8 text-yellow-400" />
-                    {item.quantity && (
-                      <span className="absolute text-white text-xs font-bold mt-6">
-                        x{item.quantity}
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="flex-1">
-                    <h3 className="text-white font-semibold">{item.name}</h3>
-                    <p className="text-blue-200 text-sm">{item.description}</p>
-                    <div className="flex items-center gap-2 mt-2">
-                      <Coins className="w-4 h-4 text-yellow-400" />
-                      <span className="text-yellow-400 font-bold">
-                        {item.price} {item.currency}
-                      </span>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => handlePurchase(item)}
-                    className="bg-gradient-to-r from-yellow-500 to-orange-600 text-white px-4 py-2 rounded-xl font-semibold text-sm hover:from-yellow-600 hover:to-orange-700 transition-all"
-                  >
-                    Buy
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Special Offers Section */}
-        <section>
-          <div className="flex items-center gap-2 mb-4">
-            <Crown className="w-6 h-6 text-orange-400" />
-            <h2 className="text-white text-xl font-bold">Special Bundles</h2>
-          </div>
-          <div className="space-y-3">
-            {specialItems.map((item) => (
-              <div
-                key={item.id}
-                className="backdrop-blur-md bg-gradient-to-r from-orange-400/20 to-red-500/20 rounded-2xl p-4 border border-orange-400/30"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-orange-400/30 to-red-500/30 flex items-center justify-center border border-orange-400/50">
-                    <Crown className="w-8 h-8 text-orange-400" />
-                  </div>
-
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-white font-semibold">{item.name}</h3>
-                      {item.discount && (
-                        <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">
-                          -{item.discount}% OFF
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-blue-200 text-sm">{item.description}</p>
-                    <div className="flex items-center gap-2 mt-2">
-                      <Coins className="w-4 h-4 text-yellow-400" />
-                      <span className="text-yellow-400 font-bold">
-                        {item.price} {item.currency}
-                      </span>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => handlePurchase(item)}
-                    className="bg-gradient-to-r from-orange-500 to-red-600 text-white px-4 py-2 rounded-xl font-semibold text-sm hover:from-orange-600 hover:to-red-700 transition-all"
-                  >
-                    Get Bundle
-                  </button>
-                </div>
-              </div>
-            ))}
+            {bundleItems.map((item) =>
+              renderCompactCard(
+                item,
+                "Get Bundle",
+                "bg-orange-500 hover:bg-orange-600",
+              ),
+            )}
           </div>
         </section>
       </div>
-
-      <Navigation currentPage="shop" onNavigate={onNavigate} />
-    </div>
+    </BaseLayout>
   );
 }

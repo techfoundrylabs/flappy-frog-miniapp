@@ -48,7 +48,7 @@ const UserPage = () => {
         </div>
 
         <InfoCard
-          Icon={<Link className="w-4 h-4 text-white" />}
+          Icon={<Link className="w-5 h-5 text-blue-300" />}
           cardTitle="Chain"
           cardInfo={chainName}
           addInfo={
@@ -59,7 +59,7 @@ const UserPage = () => {
         />
 
         <InfoCard
-          Icon={<Wallet className="w-4 h-4 text-white" />}
+          Icon={<Wallet className="w-5 h-5 text-success" />}
           cardTitle="Wallet"
           cardInfo={formattedName(address, 8)}
           addInfo={
@@ -75,10 +75,10 @@ const UserPage = () => {
         />
 
         <InfoCard
-          Icon={<Coins className="w-4 h-4 text-white" />}
+          Icon={<Coins className="w-5 h-5 text-yellow-300" />}
           cardTitle="Balance"
           cardInfo={`${Number(formattedBalance).toFixed(8)} ETH`}
-          className="text-[16px]"
+          className="text-[14px] text-yellow-300"
         />
       </div>
     </BaseLayout>
