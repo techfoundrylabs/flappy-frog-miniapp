@@ -1,4 +1,4 @@
-import { Abi } from "viem";
+import type { Abi } from "viem";
 
 export const abi = [
   { inputs: [], stateMutability: "nonpayable", type: "constructor" },
@@ -12,6 +12,7 @@ export const abi = [
     name: "OwnableUnauthorizedAccount",
     type: "error",
   },
+  { inputs: [], name: "ReentrancyGuardReentrantCall", type: "error" },
   {
     anonymous: false,
     inputs: [
@@ -74,26 +75,6 @@ export const abi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: "address", name: "to", type: "address" },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "timestamp",
-        type: "uint256",
-      },
-    ],
-    name: "PayWinner",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
       {
         indexed: true,
         internalType: "address",
@@ -141,7 +122,54 @@ export const abi = [
     name: "TeamEarnUpdated",
     type: "event",
   },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "address", name: "to", type: "address" },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "timestamp",
+        type: "uint256",
+      },
+    ],
+    name: "WinnerPaid",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "address", name: "to", type: "address" },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "timestamp",
+        type: "uint256",
+      },
+    ],
+    name: "Withdrawal",
+    type: "event",
+  },
   { stateMutability: "payable", type: "fallback" },
+  {
+    inputs: [],
+    name: "MAX_TEAM_EARN",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
   {
     inputs: [],
     name: "deposit",
@@ -151,7 +179,17 @@ export const abi = [
   },
   {
     inputs: [],
-    name: "getTreasuryBalance",
+    name: "getGameInfo",
+    outputs: [
+      { internalType: "uint256", name: "", type: "uint256" },
+      { internalType: "uint256", name: "", type: "uint256" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "user", type: "address" }],
+    name: "getPendingWithdrawal",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
@@ -164,12 +202,17 @@ export const abi = [
     type: "function",
   },
   {
-    inputs: [
-      { internalType: "address payable", name: "winner", type: "address" },
-    ],
+    inputs: [{ internalType: "address", name: "winner", type: "address" }],
     name: "payWinner",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "", type: "address" }],
+    name: "pendingWithdrawals",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -180,10 +223,24 @@ export const abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "setGameEndTime",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [{ internalType: "uint256", name: "_teamEarn", type: "uint256" }],
     name: "setTeamEarn",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "teamEarn",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -202,6 +259,13 @@ export const abi = [
       },
     ],
     name: "updateTeamAddress",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "withdraw",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
