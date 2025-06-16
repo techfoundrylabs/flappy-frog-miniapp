@@ -3,6 +3,7 @@
 import { Loading } from "@/components/loading";
 import { NavBar } from "@/components/navbar";
 import sdk from "@farcaster/frame-sdk";
+import { usePathname } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
 
 interface TemplateLayoutProps {
@@ -13,12 +14,11 @@ const FLAPPY_FROG_LANDING_URL = "https://flappyfrog.xyz";
 
 const Template = ({ children }: TemplateLayoutProps) => {
   const [isMiniApp, setIsMiniApp] = useState<boolean | null>(null);
-
+  const pathname = usePathname();
   useEffect(() => {
     const checkMiniAppStatus = async () => {
       try {
         const inMiniApp = await sdk.isInMiniApp();
-        console.log("isInMiniApp:", inMiniApp);
         if (!inMiniApp) {
           console.log("Redirecting...");
           window.location.href = FLAPPY_FROG_LANDING_URL;
@@ -40,7 +40,7 @@ const Template = ({ children }: TemplateLayoutProps) => {
   return (
     <>
       {children}
-      <NavBar />
+      {pathname !== "/" ? <NavBar /> : null}
     </>
   );
 };
