@@ -87,13 +87,13 @@ const getRankIcon = (rank: number) => {
   switch (rank) {
     case 1:
       return <Crown className="w-6 h-6 text-yellow-400" />;
-    case 2:
+/*     case 2:
       return <Medal className="w-6 h-6 text-gray-300" />;
     case 3:
-      return <Award className="w-6 h-6 text-amber-600" />;
+      return <Award className="w-6 h-6 text-amber-600" />; */
     default:
       return (
-        <span className="w-4 h-4 flex items-center justify-center text-white  text-[14px]">
+        <span className="w-4 h-4 flex items-center justify-center text-white  text-[12px]">
           #{rank}
         </span>
       );
@@ -102,7 +102,7 @@ const getRankIcon = (rank: number) => {
 
 const RankingPage = () => {
   return (
-    <BaseLayout title="Top Players" className="py-8 mb-16">
+    <BaseLayout title="Top Players" className="py-8 mb-20">
       <div className="space-y-3 w-full mx-auto">
         {mockLeaderboardData.map((player, index) => (
           <div
