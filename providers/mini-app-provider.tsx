@@ -80,8 +80,6 @@ export const MiniAppProvider = ({ children }: MiniAppProviderProps) => {
   }, [addFrame]);
 
   useEffect(() => {
-    if (didInit.current) return;
-    didInit.current = true;
     if (!isFrameReady) {
       setFrameReady();
     }
@@ -90,7 +88,8 @@ export const MiniAppProvider = ({ children }: MiniAppProviderProps) => {
       handleWallectConnect();
     }
 
-    if (!!context && !context.client.added) {
+    if (!!context && !context.client.added && !didInit.current) {
+      didInit.current = true;
       checkFrameAndAdd();
     }
   }, [
