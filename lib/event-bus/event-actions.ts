@@ -5,7 +5,7 @@ export const shareCast = async (score: number) => {
   try {
     await sdk.actions.composeCast({
       text: `Check out this game! My score is ${score}.\nWould you like to try to beat this score and try to win the treasury pool?.\nCome on, press the button and play`,
-      embeds: [APP_URL],
+      embeds: [`${APP_URL}/dynamic-cast/${score}`],
     });
   } catch (error) {
     console.error(error);
