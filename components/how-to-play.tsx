@@ -13,10 +13,10 @@ export const HowToPlay = ()=>{
               5 HEARTS TO USE.
             </p>
             <p className="text-[10px]">
-              NEED MORE? PAY 1$ TO REFILL YOUR HEARTS.
+              NEED MORE? GO TO SHOP PAGE AND REFILL YOUR HEARTS.
             </p>
             <p className="text-[10px]">
-              EACH DOLLAR SPENT IS SPLIT BETWEEN THE TREASURY POOL
+              EACH DOLLAR SPENT GOES INTO THE TREASURY POOL
             </p>
             <p className="text-[10px]">
               AT THE END OF THE TREASURY POOL PERIOD, THE PLAYER WITH THE
