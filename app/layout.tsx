@@ -26,7 +26,6 @@ export const viewport: Viewport = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  const URL = APP_URL;
   return {
     title: ONCHAINKIT_PROJECT_NAME,
     description:
@@ -40,7 +39,7 @@ export async function generateMetadata(): Promise<Metadata> {
           action: {
             type: "launch_frame",
             name: ONCHAINKIT_PROJECT_NAME,
-            url: URL,
+            url: APP_URL,
             splashImageUrl: SPLASH_IMAGE_URL,
             splashBackgroundColor: SPLASH_BACKGROUND_COLOR,
           },
