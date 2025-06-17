@@ -11,6 +11,7 @@ import {
 import { createConfig, http, WagmiProvider } from "wagmi";
 import { farcasterFrame as miniAppConnector } from "@farcaster/frame-wagmi-connector";
 import { MiniAppProvider } from "@/providers/mini-app-provider";
+import { Slide, ToastContainer } from "react-toastify";
 
 const wagmiConfig = createConfig({
   chains: [baseSepolia, base],
@@ -37,6 +38,19 @@ export function Providers(props: { children: ReactNode }) {
         }}
       >
         <MiniAppProvider>{props.children}</MiniAppProvider>
+        <ToastContainer
+          position="top-center"
+          autoClose={1500}
+          hideProgressBar
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover={false}
+          theme="colored"
+          transition={Slide}
+        />
       </MiniKitProvider>
     </WagmiProvider>
   );
