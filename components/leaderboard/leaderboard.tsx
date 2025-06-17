@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { TopPlayer } from "@/actions";
 import { useMiniApp } from "@/providers/mini-app-provider";
 import { /* Medal, Award, */ Crown } from "lucide-react";
@@ -28,6 +28,10 @@ export const Leaderboard = ({ topPlayers }: LeaderboardProps) => {
   const { userName } = useMiniApp();
   return (
     <div className="space-y-3 w-full mx-auto">
+      <h1 className="uppercase text-lg text-center text-white/90">
+        Top 10 Players
+      </h1>
+
       {topPlayers &&
         topPlayers.map((player, index) => (
           <div
