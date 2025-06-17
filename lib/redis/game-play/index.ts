@@ -8,6 +8,10 @@ const getUserGamePlayKey = (fid: number): string => {
   return `${notificationServiceKey}:hearts:${fid}`;
 };
 
+const getUserGamePlayRefillKey = (fid: number): string => {
+  return `${notificationServiceKey}:refill-hearts:${fid}`;
+};
+
 export const setTTL = async (fid: number) => {
   if (!redis) {
     return null;
@@ -34,12 +38,39 @@ export const setUserGamePlay = async (fid: number, hearts: number) => {
   }
 };
 
+export const setRefillGamePlay = async (fid: number, hearts: number) => {
+  if (!redis) {
+    return null;
+  }
+  try {
+    const refillHearts =
+      (await redis.get<number>(getUserGamePlayRefillKey(fid))) ?? 0;
+    return await redis.set<number>(
+      getUserGamePlayRefillKey(fid),
+      hearts + refillHearts,
+    );
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const getUserGamePlay = async (fid: number) => {
   if (!redis) {
     return null;
   }
   try {
     return await redis.get<number>(getUserGamePlayKey(fid));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getRefillGamePlay = async (fid: number) => {
+  if (!redis) {
+    return null;
+  }
+  try {
+    return await redis.get<number>(getUserGamePlayRefillKey(fid));
   } catch (error) {
     console.error(error);
   }
