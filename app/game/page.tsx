@@ -1,7 +1,6 @@
 "use client";
 
 import { Loading } from "@/components/loading";
-import { useDepositIntoTreasury } from "@/hooks/use-smart-contracts";
 import { useMiniApp } from "@/providers/mini-app-provider";
 
 import dynamic from "next/dynamic";
@@ -14,18 +13,10 @@ const FlappyFrog = dynamic(
   },
 );
 
-export default function App() {
+export default function GamePage() {
   const { isFrameReady, fid, userName, userAvatar } = useMiniApp();
 
-  const { handlePayGame } = useDepositIntoTreasury();
   if (!isFrameReady || !fid || !userName || !userAvatar) return <Loading />;
 
-  return (
-    <FlappyFrog
-      fid={fid}
-      displayName={userName}
-      avatar={userAvatar}
-      pay={handlePayGame}
-    />
-  );
+  return <FlappyFrog fid={fid} displayName={userName} avatar={userAvatar} />;
 }
