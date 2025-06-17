@@ -1,5 +1,5 @@
 "use client";
-import { InfoCard } from "@/components/info-card";
+import { InfoCard } from "@/components/user-info/info-card";
 import { BaseLayout } from "@/components/menu/base-layout";
 import { IS_MAINNET } from "@/config/constants";
 import { useMiniApp } from "@/providers/mini-app-provider";
