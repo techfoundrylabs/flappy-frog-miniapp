@@ -896,6 +896,90 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
 
               EventBus.emit("go-to-shop");
             });
+
+            cancelButton.on("pointerdown", () => {
+              // If start overlay exists, destroy it.
+              EventBus.emit("game-over");
+              this.startOverlay?.destroy();
+
+              // Remove the pay UI.
+              modalBg.destroy();
+              messageText.destroy();
+              explanationText.destroy();
+              payButton.destroy();
+              payButtonText.destroy();
+              cancelButton.destroy();
+              cancelButtonText.destroy();
+
+              // Destroy all physics objects including pipes and score zones.
+              if (this.physics) {
+                this.physics.world.colliders.destroy();
+              }
+
+              // Destroy all game objects in the pipes group.
+              this.pipes?.clear(true, true);
+
+              // Find and destroy any remaining score zones.
+              this.children.each((child: Phaser.GameObjects.GameObject) => {
+                if (child instanceof Phaser.Physics.Arcade.Sprite) {
+                  const sprite = child as Phaser.Physics.Arcade.Sprite;
+                  if (
+                    sprite.texture &&
+                    sprite !== this.frog &&
+                    sprite.texture.key === "tubeTop" &&
+                    sprite.alpha === 0
+                  ) {
+                    child.destroy();
+                  }
+                }
+              });
+
+              // Reset frog.
+              this.frog?.setPosition(
+                100,
+                (this.game.config.height as number) * 0.5,
+              );
+              this.frog?.setVelocity(0, 0);
+              this.frog?.setGravityY(0);
+              this.frog?.setAngle(0);
+              this.frog?.clearTint();
+
+              // Reset game state.
+              this.score = 0;
+              this.gameOver = false;
+              this.gameStarted = false;
+              this.pipeSpeed = 200;
+              this.nextPipeX = 0;
+
+              // Re-add collision detection.
+              if (this.frog && this.pipes) {
+                this.physics.add.collider(
+                  this.frog,
+                  this.pipes,
+                  this.gameOverHandler,
+                  undefined,
+                  this,
+                );
+              }
+
+              if (this.scoreText) {
+                this.scoreText.setText("0");
+                this.scoreText.setVisible(false);
+              }
+
+              // Create a new start overlay.
+              this.createStartOverlay();
+
+              // Resume animations and physics.
+              this.anims.resumeAll();
+              this.physics.resume();
+            });
+            cancelButton.on("pointerover", () => {
+              cancelButton.setFillStyle(0xde5a5a);
+            });
+            cancelButton.on("pointerout", () => {
+              cancelButton.setFillStyle(0xd53e3e);
+            });
           }
         }
 
