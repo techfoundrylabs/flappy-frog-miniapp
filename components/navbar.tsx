@@ -12,7 +12,7 @@ export const NavBar = () => {
   return (
     <div
       className={cn(
-        "fixed bottom-4  z-50 flex w-full h-20  items-center  justify-between  px-4 mb-2  backdrop-blur-xl",
+        "fixed bottom-4  z-50 flex w-full h-20  items-center  justify-between  px-4 mb-2  backdrop-blur-xl rounded-lg",
         animateOut ? "animate-slide-out-bottom" : "animate-slide-in-bottom",
       )}
     >
