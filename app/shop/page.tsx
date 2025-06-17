@@ -1,12 +1,17 @@
 "use client";
 
+import { refillHearts } from "@/actions";
 import { BaseLayout } from "@/components/menu/base-layout";
+import { useDepositIntoTreasury } from "@/hooks/use-smart-contracts";
+import { useMiniApp } from "@/providers/mini-app-provider";
 import { Crown, Gamepad2, Sparkles } from "lucide-react";
+import { toast } from "react-toastify";
 
 interface ShopItem {
   id: string;
   name: string;
   description: string;
+  quantity?: number;
   price: number;
   originalPrice?: number;
   currency: string;
@@ -17,10 +22,6 @@ interface ShopItem {
   rarity?: "common" | "rare" | "epic" | "legendary";
 }
 
-interface ShopProps {
-  onNavigate: (page: "user" | "ranking" | "game" | "shop" | "info") => void;
-}
-
 const shopItems: ShopItem[] = [
   // Game Attempts
   {
@@ -28,6 +29,7 @@ const shopItems: ShopItem[] = [
     name: "5 Hop Attempts",
     description: "Continue your journey",
     price: 1.0,
+    quantity: 5,
     currency: "USDC",
     type: "attempts",
   },
@@ -37,6 +39,7 @@ const shopItems: ShopItem[] = [
     description: "Extended gameplay",
     price: 2.4,
     originalPrice: 3.0,
+    quantity: 15,
     currency: "USDC",
     discount: 20,
     type: "attempts",
@@ -48,6 +51,7 @@ const shopItems: ShopItem[] = [
     description: "Mega pack",
     price: 6.5,
     originalPrice: 10.0,
+    quantity: 50,
     currency: "USDC",
     discount: 35,
     type: "attempts",
@@ -142,9 +146,38 @@ const getRarityColor = (rarity?: string) => {
   }
 };
 
-export default function Shop({ onNavigate }: ShopProps) {
-  const handlePurchase = (item: ShopItem) => {
+export default function Shop() {
+  const { handlePayGame, isPending } = useDepositIntoTreasury();
+  const { fid } = useMiniApp();
+
+  const handlePurchase = async (item: ShopItem) => {
     console.log(`Purchasing ${item.name} for $${item.price} USDC`);
+    switch (item.type) {
+      case "attempts":
+        await buyAttemps(item.price, item.quantity!);
+        break;
+      case "nft":
+        await buyNft();
+        break;
+      case "bundle":
+        console.log("TO DO");
+    }
+  };
+
+  const buyAttemps = async (priceToPay: number, quantity: number) => {
+    try {
+      const result = await handlePayGame(priceToPay);
+      if (!!result && result.status === "success") {
+        await refillHearts(fid!, quantity);
+        toast.success("You have refilled... go to flap");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const buyNft = async () => {
+    toast.info("TO DO");
   };
 
   const attemptsItems = shopItems.filter((item) => item.type === "attempts");
@@ -235,7 +268,11 @@ export default function Shop({ onNavigate }: ShopProps) {
             onClick={() => handlePurchase(item)}
             className={`${buttonColor} text-white px-3 py-1.5 rounded-lg  text-[8px]`}
           >
-            {buttonText}
+            {isPending ? (
+              <span className="loading loading-spinner loading-xs "></span>
+            ) : (
+              buttonText
+            )}
           </button>
         </div>
       </div>
@@ -277,7 +314,7 @@ export default function Shop({ onNavigate }: ShopProps) {
         </section>
 
         {/* Special Bundles Section */}
-{/*         <section>
+        {/*         <section>
           <div className="flex items-center gap-2 mb-3">
             <Crown className="w-5 h-5 text-amber-400" />
             <h2 className="text-white text-[13px]">Special Bundles</h2>
