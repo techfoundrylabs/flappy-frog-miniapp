@@ -59,7 +59,7 @@ export const updateLeaderboard = async (
 
     const existingScore = await redis.zscore(
       leaderboardKey,
-      `${fid}:${displayName}:${avatar}`,
+      `${fid}@@${displayName}@@${avatar}`,
     );
     if (existingScore === null || existingScore < score) {
       // If the user doesn't exist or the score is higher than the existing one, add or update it.
@@ -91,18 +91,6 @@ export const getNthTopPlayers = async (limit: number) => {
       rev: true,
       withScores: true,
     });
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-export const getEndOfGame = async () => {
-  if (!redis) {
-    return null;
-  }
-  try {
-    const endOfGameKey = `${notificationServiceKey}:end-of-game`;
-    return await redis.get(endOfGameKey);
   } catch (error) {
     console.error(error);
   }
