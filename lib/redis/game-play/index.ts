@@ -43,12 +43,7 @@ export const setRefillGamePlay = async (fid: number, hearts: number) => {
     return null;
   }
   try {
-    const refillHearts =
-      (await redis.get<number>(getUserGamePlayRefillKey(fid))) ?? 0;
-    return await redis.set<number>(
-      getUserGamePlayRefillKey(fid),
-      hearts + refillHearts,
-    );
+    return await redis.set<number>(getUserGamePlayRefillKey(fid), hearts);
   } catch (error) {
     console.error(error);
   }

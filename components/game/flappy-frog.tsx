@@ -31,6 +31,7 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
           private startOverlay: Phaser.GameObjects.Container | null = null;
           private pipeSpeed: number = 200;
           private pipeSpacing: number = 350;
+          private heartText: Phaser.GameObjects.BitmapText | null = null;
           private hearts: number = 0;
           private nextPipeX: number = 0;
           private personalRecord: Phaser.Physics.Arcade.Sprite | null = null;
@@ -181,10 +182,11 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
             // Hearts.
             const heart = this.add.image(30, 35, "heartFull");
             heart.setDepth(99);
-            this.add
-              .bitmapText(60, 35, "numbers", `${this.hearts}`, 20)
+            this.heartText = this.add
+              .bitmapText(65, 35, "letters", `${this.hearts}`, 16)
               .setOrigin(0.5)
               .setTint(0xffffff);
+            this.heartText.setDepth(99);
 
             if (this.hearts === 0) {
               this.showPayForTryUI();
@@ -539,10 +541,10 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
             // Update hearts.
             this.hearts = this.hearts - 1 > 0 ? this.hearts - 1 : 0;
             await decreaseHearts(fid, this.hearts);
-            this.add
-              .bitmapText(60, 35, "numbers", this.hearts.toString(), 20)
-              .setOrigin(0.5)
-              .setTint(0xffffff);
+
+            if (this.heartText) {
+              this.heartText.setText(this.hearts.toString());
+            }
 
             // Put the user score in the leaderboard.
             const leaderBoardResult = await setScoreInLeaderboard(

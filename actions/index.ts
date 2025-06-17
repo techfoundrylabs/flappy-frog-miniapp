@@ -8,6 +8,7 @@ import {
   updateLeaderboard,
   getNthTopPlayers,
   setRefillGamePlay,
+  getRefillGamePlay,
 } from "@/lib/redis/game-play";
 
 interface Player {
@@ -21,20 +22,19 @@ export type TopPlayer = Player[];
 const MAX_USER_HEARTS = env.MAX_HEARTS;
 const LEADERBOARD_LIMIT = 10;
 
-export const initGame = async (
-  fid: number,
-  attempts: number = MAX_USER_HEARTS,
-) => {
+export const initGame = async (fid: number) => {
   try {
-    const hearts = await getUserGamePlay(fid);
-    if (hearts === null) {
-      const res = await setUserGamePlay(fid, attempts);
+    const hearts = (await getUserGamePlay(fid)) ?? 0;
+    const refill = (await getRefillGamePlay(fid)) ?? 0;
+    const totalHearts = hearts + refill;
+    if (totalHearts === 0) {
+      const res = await setUserGamePlay(fid, MAX_USER_HEARTS);
       if (res === "OK") {
         setTTL(fid);
-        return attempts;
+        return MAX_USER_HEARTS;
       }
     }
-    return hearts;
+    return totalHearts;
   } catch (error) {
     console.error(error);
   }
@@ -42,7 +42,8 @@ export const initGame = async (
 
 export const refillHearts = async (fid: number, attempts: number) => {
   try {
-    const res = await setRefillGamePlay(fid, attempts);
+    const refill = (await getRefillGamePlay(fid)) ?? 0;
+    const res = await setRefillGamePlay(fid, refill + attempts);
     if (res === "OK") {
       return attempts;
     }
@@ -53,7 +54,9 @@ export const refillHearts = async (fid: number, attempts: number) => {
 
 export const decreaseHearts = async (fid: number, hearts: number) => {
   try {
-    setUserGamePlay(fid, hearts);
+    const userHearts = (await getUserGamePlay(fid)) ?? 0;
+    if (userHearts > 0) await setUserGamePlay(fid, userHearts - 1);
+    else await setRefillGamePlay(fid, hearts);
   } catch (error) {
     console.error(error);
   }
