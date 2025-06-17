@@ -24,17 +24,17 @@ const LEADERBOARD_LIMIT = 10;
 
 export const initGame = async (fid: number) => {
   try {
-    const hearts = (await getUserGamePlay(fid)) ?? 0;
+    const hearts = await getUserGamePlay(fid);
     const refill = (await getRefillGamePlay(fid)) ?? 0;
-    const totalHearts = hearts + refill;
-    if (totalHearts === 0) {
+
+    if (refill === 0 && hearts === null) {
       const res = await setUserGamePlay(fid, MAX_USER_HEARTS);
       if (res === "OK") {
         setTTL(fid);
         return MAX_USER_HEARTS;
       }
     }
-    return totalHearts;
+    return refill + (hearts ?? 0);
   } catch (error) {
     console.error(error);
   }
