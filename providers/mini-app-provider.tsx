@@ -8,6 +8,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { formatEther } from "viem";
@@ -37,6 +38,7 @@ interface MiniAppProviderProps {
 }
 
 export const MiniAppProvider = ({ children }: MiniAppProviderProps) => {
+  const didInit = useRef(false);
   const { isFrameReady, setFrameReady, context } = useMiniKit();
   const [animateOut, setAnimateOut] = useState(false);
   const addFrame = useAddFrame();
@@ -78,6 +80,8 @@ export const MiniAppProvider = ({ children }: MiniAppProviderProps) => {
   }, [addFrame]);
 
   useEffect(() => {
+    if (didInit.current) return;
+    didInit.current = true;
     if (!isFrameReady) {
       setFrameReady();
     }
