@@ -1,28 +1,18 @@
 "use client";
 
-import {
-  decreaseHearts,
-  initGame,
-  resetGame,
-  setScoreInLeaderboard,
-} from "@/actions";
-import { MAX_HEARTS } from "@/config/constants";
+import { decreaseHearts, initGame, setScoreInLeaderboard } from "@/actions";
 import { EventBus } from "@/lib/event-bus";
 
 import { useLayoutEffect, useRef } from "react";
-import { TransactionReceipt } from "viem";
 import { useEventHandler } from "@/hooks/use-event-handler";
-
-const HEARTS = MAX_HEARTS ?? 5;
 
 interface FlappyFrogProps {
   fid: number;
   displayName: string;
   avatar: string;
-  pay: () => Promise<TransactionReceipt | undefined>;
 }
 
-export function FlappyFrog({ fid, displayName, avatar, pay }: FlappyFrogProps) {
+export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
   const gameContainerRef = useRef<HTMLDivElement>(null);
   const gameInstanceRef = useRef<Phaser.Game | null>(null);
   useEventHandler();
@@ -187,16 +177,14 @@ export function FlappyFrog({ fid, displayName, avatar, pay }: FlappyFrogProps) {
             );
 
             // Fetch available hearts.
-            this.hearts = (await this.fetchAvailableHearts()) ?? HEARTS;
+            this.hearts = (await this.fetchAvailableHearts()) ?? 0;
             // Hearts.
-            for (let i = 1; i < HEARTS + 1; i++) {
-              const heart = this.add.image(
-                i * 30,
-                35,
-                i <= this.hearts ? "heartFull" : "heartEmpty",
-              );
-              heart.setDepth(99);
-            }
+            const heart = this.add.image(30, 35, "heartFull");
+            heart.setDepth(99);
+            this.add
+              .bitmapText(60, 35, "numbers", `${this.hearts}`, 20)
+              .setOrigin(0.5)
+              .setTint(0xffffff);
 
             if (this.hearts === 0) {
               this.showPayForTryUI();
@@ -551,14 +539,10 @@ export function FlappyFrog({ fid, displayName, avatar, pay }: FlappyFrogProps) {
             // Update hearts.
             this.hearts = this.hearts - 1 > 0 ? this.hearts - 1 : 0;
             await decreaseHearts(fid, this.hearts);
-            for (let i = 1; i < HEARTS + 1; i++) {
-              const heart = this.add.image(
-                i * 30,
-                35,
-                i <= this.hearts ? "heartFull" : "heartEmpty",
-              );
-              heart.setDepth(99);
-            }
+            this.add
+              .bitmapText(60, 35, "numbers", this.hearts.toString(), 20)
+              .setOrigin(0.5)
+              .setTint(0xffffff);
 
             // Put the user score in the leaderboard.
             const leaderBoardResult = await setScoreInLeaderboard(
@@ -842,7 +826,7 @@ export function FlappyFrog({ fid, displayName, avatar, pay }: FlappyFrogProps) {
             const payButton = this.add.rectangle(
               (this.game.config.width as number) * 0.5,
               (this.game.config.height as number) * 0.5 + 20,
-              150,
+              180,
               40,
               0x4a752c,
             );
@@ -854,7 +838,7 @@ export function FlappyFrog({ fid, displayName, avatar, pay }: FlappyFrogProps) {
                 (this.game.config.width as number) * 0.5,
                 (this.game.config.height as number) * 0.5 + 20,
                 "letters",
-                "PAY 1$",
+                "BUY HEARTS",
                 12,
               )
               .setOrigin(0.5)
@@ -865,7 +849,7 @@ export function FlappyFrog({ fid, displayName, avatar, pay }: FlappyFrogProps) {
             const cancelButton = this.add.rectangle(
               (this.game.config.width as number) * 0.5,
               (this.game.config.height as number) * 0.5 + 70,
-              150,
+              180,
               40,
               0xd53e3e,
             );
@@ -908,187 +892,7 @@ export function FlappyFrog({ fid, displayName, avatar, pay }: FlappyFrogProps) {
               loadingIcon.setDepth(101);
               loadingIcon.play("loading");
 
-              // Payment process.
-              const paymentResult = await pay();
-              if (paymentResult && paymentResult.status === "success") {
-                await resetGame(fid);
-                this.hearts = HEARTS;
-
-                // Reset game state.
-                this.gameOver = false;
-                this.gameStarted = false;
-                this.score = 0;
-                this.pipeSpeed = 200;
-                this.nextPipeX = 0;
-
-                // Cleanup UI elements.
-                modalBg.destroy();
-                messageText.destroy();
-                explanationText.destroy();
-                payButton.destroy();
-                payButtonText.destroy();
-                cancelButton.destroy();
-                cancelButtonText.destroy();
-                loadingIcon.destroy();
-
-                // Reset physics and game objects.
-                this.physics.world.colliders.destroy();
-                this.pipes?.clear(true, true);
-
-                // Find and destroy any remaining score zones.
-                this.children.each((child: Phaser.GameObjects.GameObject) => {
-                  if (child instanceof Phaser.Physics.Arcade.Sprite) {
-                    const sprite = child as Phaser.Physics.Arcade.Sprite;
-                    if (
-                      sprite.texture &&
-                      sprite !== this.frog &&
-                      sprite.texture.key === "tubeTop" &&
-                      sprite.alpha === 0
-                    ) {
-                      child.destroy();
-                    }
-                  }
-                });
-
-                // Reset frog position and physics.
-                if (this.frog) {
-                  this.frog.setPosition(
-                    100,
-                    (this.game.config.height as number) * 0.5,
-                  );
-                  this.frog.setVelocity(0, 0);
-                  this.frog.setGravityY(0);
-                  this.frog.setAngle(0);
-                  this.frog.clearTint();
-                }
-
-                // Reset score display.
-                if (this.scoreText) {
-                  this.scoreText.setText("0");
-                  this.scoreText.setVisible(false);
-                }
-
-                // Update hearts display.
-                for (let i = 1; i < HEARTS + 1; i++) {
-                  const heart = this.add.image(
-                    i * 30,
-                    35,
-                    i <= this.hearts ? "heartFull" : "heartEmpty",
-                  );
-                  heart.setDepth(99);
-                }
-
-                // Re-add collision detection.
-                if (this.frog && this.pipes) {
-                  this.physics.add.collider(
-                    this.frog,
-                    this.pipes,
-                    this.gameOverHandler,
-                    undefined,
-                    this,
-                  );
-                }
-
-                // Create start overlay to begin a new game.
-                this.createStartOverlay();
-
-                // Resume animations and physics.
-                this.anims.resumeAll();
-                this.physics.resume();
-              } else {
-                loadingIcon.destroy();
-                payButtonText.setVisible(true);
-              }
-            });
-            payButton.on("pointerover", () => {
-              payButton.setFillStyle(0x5d9639);
-            });
-            payButton.on("pointerout", () => {
-              payButton.setFillStyle(0x4a752c);
-            });
-
-            // Payment cancellation event.
-            cancelButton.on("pointerdown", () => {
-              // If start overlay exists, destroy it.
-              this.startOverlay?.destroy();
-
-              // Remove the pay UI.
-              modalBg.destroy();
-              messageText.destroy();
-              explanationText.destroy();
-              payButton.destroy();
-              payButtonText.destroy();
-              cancelButton.destroy();
-              cancelButtonText.destroy();
-
-              // Destroy all physics objects including pipes and score zones.
-              if (this.physics) {
-                this.physics.world.colliders.destroy();
-              }
-
-              // Destroy all game objects in the pipes group.
-              this.pipes?.clear(true, true);
-
-              // Find and destroy any remaining score zones.
-              this.children.each((child: Phaser.GameObjects.GameObject) => {
-                if (child instanceof Phaser.Physics.Arcade.Sprite) {
-                  const sprite = child as Phaser.Physics.Arcade.Sprite;
-                  if (
-                    sprite.texture &&
-                    sprite !== this.frog &&
-                    sprite.texture.key === "tubeTop" &&
-                    sprite.alpha === 0
-                  ) {
-                    child.destroy();
-                  }
-                }
-              });
-
-              // Reset frog.
-              this.frog?.setPosition(
-                100,
-                (this.game.config.height as number) * 0.5,
-              );
-              this.frog?.setVelocity(0, 0);
-              this.frog?.setGravityY(0);
-              this.frog?.setAngle(0);
-              this.frog?.clearTint();
-
-              // Reset game state.
-              this.score = 0;
-              this.gameOver = false;
-              this.gameStarted = false;
-              this.pipeSpeed = 200;
-              this.nextPipeX = 0;
-
-              // Re-add collision detection.
-              if (this.frog && this.pipes) {
-                this.physics.add.collider(
-                  this.frog,
-                  this.pipes,
-                  this.gameOverHandler,
-                  undefined,
-                  this,
-                );
-              }
-
-              if (this.scoreText) {
-                this.scoreText.setText("0");
-                this.scoreText.setVisible(false);
-              }
-
-              // Create a new start overlay.
-              this.createStartOverlay();
-
-              // Resume animations and physics.
-              this.anims.resumeAll();
-              this.physics.resume();
-            });
-            cancelButton.on("pointerover", () => {
-              cancelButton.setFillStyle(0xde5a5a);
-            });
-            cancelButton.on("pointerout", () => {
-              cancelButton.setFillStyle(0xd53e3e);
+              EventBus.emit("go-to-shop");
             });
           }
         }
