@@ -7,7 +7,7 @@ import { useMiniApp } from "@/providers/mini-app-provider";
 import dynamic from "next/dynamic";
 
 const FlappyFrog = dynamic(
-  () => import("@/components/flappy-frog").then((mod) => mod.FlappyFrog),
+  () => import("@/components/game/flappy-frog").then((mod) => mod.FlappyFrog),
   {
     ssr: false,
     loading: () => <Loading />,
