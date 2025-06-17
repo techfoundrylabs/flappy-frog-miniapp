@@ -39,7 +39,7 @@ export const useTokenPrice = () => {
     ],
   });
 
-  const fetchPriceFeed = async () => {
+  const fetchPriceFeed = async (priceToPay: number) => {
     try {
       const { data, isSuccess } = await refetch();
       if (!isSuccess || !data) throw new Error("Failed to retrieve price data");
@@ -48,7 +48,7 @@ export const useTokenPrice = () => {
       const decimals = Number(data[1].result);
 
       const tokenPriceUsd = price / 10 ** decimals;
-      return GAME_PRICE_USD / tokenPriceUsd;
+      return priceToPay / tokenPriceUsd;
     } catch (error) {
       console.error("fetchPriceFeed error:", error);
       return null;

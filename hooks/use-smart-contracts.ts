@@ -5,6 +5,7 @@ import { Abi, formatEther, parseEther } from "viem";
 import { useTokenPrice } from "@/hooks/use-token-price";
 import { useChain } from "@/hooks/use-chain";
 import { useMiniApp } from "@/providers/mini-app-provider";
+import { toast } from "react-toastify";
 
 interface ContractCommonParams {
   address: `0x${string}`;
@@ -21,17 +22,18 @@ export const useDepositIntoTreasury = () => {
   const { fetchPriceFeed } = useTokenPrice();
   const { getWalletBalance } = useMiniApp();
 
-  const { writeContractAsync } = useWriteContract();
+  const { writeContractAsync , isPending} = useWriteContract();
 
-  const handlePayGame = async () => {
+  const handlePayGame = async (price: number) => {
     try {
-      const amount = await fetchPriceFeed();
+      const amount = await fetchPriceFeed(price);
 
       const balance = await getWalletBalance();
 
       if (!amount || amount <= 0) throw new Error("Not retrieve amount");
-      if (amount > 0 && amount > Number(balance))
+      if (amount > 0 && amount > Number(balance)) {
         throw new Error("Insufficent balance");
+      }
 
       const trxHash = await writeContractAsync({
         ...commonContractParams,
@@ -45,11 +47,15 @@ export const useDepositIntoTreasury = () => {
       return trxReceipt;
     } catch (error) {
       console.error(error);
+      const message =
+        error instanceof Error ? error.message : (error as string);
+      toast.error(message);
     }
   };
 
   return {
     handlePayGame,
+    isPending,
   };
 };
 
