@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export const useEventHandler = () => {
-  const { setAnimateOut, fid } = useMiniApp();
+  const { setAnimateOut } = useMiniApp();
   const router = useRouter();
 
   useEffect(() => {
@@ -19,5 +19,5 @@ export const useEventHandler = () => {
         EventBus.removeAllListeners();
       };
     }
-  }, [setAnimateOut]);
+  }, [router, setAnimateOut]);
 };
