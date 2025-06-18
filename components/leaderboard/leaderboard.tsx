@@ -2,6 +2,7 @@
 import { TopPlayer } from "@/actions";
 import { useMiniApp } from "@/providers/mini-app-provider";
 import { /* Medal, Award, */ Crown } from "lucide-react";
+import Image from "next/image";
 
 interface LeaderboardProps {
   topPlayers: TopPlayer | undefined;
@@ -48,7 +49,7 @@ export const Leaderboard = ({ topPlayers }: LeaderboardProps) => {
 
               {/* Avatar */}
               <div className="flex-shrink-0">
-                <img
+                <Image
                   src={player.avatar || "/placeholder.svg"}
                   alt={player.name}
                   className="w-12 h-12 rounded-full border-2 border-white/30"

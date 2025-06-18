@@ -1,7 +1,6 @@
 import Frog from "@/components/menu/frog";
 import { MenuIcon } from "@/components/menu/menu-icon";
 import {
-  ChartNoAxesColumn,
   Info,
   ShoppingCart,
   Trophy,

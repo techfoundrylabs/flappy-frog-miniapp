@@ -182,7 +182,7 @@ export default function Shop() {
 
   const attemptsItems = shopItems.filter((item) => item.type === "attempts");
   const nftItems = shopItems.filter((item) => item.type === "nft");
-  const bundleItems = shopItems.filter((item) => item.type === "bundle");
+ // const bundleItems = shopItems.filter((item) => item.type === "bundle");
 
   const renderCompactCard = (
     item: ShopItem,
