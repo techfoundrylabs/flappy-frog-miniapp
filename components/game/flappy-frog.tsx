@@ -530,7 +530,7 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
                     this.frog &&
                     this.frog.y > (this.game.config.height as number) + 50
                   ) {
-                    this.showGameOverUI();
+                    this.showGameOverUI(leaderBoardResult?.personalRecord);
 
                     gameOverTimer.destroy();
                   }
@@ -590,7 +590,7 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
             }
           }
 
-          showGameOverUI() {
+          showGameOverUI(showShare: boolean = false) {
             if (!this.frog) return;
 
             // Now pause physics completely.
@@ -653,7 +653,7 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
               .setTint(0xffffff);
 
             // Add share button.
-            if (!!this.personalRecord) {
+            if (showShare) {
               this.shareButton = this.add.rectangle(
                 (this.game.config.width as number) * 0.5,
                 (this.game.config.height as number) * 0.5 + 20,
