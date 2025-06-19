@@ -1,4 +1,4 @@
-# 🐸 Flappy Frog 
+# 🐸 Flappy Frog
 
 **A decentralized arcade game bringing classic gameplay to the blockchain with true community ownership.**
 
