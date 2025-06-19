@@ -9,12 +9,23 @@ import {
   getNthTopPlayers,
   setRefillGamePlay,
   getRefillGamePlay,
+  getRankingScoreAttemps,
 } from "@/lib/redis/game-play";
 
 interface Player {
+  fid: number;
   name: string;
   avatar: string;
   score: number;
+}
+
+interface UserRankScore {
+  rank: number;
+  score: number;
+}
+
+export interface UserRankScoreAttempts extends UserRankScore {
+  attempts: number;
 }
 
 export type TopPlayer = Player[];
@@ -81,9 +92,12 @@ export const getTopPlayers = async () => {
     return nthTopPlayers!.reduce(
       (previousValue, currentValue, currentIndex) => {
         if (currentIndex % 2 === 0) {
-          const displayName = (currentValue as string).split("@@")[1];
-          const avatar = (currentValue as string).split("@@")[2];
+          const splittedValue = (currentValue as string).split("@@");
+          const fid = splittedValue[0];
+          const displayName = splittedValue[1];
+          const avatar = splittedValue[2];
           (previousValue as Record<string, string>[]).push({
+            fid,
             name: displayName,
             avatar,
             score: nthTopPlayers![currentIndex + 1] as string,
@@ -93,6 +107,19 @@ export const getTopPlayers = async () => {
       },
       [],
     ) as TopPlayer;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getRankingScoreAttemptsByUser = async (userKey: string) => {
+  try {
+    const fid = Number(userKey.split("@@")[0]);
+    const hearts = await getUserGamePlay(fid);
+    const refill = (await getRefillGamePlay(fid)) ?? 0;
+    const attempts = refill + (hearts ?? 0);
+    const result = (await getRankingScoreAttemps(userKey)) as UserRankScore;
+    return { ...result, attempts } as UserRankScoreAttempts;
   } catch (error) {
     console.error(error);
   }

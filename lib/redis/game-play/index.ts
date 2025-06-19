@@ -121,3 +121,17 @@ export const getNthTopPlayers = async (limit: number) => {
     console.error(error);
   }
 };
+
+export const getRankingScoreAttemps = async (member: string) => {
+  if (!redis) {
+    return null;
+  }
+  try {
+    const leaderboardKey = `${notificationServiceKey}:leaderboard`;
+    const rank = await redis.zrevrank(leaderboardKey, member);
+    const score = await redis.zscore(leaderboardKey, member);
+    return { rank, score };
+  } catch (error) {
+    console.error(error);
+  }
+};

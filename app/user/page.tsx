@@ -7,9 +7,17 @@ import { formattedName } from "@/utils";
 import { useOpenUrl } from "@coinbase/onchainkit/minikit";
 import { Coins, Copy, ExternalLink, Link, Wallet } from "lucide-react";
 import Image from "next/image";
+import { toast } from "react-toastify";
+import {
+  getRankingScoreAttemptsByUser,
+  UserRankScoreAttempts,
+} from "@/actions";
+import { useCallback, useEffect, useState } from "react";
+import { UserStats } from "@/components/user-info/user-stats";
 
 const UserPage = () => {
   const {
+    fid,
     address,
     chainName,
     chainExplorer,
@@ -19,14 +27,38 @@ const UserPage = () => {
   } = useMiniApp();
   const openUrl = useOpenUrl();
 
+  const [userRankScoreAttempts, setUserRankScoreAttempts] = useState<
+    UserRankScoreAttempts | undefined
+  >();
+
   const handlerOpenExplorer = () => {
     const url = `${chainExplorer}/address/${address}`;
     openUrl(url);
   };
 
   const handleCopyAddress = () => {
-    if (!!address) navigator.clipboard.writeText(address);
+    if (!!address) {
+      navigator.clipboard.writeText(address);
+      toast.info("Address copied");
+    }
   };
+
+  const getUserRankingScoreAttempts = useCallback(async () => {
+    try {
+      const userRankScoreAttempts = await getRankingScoreAttemptsByUser(
+        `${fid}@@${userName}@@${userAvatar}`,
+      );
+      setUserRankScoreAttempts(userRankScoreAttempts);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : (error as string);
+      toast.error(message);
+    }
+  }, [fid, userAvatar, userName]);
+
+  useEffect(() => {
+    getUserRankingScoreAttempts();
+  }, [getUserRankingScoreAttempts]);
 
   return (
     <BaseLayout title="User Info" className="py-8 mb-16">
@@ -63,7 +95,7 @@ const UserPage = () => {
           cardTitle="Wallet"
           cardInfo={formattedName(address, 8)}
           addInfo={
-            <div className="flex w-fit justify-between space-x-6 flex-row bg-blue-500/30 px-3 py-1 rounded-full border border-blue-400/40">
+            <div className="flex w-fit items-start justify-between space-x-6 flex-row bg-blue-500/30 px-3 py-1 rounded-full border border-blue-400/40">
               <button onClick={handlerOpenExplorer}>
                 <ExternalLink className="w-4 h-4 text-white" />
               </button>
@@ -81,6 +113,12 @@ const UserPage = () => {
           className="text-[14px] text-yellow-300"
         />
       </div>
+
+      <UserStats
+        rank={userRankScoreAttempts?.rank}
+        score={userRankScoreAttempts?.score}
+        attempts={userRankScoreAttempts?.attempts}
+      />
     </BaseLayout>
   );
 };
