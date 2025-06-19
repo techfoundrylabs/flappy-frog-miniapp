@@ -21,7 +21,7 @@ export const UserStats = ({ score, rank, attempts }: UserStatsProps) => {
               <p className="text-blue-200 text-[10px]">Current Score</p>
             </div>
             <button
-              onClick={() => shareCast(score!, rank!)}
+              onClick={() => shareCast(score!, rank!+1)}
               className="bg-blue-500/50 hover:bg-blue-500/70 text-white p-2 rounded-lg transition-colors"
               title="Share Current Score"
             >
