@@ -5,6 +5,7 @@ import { BaseLayout } from "@/components/menu/base-layout";
 import { useDepositIntoTreasury } from "@/hooks/use-smart-contracts";
 import { useMiniApp } from "@/providers/mini-app-provider";
 import { Crown, Gamepad2, Sparkles } from "lucide-react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 
 interface ShopItem {
@@ -149,9 +150,11 @@ const getRarityColor = (rarity?: string) => {
 export default function Shop() {
   const { handlePayGame, isPending } = useDepositIntoTreasury();
   const { fid } = useMiniApp();
+  const [loadingItemId, setLoadingItemId] = useState<string | null>(null);
 
   const handlePurchase = async (item: ShopItem) => {
     console.log(`Purchasing ${item.name} for $${item.price} USDC`);
+    setLoadingItemId(item.id);
     switch (item.type) {
       case "attempts":
         await buyAttemps(item.price, item.quantity!);
@@ -162,6 +165,7 @@ export default function Shop() {
       case "bundle":
         console.log("TO DO");
     }
+    setLoadingItemId(null);
   };
 
   const buyAttemps = async (priceToPay: number, quantity: number) => {
@@ -182,7 +186,7 @@ export default function Shop() {
 
   const attemptsItems = shopItems.filter((item) => item.type === "attempts");
   const nftItems = shopItems.filter((item) => item.type === "nft");
- // const bundleItems = shopItems.filter((item) => item.type === "bundle");
+  // const bundleItems = shopItems.filter((item) => item.type === "bundle");
 
   const renderCompactCard = (
     item: ShopItem,
@@ -265,10 +269,11 @@ export default function Shop() {
             )}
           </div>
           <button
+            disabled={loadingItemId !== null && loadingItemId !== item.id}
             onClick={() => handlePurchase(item)}
             className={`${buttonColor} text-white px-3 py-1.5 rounded-lg  text-[8px]`}
           >
-            {isPending ? (
+            {isPending || loadingItemId ? (
               <span className="loading loading-spinner loading-xs "></span>
             ) : (
               buttonText
