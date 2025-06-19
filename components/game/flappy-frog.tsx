@@ -35,6 +35,8 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
           private hearts: number = 0;
           private nextPipeX: number = 0;
           private personalRecord: Phaser.Physics.Arcade.Sprite | null = null;
+          private shareButton: Phaser.GameObjects.Rectangle | null = null;
+          private shareButtonText: Phaser.GameObjects.BitmapText | null = null;
 
           constructor() {
             super({ key: "FlappyFrogScene" });
@@ -651,25 +653,37 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
               .setTint(0xffffff);
 
             // Add share button.
-            const shareButton = this.add.rectangle(
-              (this.game.config.width as number) * 0.5,
-              (this.game.config.height as number) * 0.5 + 20,
-              150,
-              40,
-              0x3e84d5,
-            );
-            shareButton.setOrigin(0.5);
-            shareButton.setInteractive({ useHandCursor: true });
-            const shareButtonText = this.add
-              .bitmapText(
+            if (!!this.personalRecord) {
+              this.shareButton = this.add.rectangle(
                 (this.game.config.width as number) * 0.5,
                 (this.game.config.height as number) * 0.5 + 20,
-                "letters",
-                "SHARE",
-                12,
-              )
-              .setOrigin(0.5)
-              .setTint(0xffffff);
+                150,
+                40,
+                0x3e84d5,
+              );
+              this.shareButton.setOrigin(0.5);
+              this.shareButton.setInteractive({ useHandCursor: true });
+              this.shareButtonText = this.add
+                .bitmapText(
+                  (this.game.config.width as number) * 0.5,
+                  (this.game.config.height as number) * 0.5 + 20,
+                  "letters",
+                  "SHARE",
+                  12,
+                )
+                .setOrigin(0.5)
+                .setTint(0xffffff);
+              // Share event.
+              this.shareButton.on("pointerdown", async () => {
+                EventBus.emit("share", this.score);
+              });
+              this.shareButton.on("pointerover", () => {
+                this.shareButton?.setFillStyle(0x6b96c7);
+              });
+              this.shareButton.on("pointerout", () => {
+                this.shareButton?.setFillStyle(0x3e84d5);
+              });
+            }
 
             // Restart event.
             retryButton.on("pointerdown", () => {
@@ -677,8 +691,8 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
               modalBg.destroy();
               retryButton.destroy();
               retryButtonText.destroy();
-              shareButton.destroy();
-              shareButtonText.destroy();
+              this.shareButton?.destroy();
+              this.shareButtonText?.destroy();
               gameOverText.destroy();
               scoreText.destroy();
               this.personalRecord?.destroy();
@@ -769,17 +783,6 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
             });
             retryButton.on("pointerout", () => {
               retryButton.setFillStyle(0x4a752c);
-            });
-
-            // Share event.
-            shareButton.on("pointerdown", async () => {
-              EventBus.emit("share", this.score);
-            });
-            shareButton.on("pointerover", () => {
-              shareButton.setFillStyle(0x6b96c7);
-            });
-            shareButton.on("pointerout", () => {
-              shareButton.setFillStyle(0x3e84d5);
             });
 
             EventBus.emit("game-over");
