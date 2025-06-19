@@ -530,7 +530,10 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
                     this.frog &&
                     this.frog.y > (this.game.config.height as number) + 50
                   ) {
-                    this.showGameOverUI(leaderBoardResult?.personalRecord);
+                    this.showGameOverUI(
+                      leaderBoardResult?.personalRecord === true &&
+                        this.score > 0,
+                    );
 
                     gameOverTimer.destroy();
                   }
