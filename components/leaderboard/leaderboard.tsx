@@ -1,6 +1,7 @@
 "use client";
 import { TopPlayer } from "@/actions";
 import { useMiniApp } from "@/providers/mini-app-provider";
+import { useViewProfile } from "@coinbase/onchainkit/minikit";
 import { /* Medal, Award, */ Crown } from "lucide-react";
 import Image from "next/image";
 
@@ -27,6 +28,7 @@ const getRankIcon = (rank: number) => {
 
 export const Leaderboard = ({ topPlayers }: LeaderboardProps) => {
   const { userName } = useMiniApp();
+  const viewUserProfile = useViewProfile();
   return (
     <div className="space-y-3 w-full mx-auto">
       <h1 className="uppercase text-lg text-center text-white/90">
@@ -48,11 +50,16 @@ export const Leaderboard = ({ topPlayers }: LeaderboardProps) => {
               <div className="flex-shrink-0">{getRankIcon(index + 1)}</div>
 
               {/* Avatar */}
-              <div className="flex-shrink-0">
+              <div
+                className="flex-shrink-0"
+                onClick={() => viewUserProfile(player.fid)}
+              >
                 <Image
-                  src={player.avatar || "/placeholder.svg"}
+                  src={player.avatar}
                   alt={player.name}
                   className="w-12 h-12 rounded-full border-2 border-white/30"
+                  width={"48"}
+                  height={"48"}
                 />
               </div>
 
