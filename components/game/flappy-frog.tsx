@@ -180,7 +180,7 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
             );
 
             // Fetch available hearts.
-            this.hearts = (await this.fetchAvailableHearts()) ?? 0;
+            this.hearts = await this.fetchAvailableHearts();
             // Hearts.
             const heart = this.add.image(30, 35, "heartFull");
             heart.setDepth(99);
@@ -530,10 +530,7 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
                     this.frog &&
                     this.frog.y > (this.game.config.height as number) + 50
                   ) {
-                    this.showGameOverUI(
-                      leaderBoardResult?.personalRecord === true &&
-                        this.score > 0,
-                    );
+                    this.showGameOverUI();
 
                     gameOverTimer.destroy();
                   }
@@ -593,7 +590,7 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
             }
           }
 
-          showGameOverUI(showShare: boolean = false) {
+          showGameOverUI() {
             if (!this.frog) return;
 
             // Now pause physics completely.
@@ -656,7 +653,7 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
               .setTint(0xffffff);
 
             // Add share button.
-            if (showShare) {
+            if (this.personalRecord?.active) {
               this.shareButton = this.add.rectangle(
                 (this.game.config.width as number) * 0.5,
                 (this.game.config.height as number) * 0.5 + 20,

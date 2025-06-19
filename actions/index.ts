@@ -48,6 +48,7 @@ export const initGame = async (fid: number) => {
     return refill + (hearts ?? 0);
   } catch (error) {
     console.error(error);
+    return 0;
   }
 };
 
