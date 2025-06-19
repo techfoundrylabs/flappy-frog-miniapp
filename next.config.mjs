@@ -7,7 +7,10 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ["imagedelivery.net"],
+    domains: [
+      "imagedelivery.net",
+      "arweave.net","i.seadn.io"
+    ],
   },
 };
 
