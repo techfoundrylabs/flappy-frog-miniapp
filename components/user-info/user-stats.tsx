@@ -21,7 +21,7 @@ export const UserStats = ({ score, rank, attempts }: UserStatsProps) => {
               <p className="text-blue-200 text-[10px]">Current Score</p>
             </div>
             <button
-              onClick={() => shareCast(score!)}
+              onClick={() => shareCast(score!, rank!)}
               className="bg-blue-500/50 hover:bg-blue-500/70 text-white p-2 rounded-lg transition-colors"
               title="Share Current Score"
             >
@@ -33,7 +33,7 @@ export const UserStats = ({ score, rank, attempts }: UserStatsProps) => {
         {/* Current Rank and Attempts Left */}
         <div className="grid grid-cols-2 gap-4">
           <div className="text-center bg-purple-500/20 rounded-xl p-4 border border-purple-400/30">
-            <p className="text-lg  text-purple-400">#{rank!+1}</p>
+            <p className="text-lg  text-purple-400">#{rank! + 1}</p>
             <p className="text-blue-200 text-[10px]">Current Rank</p>
           </div>
           <div className="text-center bg-yellow-500/20 rounded-xl p-4 border border-yellow-400/30">
