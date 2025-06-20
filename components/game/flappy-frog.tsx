@@ -191,6 +191,7 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
             this.heartText.setDepth(99);
 
             if (this.hearts === 0) {
+              EventBus.emit("game-over");
               this.showPayForTryUI();
             }
           }
