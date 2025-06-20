@@ -191,7 +191,6 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
             this.heartText.setDepth(99);
 
             if (this.hearts === 0) {
-              EventBus.emit("game-over");
               this.showPayForTryUI();
             }
           }
@@ -699,6 +698,7 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
               this.personalRecord?.destroy();
 
               if (this.hearts == 0) {
+                EventBus.emit("game-over");
                 this.showPayForTryUI();
               } else {
                 // Destroy all physics objects including pipes and score zones.

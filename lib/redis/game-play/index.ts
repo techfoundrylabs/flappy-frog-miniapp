@@ -68,6 +68,7 @@ export const getRefillGamePlay = async (fid: number) => {
     return await redis.get<number>(getUserGamePlayRefillKey(fid));
   } catch (error) {
     console.error(error);
+    return 0;
   }
 };
 
