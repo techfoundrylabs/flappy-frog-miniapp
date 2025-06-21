@@ -29,7 +29,7 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
           private gameOver: boolean = false;
           private gameStarted: boolean = false;
           private startOverlay: Phaser.GameObjects.Container | null = null;
-          private pipeSpeed: number = 200;
+          private pipeSpeed: number = 230;
           private pipeSpacing: number = 350;
           private heartText: Phaser.GameObjects.BitmapText | null = null;
           private hearts: number = 0;
@@ -653,37 +653,36 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
               .setTint(0xffffff);
 
             // Add share button.
-            if (this.personalRecord?.active) {
-              this.shareButton = this.add.rectangle(
+
+            this.shareButton = this.add.rectangle(
+              (this.game.config.width as number) * 0.5,
+              (this.game.config.height as number) * 0.5 + 20,
+              150,
+              40,
+              0x3e84d5,
+            );
+            this.shareButton.setOrigin(0.5);
+            this.shareButton.setInteractive({ useHandCursor: true });
+            this.shareButtonText = this.add
+              .bitmapText(
                 (this.game.config.width as number) * 0.5,
                 (this.game.config.height as number) * 0.5 + 20,
-                150,
-                40,
-                0x3e84d5,
-              );
-              this.shareButton.setOrigin(0.5);
-              this.shareButton.setInteractive({ useHandCursor: true });
-              this.shareButtonText = this.add
-                .bitmapText(
-                  (this.game.config.width as number) * 0.5,
-                  (this.game.config.height as number) * 0.5 + 20,
-                  "letters",
-                  "SHARE",
-                  12,
-                )
-                .setOrigin(0.5)
-                .setTint(0xffffff);
-              // Share event.
-              this.shareButton.on("pointerdown", async () => {
-                EventBus.emit("share", this.score);
-              });
-              this.shareButton.on("pointerover", () => {
-                this.shareButton?.setFillStyle(0x6b96c7);
-              });
-              this.shareButton.on("pointerout", () => {
-                this.shareButton?.setFillStyle(0x3e84d5);
-              });
-            }
+                "letters",
+                "SHARE",
+                12,
+              )
+              .setOrigin(0.5)
+              .setTint(0xffffff);
+            // Share event.
+            this.shareButton.on("pointerdown", async () => {
+              EventBus.emit("share", this.score);
+            });
+            this.shareButton.on("pointerover", () => {
+              this.shareButton?.setFillStyle(0x6b96c7);
+            });
+            this.shareButton.on("pointerout", () => {
+              this.shareButton?.setFillStyle(0x3e84d5);
+            });
 
             // Restart event.
             retryButton.on("pointerdown", () => {

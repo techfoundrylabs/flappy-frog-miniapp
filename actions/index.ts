@@ -38,7 +38,7 @@ export const initGame = async (fid: number) => {
     const hearts = await getUserGamePlay(fid);
     const refill = await getRefillGamePlay(fid);
 
-    if (refill === 0 && hearts === null) {
+    if (hearts === null) {
       const res = await setUserGamePlay(fid, MAX_USER_HEARTS);
       if (res === "OK") {
         setTTL(fid);
