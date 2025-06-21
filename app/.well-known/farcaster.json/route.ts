@@ -1,6 +1,6 @@
 export async function GET() {
   const URL = process.env.NEXT_PUBLIC_URL;
-  
+
   return Response.json({
     accountAssociation: {
       header: process.env.FARCASTER_HEADER,
@@ -18,9 +18,6 @@ export async function GET() {
       splashBackgroundColor: `#${process.env.NEXT_PUBLIC_SPLASH_BACKGROUND_COLOR}`,
       webhookUrl: `${URL}/api/webhook`,
       primaryCategory: "games",
-      subtitle: "Flap and Win",
-      description: "Fly, dodge, and dominate! Join the flight frenzy on the Base chain. Collect points, beat the pipes, and climb to the top for a chance to win the Treasury Pool in Ethereum (ETH). Connect your wallet and take off!";
-
     },
   });
 }
