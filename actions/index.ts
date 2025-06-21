@@ -36,7 +36,7 @@ const LEADERBOARD_LIMIT = 10;
 export const initGame = async (fid: number) => {
   try {
     const hearts = await getUserGamePlay(fid);
-    const refill = await getRefillGamePlay(fid);
+    const refill = (await getRefillGamePlay(fid)) ?? 0;
 
     if (hearts === null) {
       const res = await setUserGamePlay(fid, MAX_USER_HEARTS);
@@ -45,7 +45,7 @@ export const initGame = async (fid: number) => {
         return MAX_USER_HEARTS;
       }
     }
-    return refill ?? 0 + (hearts ?? 0);
+    return refill + (hearts ?? 0);
   } catch (error) {
     console.error(error);
     return 0;
