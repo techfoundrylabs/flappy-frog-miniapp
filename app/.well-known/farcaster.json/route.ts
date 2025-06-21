@@ -17,7 +17,10 @@ export async function GET() {
       splashImageUrl: process.env.NEXT_PUBLIC_SPLASH_IMAGE_URL,
       splashBackgroundColor: `#${process.env.NEXT_PUBLIC_SPLASH_BACKGROUND_COLOR}`,
       webhookUrl: `${URL}/api/webhook`,
-      tagline:"games"
+      primaryCategory: "games",
+      subtitle: "Flap and Win",
+      description: "Fly, dodge, and dominate! Join the flight frenzy on the Base chain. Collect points, beat the pipes, and climb to the top for a chance to win the Treasury Pool in Ethereum (ETH). Connect your wallet and take off!";
+
     },
   });
 }
