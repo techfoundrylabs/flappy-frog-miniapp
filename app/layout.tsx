@@ -9,6 +9,7 @@ import {
   SPLASH_BACKGROUND_COLOR,
   SPLASH_IMAGE_URL,
   VERSION,
+  MINIAPP_METADATA_DESCRIPTION,
 } from "@/config/constants";
 import background from "@/assets/flappy-frog-bg.png";
 
@@ -28,8 +29,7 @@ export const viewport: Viewport = {
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: ONCHAINKIT_PROJECT_NAME,
-    description:
-      "Fly, dodge, and dominate! Join the flight frenzy on the Base chain. Collect points, beat the pipes, and climb to the top for a chance to win the Treasury Pool in Ethereum (ETH). Connect your wallet and take off!",
+    description: MINIAPP_METADATA_DESCRIPTION,
     other: {
       "fc:frame": JSON.stringify({
         version: VERSION,

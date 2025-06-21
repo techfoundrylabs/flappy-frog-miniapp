@@ -18,4 +18,5 @@ export const TREASURY_CONTRACT_ADDRESS =
 
 export const IS_MAINNET = NETWORK === "mainnet";
 
-export const WARPCASTER_URL = "https://warpcast.com/miniapps/8NDoX-86JBe1/flappy-frog";
+export const MINIAPP_METADATA_DESCRIPTION =
+  "Fly, dodge, and dominate! Join the flight frenzy on the Base chain. Collect points, beat the pipes, and climb to the top for a chance to win the Treasury Pool in Ethereum (ETH). Connect your wallet and take off!";

@@ -1,6 +1,7 @@
 import { Home } from "@/components/home/home";
 import {
   APP_URL,
+  MINIAPP_METADATA_DESCRIPTION,
   ONCHAINKIT_PROJECT_NAME,
   SPLASH_BACKGROUND_COLOR,
   SPLASH_IMAGE_URL,
@@ -28,9 +29,11 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: `Launch ${ONCHAINKIT_PROJECT_NAME}`,
+    description: MINIAPP_METADATA_DESCRIPTION,
+
     openGraph: {
-      title: "Mini App Starter",
-      description: "Mini App Next Template",
+      title: ONCHAINKIT_PROJECT_NAME,
+      description: MINIAPP_METADATA_DESCRIPTION,
       images: [{ url: `${APP_URL}/cast.png` }],
     },
     other: {
