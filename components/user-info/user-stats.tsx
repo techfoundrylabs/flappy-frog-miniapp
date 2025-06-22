@@ -9,7 +9,7 @@ interface UserStatsProps {
 
 export const UserStats = ({ score, rank, attempts }: UserStatsProps) => {
   const realScore = score ?? 0;
-  const realRank = !!rank ? rank + 1 : -1;
+  const realRank = typeof rank === "number" && rank >= 0 ? rank + 1 : -1;
   const realAttempts = attempts ?? 0;
   return (
     <div className="backdrop-blur-md bg-white/10 rounded-2xl p-4 border border-white/20">
@@ -26,7 +26,7 @@ export const UserStats = ({ score, rank, attempts }: UserStatsProps) => {
 
             <button
               onClick={() =>
-                shareCast(realScore, realRank > 0 ? realRank : undefined)
+                shareCast(realScore, realRank >= 0 ? realRank : undefined)
               }
               className="bg-blue-500/50 hover:bg-blue-500/70 text-white p-2 rounded-lg transition-colors"
               title="Share Current Score"
@@ -40,7 +40,7 @@ export const UserStats = ({ score, rank, attempts }: UserStatsProps) => {
         <div className="grid grid-cols-2 gap-4">
           <div className="text-center bg-purple-500/20 rounded-xl p-4 border border-purple-400/30">
             <p className="text-lg  text-purple-400">
-              {realRank > 0 ? `#${realRank}` : "-"}
+              {realRank >= 0 ? `#${realRank}` : "-"}
             </p>
             <p className="text-blue-200 text-[10px]">Current Rank</p>
           </div>
