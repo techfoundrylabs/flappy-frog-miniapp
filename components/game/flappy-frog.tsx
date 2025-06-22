@@ -1,11 +1,15 @@
 "use client";
 
-import { decreaseHearts, initGame, setScoreInLeaderboard } from "@/actions";
+import {
+  decreaseHearts,
+  getTimeToAutoRefill,
+  initGame,
+  setScoreInLeaderboard,
+} from "@/actions";
 import { EventBus } from "@/lib/event-bus";
 
 import { useLayoutEffect, useRef } from "react";
 import { useEventHandler } from "@/hooks/use-event-handler";
-import { getTTL } from "@/lib/redis/game-play";
 
 interface FlappyFrogProps {
   fid: number;
@@ -185,7 +189,7 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
 
             this.hearts = await this.fetchAvailableHearts();
             if (this.hearts === 0) {
-              this.timeToAutoRefill = (await getTTL(fid)) ?? 0;
+              this.timeToAutoRefill = (await getTimeToAutoRefill(fid)) ?? 0;
             }
             // Hearts.
             const heart = this.add.image(30, 35, "heartFull");
