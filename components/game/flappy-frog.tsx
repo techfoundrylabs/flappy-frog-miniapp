@@ -829,11 +829,21 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
             const explanationText = this.add
               .bitmapText(
                 (this.game.config.width as number) * 0.5,
-                (this.game.config.height as number) * 0.5 - 35,
+                (this.game.config.height as number) * 0.5 - 45,
                 "letters",
-                `NEXT AUTOREFILL\n
-                ${formatTime(this.timeToAutoRefill)}\n
-                WANNA PLAY NOW?`,
+                `AUTOREFILL IN:${formatTime(this.timeToAutoRefill)}`,
+                12,
+              )
+              .setOrigin(0.5)
+              .setTint(0xffffff)
+              .setDepth(101);
+
+            const explanationTextMore = this.add
+              .bitmapText(
+                (this.game.config.width as number) * 0.5,
+                (this.game.config.height as number) * 0.5 - 25,
+                "letters",
+                "WANNA PLAY NOW?",
                 12,
               )
               .setOrigin(0.5)
@@ -922,6 +932,7 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
               modalBg.destroy();
               messageText.destroy();
               explanationText.destroy();
+              explanationTextMore.destroy();
               payButton.destroy();
               payButtonText.destroy();
               cancelButton.destroy();
