@@ -148,7 +148,7 @@ const getRarityColor = (rarity?: string) => {
 };
 
 export default function Shop() {
-  const { handlePayGame, isPending } = useDepositIntoTreasury();
+  const { handlePayGame } = useDepositIntoTreasury();
   const { fid } = useMiniApp();
   const [loadingItemId, setLoadingItemId] = useState<string | null>(null);
 
@@ -273,7 +273,7 @@ export default function Shop() {
             onClick={() => handlePurchase(item)}
             className={`${buttonColor} text-white px-3 py-1.5 rounded-lg  text-[8px]`}
           >
-            {isPending || loadingItemId ? (
+            {loadingItemId === item.id ? (
               <span className="loading loading-spinner loading-xs "></span>
             ) : (
               buttonText
