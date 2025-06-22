@@ -10,7 +10,7 @@ export const BaseLayout = ({ title, children, className }: BaseLayoutProps) => {
   return (
     <div
       className={cn(
-        "backdrop-blur flex flex-1 min-h-sceen  flex-col  w-full p-4 gap-y-2 overflow-y-auto",
+        "backdrop-blur-lg flex flex-1 min-h-sceen  flex-col  w-full p-4 gap-y-2 overflow-y-auto",
         className,
       )}
     >
