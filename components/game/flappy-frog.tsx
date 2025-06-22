@@ -10,6 +10,7 @@ import { EventBus } from "@/lib/event-bus";
 
 import { useLayoutEffect, useRef } from "react";
 import { useEventHandler } from "@/hooks/use-event-handler";
+import { formatTime } from "@/utils";
 
 interface FlappyFrogProps {
   fid: number;
@@ -817,7 +818,7 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
                 (this.game.config.width as number) * 0.5,
                 (this.game.config.height as number) * 0.5 - 75,
                 "letters",
-                `OUT OF HEARTS\n${this.timeToAutoRefill}`,
+                `OUT OF HEARTS`,
                 14,
               )
               .setOrigin(0.5)
@@ -830,7 +831,9 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
                 (this.game.config.width as number) * 0.5,
                 (this.game.config.height as number) * 0.5 - 35,
                 "letters",
-                "WANNA PLAY NOW?",
+                `NEXT AUTOREFILL\n
+                ${formatTime(this.timeToAutoRefill)}\n
+                WANNA PLAY NOW?`,
                 12,
               )
               .setOrigin(0.5)

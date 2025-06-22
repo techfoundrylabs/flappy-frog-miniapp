@@ -12,3 +12,17 @@ export const formattedName = (name: string | undefined, maxLenght = 10) => {
 };
 
 export const pad = (n: number) => n.toString().padStart(2, "0");
+
+export const formatTime = (seconds: number): string => {
+  if (seconds < 60) {
+    return `${seconds} sec`;
+  }
+
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) {
+    return `${minutes} min`;
+  }
+
+  const hours = Math.floor(minutes / 60);
+  return `${hours} h`;
+};
