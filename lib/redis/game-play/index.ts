@@ -25,6 +25,18 @@ export const setTTL = async (fid: number) => {
   }
 };
 
+export const getTTL = async (fid: number) => {
+  if (!redis) {
+    return null;
+  }
+  try {
+    const ttl = await redis.ttl(getUserGamePlayKey(fid));
+    return ttl;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const setUserGamePlay = async (fid: number, hearts: number) => {
   if (!redis) {
     return null;

@@ -5,6 +5,7 @@ import { EventBus } from "@/lib/event-bus";
 
 import { useLayoutEffect, useRef } from "react";
 import { useEventHandler } from "@/hooks/use-event-handler";
+import { getTTL } from "@/lib/redis/game-play";
 
 interface FlappyFrogProps {
   fid: number;
@@ -37,6 +38,7 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
           private personalRecord: Phaser.Physics.Arcade.Sprite | null = null;
           private shareButton: Phaser.GameObjects.Rectangle | null = null;
           private shareButtonText: Phaser.GameObjects.BitmapText | null = null;
+          private timeToAutoRefill: number = 0;
 
           constructor() {
             super({ key: "FlappyFrogScene" });
@@ -180,7 +182,11 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
             );
 
             // Fetch available hearts.
+
             this.hearts = await this.fetchAvailableHearts();
+            if (this.hearts === 0) {
+              this.timeToAutoRefill = (await getTTL(fid)) ?? 0;
+            }
             // Hearts.
             const heart = this.add.image(30, 35, "heartFull");
             heart.setDepth(99);
@@ -807,7 +813,7 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
                 (this.game.config.width as number) * 0.5,
                 (this.game.config.height as number) * 0.5 - 75,
                 "letters",
-                "OUT OF HEARTS",
+                `OUT OF HEARTS\n${this.timeToAutoRefill}`,
                 14,
               )
               .setOrigin(0.5)
@@ -820,7 +826,7 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
                 (this.game.config.width as number) * 0.5,
                 (this.game.config.height as number) * 0.5 - 35,
                 "letters",
-                "WANNA REFILL?",
+                "WANNA PLAY NOW?",
                 12,
               )
               .setOrigin(0.5)

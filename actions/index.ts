@@ -10,6 +10,7 @@ import {
   setRefillGamePlay,
   getRefillGamePlay,
   getRankingScoreAttemps,
+  getTTL,
 } from "@/lib/redis/game-play";
 
 interface Player {
@@ -45,6 +46,7 @@ export const initGame = async (fid: number) => {
         return MAX_USER_HEARTS;
       }
     }
+
     return refill + (hearts ?? 0);
   } catch (error) {
     console.error(error);
@@ -121,6 +123,14 @@ export const getRankingScoreAttemptsByUser = async (userKey: string) => {
     const attempts = refill + (hearts ?? 0);
     const result = (await getRankingScoreAttemps(userKey)) as UserRankScore;
     return { ...result, attempts } as UserRankScoreAttempts;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getTimeToAutoRefill = async (fid: number) => {
+  try {
+    return await getTTL(fid);
   } catch (error) {
     console.error(error);
   }
