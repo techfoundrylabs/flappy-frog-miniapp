@@ -189,9 +189,7 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
             // Fetch available hearts.
 
             this.hearts = await this.fetchAvailableHearts();
-            if (this.hearts === 0) {
-              this.timeToAutoRefill = (await getTimeToAutoRefill(fid)) ?? 0;
-            }
+
             // Hearts.
             const heart = this.add.image(30, 35, "heartFull");
             heart.setDepth(99);
@@ -801,6 +799,7 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
 
           async showPayForTryUI() {
             // Create modal.
+            this.timeToAutoRefill = (await getTimeToAutoRefill(fid)) ?? 0;
             const modalBg = this.add.rectangle(
               (this.game.config.width as number) * 0.5,
               (this.game.config.height as number) * 0.5,
