@@ -39,7 +39,7 @@ export const UserStats = ({ score, rank, attempts }: UserStatsProps) => {
         {/* Current Rank and Attempts Left */}
         <div className="grid grid-cols-2 gap-4">
           <div className="text-center bg-purple-500/20 rounded-xl p-4 border border-purple-400/30">
-            <p className="text-lg  text-purple-400">
+            <p className="text-lg  text-yellow-400">
               {realRank >= 0 ? `#${realRank}` : "-"}
             </p>
             <p className="text-blue-200 text-[10px]">Current Rank</p>
