@@ -2,7 +2,10 @@
 
 import { refillHearts } from "@/actions";
 import { BaseLayout } from "@/components/menu/base-layout";
-import { useDepositIntoTreasury } from "@/hooks/use-smart-contracts";
+import {
+  useDepositIntoTreasury,
+  useGetTreasuryPoolData,
+} from "@/hooks/use-smart-contracts";
 import { useMiniApp } from "@/providers/mini-app-provider";
 import { Crown, Gamepad2, Sparkles } from "lucide-react";
 import { useState } from "react";
@@ -149,6 +152,8 @@ const getRarityColor = (rarity?: string) => {
 
 export default function Shop() {
   const { handlePayGame } = useDepositIntoTreasury();
+  const { refetchTreasuryAmount } = useGetTreasuryPoolData();
+
   const { fid } = useMiniApp();
   const [loadingItemId, setLoadingItemId] = useState<string | null>(null);
 
@@ -173,6 +178,7 @@ export default function Shop() {
       const result = await handlePayGame(priceToPay);
       if (!!result && result.status === "success") {
         await refillHearts(fid!, quantity);
+        await refetchTreasuryAmount();
         toast.success("You have refilled... go to flap");
       }
     } catch (error) {

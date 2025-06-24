@@ -8,7 +8,7 @@ import {
 import { abi as TREASURY_POOL_ABI } from "@/lib/chain/abi/treasury-pool-abi";
 import { useMiniApp } from "@/providers/mini-app-provider";
 import { toast } from "react-toastify";
-import { Abi, erc20Abi, formatUnits } from "viem";
+import { Abi, erc20Abi, formatUnits, parseUnits } from "viem";
 import { erc20Address } from "@/config/erc20-address";
 
 export const useDepositIntoTreasury = () => {
@@ -45,7 +45,10 @@ export const useDepositIntoTreasury = () => {
         address: usdcAddress,
         chainId,
         functionName: "transfer",
-        args: [TREASURY_CONTRACT_ADDRESS, price],
+        args: [
+          TREASURY_CONTRACT_ADDRESS,
+          parseUnits(price.toString(), decimals),
+        ],
       });
       const trxReceipt = await publicClient?.waitForTransactionReceipt({
         hash: trxHash,
@@ -66,7 +69,12 @@ export const useDepositIntoTreasury = () => {
 };
 
 export const useGetTreasuryPoolData = () => {
-  const { data, isLoading, isSuccess } = useReadContract({
+  const {
+    data,
+    isLoading,
+    isSuccess,
+    refetch: refetchTreasuryAmount,
+  } = useReadContract({
     address: TREASURY_CONTRACT_ADDRESS as `0x${string}`,
     abi: TREASURY_POOL_ABI,
     functionName: "getGameInfo",
@@ -88,6 +96,7 @@ export const useGetTreasuryPoolData = () => {
     treamRevenue,
     gameEndMs,
     gameNumber,
+    refetchTreasuryAmount,
     isLoading,
     isSuccess,
   };
