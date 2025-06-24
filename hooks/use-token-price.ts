@@ -1,5 +1,5 @@
 import { GAME_PRICE_USD } from "@/config/constants";
-import { AssetPairs, chainLinkFeedPrice } from "@/config/contracts-address";
+import { AssetPairs, chainLinkFeedPrice } from "@/config/chainlink-contracts-address";
 import { getEthUsdPrice } from "@/lib/base";
 import { abi } from "@/lib/chain/abi/chainlink-price-feed";
 import { useMiniApp } from "@/providers/mini-app-provider";

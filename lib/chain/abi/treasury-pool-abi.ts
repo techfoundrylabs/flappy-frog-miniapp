@@ -1,7 +1,14 @@
 import type { Abi } from "viem";
 
 export const abi = [
-  { inputs: [], stateMutability: "nonpayable", type: "constructor" },
+  {
+    inputs: [
+      { internalType: "address", name: "_tokenAddress", type: "address" },
+      { internalType: "uint256", name: "_teamEarn", type: "uint256" },
+    ],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
   {
     inputs: [{ internalType: "address", name: "owner", type: "address" }],
     name: "OwnableInvalidOwner",
@@ -172,15 +179,17 @@ export const abi = [
   },
   {
     inputs: [],
-    name: "deposit",
-    outputs: [],
-    stateMutability: "payable",
+    name: "gameNumer",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "getGameInfo",
     outputs: [
+      { internalType: "uint256", name: "", type: "uint256" },
+      { internalType: "uint256", name: "", type: "uint256" },
       { internalType: "uint256", name: "", type: "uint256" },
       { internalType: "uint256", name: "", type: "uint256" },
     ],

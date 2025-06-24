@@ -4,16 +4,19 @@ import { useGetTreasuryPoolData } from "@/hooks/use-smart-contracts";
 import { Clock, Crown } from "lucide-react";
 
 export const TreasuryPoolInfo = () => {
-  const { formattedTreasury, gameEndMs } = useGetTreasuryPoolData();
+  const { formattedTreasury, gameEndMs, gameNumber } = useGetTreasuryPoolData();
   const { timeLeftFormatted } = useCountdown(gameEndMs);
 
   return (
     <div className="bg-gradient-to-r from-purple-600/80 to-indigo-600/80 rounded-2xl p-6 border-2 border-purple-400/50 shadow-xl mt-6">
       <div className="text-center">
         {/* Pool Amount */}
-        <div className="flex items-center justify-center gap-2 mb-4">
+        <div className="flex flex-col items-center justify-center gap-2 mb-4">
+          <span className="text-emerald-200 font-black text-sm">
+            Game {gameNumber.toString()}
+          </span>
           <span className="text-emerald-400 font-black text-lg">
-            {Number(formattedTreasury).toFixed(8)} ETH
+            {Number(formattedTreasury).toFixed(2)} USDC
           </span>
         </div>
 
