@@ -33,28 +33,21 @@ export async function GET(
     // Extract the ID from the route parameters
     const { id } = await params;
 
-    // Get the application's base URL from environment variables
-    const appUrl = APP_URL;
-
     // Load the logo image from the public directory
-    const logoImage = await loadImage(`${appUrl}/cast.png`);
+    const logoImage = await loadImage(`${APP_URL}/cast.png`);
 
     // Load and prepare the custom font with the text to be rendered
-    const fontData = await loadGoogleFont("Press+Start+2P", "Example ID:" + id);
+    const fontData = await loadGoogleFont("Press+Start+2P", "My score is" + id);
 
     // Generate and return the image response with the composed elements
     return new ImageResponse(
       (
         <div
           style={{
-            height: "100%",
-            width: "100%",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            position: "relative",
-            backgroundColor: "white",
             gap: "20px",
           }}
         >
@@ -64,23 +57,38 @@ export async function GET(
               "base64",
             )}`}
             style={{
-              width: "100px",
-              marginBottom: "20px",
-              borderRadius: "10px",
+              width: 600,
+              height: 400,
             }}
           />
           {/* Display the example ID with custom styling */}
           <div
             style={{
-              position: "relative",
-              color: "black",
-              fontSize: 48,
+              position: "absolute",
+              top: 50,
+              right: 200,
+              color: "white",
+              fontSize: 32,
               fontFamily: "PressStart2P",
               textAlign: "center",
               display: "flex",
             }}
           >
-            Example ID: {id}
+            My score is
+          </div>
+          <div
+            style={{
+              position: "absolute",
+              top: 90,
+              right: 200,
+              color: "white",
+              fontSize: 32,
+              fontFamily: "PressStart2P",
+              textAlign: "center",
+              display: "flex",
+            }}
+          >
+            {id}
           </div>
         </div>
       ),
