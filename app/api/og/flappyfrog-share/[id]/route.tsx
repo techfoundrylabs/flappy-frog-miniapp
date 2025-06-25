@@ -37,7 +37,7 @@ export async function GET(
     const logoImage = await loadImage(`${APP_URL}/cast.png`);
 
     // Load and prepare the custom font with the text to be rendered
-    const fontData = await loadGoogleFont("Press+Start+2P", "My score is" + id);
+    const fontData = await loadGoogleFont("Press+Start+2P", "SCORE" + id);
 
     // Generate and return the image response with the composed elements
     return new ImageResponse(
@@ -65,24 +65,24 @@ export async function GET(
           <div
             style={{
               position: "absolute",
-              top: 50,
-              right: 200,
-              color: "white",
-              fontSize: 32,
+              top: 40,
+              left: 50,
+              color: "#BBE5F8",
+              fontSize: 28,
               fontFamily: "PressStart2P",
               textAlign: "center",
               display: "flex",
             }}
           >
-            My score is
+            SCORE
           </div>
           <div
             style={{
               position: "absolute",
-              top: 90,
-              right: 200,
-              color: "white",
-              fontSize: 32,
+              top: 80,
+              left: 50,
+              color: "#EE9200",
+              fontSize: 40,
               fontFamily: "PressStart2P",
               textAlign: "center",
               display: "flex",
