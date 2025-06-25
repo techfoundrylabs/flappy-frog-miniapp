@@ -11,10 +11,19 @@ import { Metadata } from "next";
 
 const appUrl = APP_URL;
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+
+  const imageUrl = new URL(`${appUrl}/api/og/flappyfrog-share/${id}`);
+
   const frame = {
     version: VERSION,
-    imageUrl: `${APP_URL}/cast.png`,
+    imageUrl: imageUrl.toString(),
     button: {
       title: `Launch ${ONCHAINKIT_PROJECT_NAME}`,
       action: {
@@ -34,7 +43,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: ONCHAINKIT_PROJECT_NAME,
       description: MINIAPP_METADATA_DESCRIPTION,
-      images: [{ url: `${APP_URL}/cast.png` }],
+      images: [{ url: imageUrl.toString() }],
     },
     other: {
       "fc:frame": JSON.stringify(frame),
