@@ -14,12 +14,14 @@ const appUrl = APP_URL;
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ score: string }>;
+  params: Promise<{ avatar: string; score: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }): Promise<Metadata> {
-  const { score } = await params;
+  const { avatar, score } = await params;
 
-  const imageUrl = new URL(`${appUrl}/api/og/flappyfrog-share/${score}`);
+  const imageUrl = new URL(
+    `${appUrl}/api/og/flappyfrog-share/${avatar}/${score}`,
+  );
 
   const frame = {
     version: VERSION,

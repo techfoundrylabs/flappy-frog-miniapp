@@ -25,15 +25,17 @@ export async function GET(
     params,
   }: {
     params: Promise<{
+      avatar: string;
       score: string;
     }>;
   },
 ) {
   try {
     // Extract the ID from the route parameters
-    const { score } = await params;
+    const { avatar, score } = await params;
 
     // Load the logo image from the public directory
+    const avatarImage = await loadImage(avatar);
     const logoImage = await loadImage(`${APP_URL}/cast.png`);
 
     // Load and prepare the custom font with the text to be rendered
@@ -74,6 +76,15 @@ export async function GET(
               display: "flex",
             }}
           >
+            <img
+              src={`data:image/png;base64,${Buffer.from(avatarImage).toString(
+                "base64",
+              )}`}
+              style={{
+                width: 60,
+                height: 60,
+              }}
+            />
             SCORE
           </div>
           <div
