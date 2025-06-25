@@ -33,7 +33,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: ONCHAINKIT_PROJECT_NAME,
       description: MINIAPP_METADATA_DESCRIPTION,
-      images: [{ url: `${APP_URL}/cast.png` }],
+      images: [{ url: `${IMAGE_URL}` }],
     },
     other: {
       "fc:frame": JSON.stringify({
