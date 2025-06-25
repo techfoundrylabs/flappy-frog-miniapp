@@ -14,12 +14,12 @@ const appUrl = APP_URL;
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ score: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }): Promise<Metadata> {
-  const { id } = await params;
+  const { score } = await params;
 
-  const imageUrl = new URL(`${appUrl}/api/og/flappyfrog-share/${id}`);
+  const imageUrl = new URL(`${appUrl}/api/og/flappyfrog-share/${score}`);
 
   const frame = {
     version: VERSION,
@@ -51,6 +51,6 @@ export async function generateMetadata({
   };
 }
 
-export default async function StreakFlex() {
+export default async function FlappyFrogShare() {
   return <Home />;
 }

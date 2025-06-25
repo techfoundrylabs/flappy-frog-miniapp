@@ -25,19 +25,19 @@ export async function GET(
     params,
   }: {
     params: Promise<{
-      id: string;
+      score: string;
     }>;
   },
 ) {
   try {
     // Extract the ID from the route parameters
-    const { id } = await params;
+    const { score } = await params;
 
     // Load the logo image from the public directory
     const logoImage = await loadImage(`${APP_URL}/cast.png`);
 
     // Load and prepare the custom font with the text to be rendered
-    const fontData = await loadGoogleFont("Press+Start+2P", "SCORE" + id);
+    const fontData = await loadGoogleFont("Press+Start+2P", "SCORE" + score);
 
     // Generate and return the image response with the composed elements
     return new ImageResponse(
@@ -88,7 +88,7 @@ export async function GET(
               display: "flex",
             }}
           >
-            {id}
+            {score}
           </div>
         </div>
       ),
