@@ -91,13 +91,13 @@ export async function GET(
                 border: "4px solid white",
               }}
             />
-            <div style={{ fontSize: 28 }}>
+            <div style={{ display: "flex", fontSize: 28 }}>
               <span
                 style={{
                   color: "#BBE5F8",
                 }}
               >
-                SCORE: 
+                SCORE:
               </span>
               <span style={{ color: "#EE9200" }}> {score}</span>
             </div>
