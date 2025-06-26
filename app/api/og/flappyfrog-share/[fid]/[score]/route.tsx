@@ -38,6 +38,7 @@ export async function GET(
     // Load the logo image from the public directory
     const farcasterUser = await fetchFarcasterUser(fid);
     const avatarUrl = farcasterUser?.pfp_url;
+    const userName = farcasterUser?.display_name;
     const logoImage = await loadImage(`${APP_URL}/cast.png`);
 
     // Load and prepare the custom font with the text to be rendered
@@ -81,16 +82,25 @@ export async function GET(
               fontFamily: "PressStart2P",
             }}
           >
-            <img
-              src={avatarUrl}
-              style={{
-                width: 70,
-                height: 70,
-                borderRadius: "50%",
-                objectFit: "cover",
-                border: "4px solid white",
-              }}
-            />
+            <div style={{ display: "flex", gap: 5 }}>
+              <img
+                src={avatarUrl}
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                  border: "4px solid white",
+                }}
+              />
+              <span
+                style={{
+                  color: "#BBE5F8",
+                }}
+              >
+                {userName}
+              </span>
+            </div>
             <div style={{ display: "flex", fontSize: 20 }}>
               <span
                 style={{
