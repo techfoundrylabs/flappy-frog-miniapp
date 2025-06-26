@@ -73,8 +73,8 @@ export async function GET(
           <div
             style={{
               position: "absolute",
-              top: 20,
-              left: 20,
+              top: 40,
+              left: 30,
               textAlign: "center",
               display: "flex",
               flexDirection: "column",
