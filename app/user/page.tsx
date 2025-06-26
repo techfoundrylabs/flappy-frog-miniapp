@@ -115,7 +115,7 @@ const UserPage = () => {
       </div>
 
       <UserStats
-        avatar={userAvatar}
+        fid={fid}
         rank={userRankScoreAttempts?.rank}
         score={userRankScoreAttempts?.score}
         attempts={userRankScoreAttempts?.attempts}

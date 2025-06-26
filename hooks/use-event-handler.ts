@@ -5,14 +5,14 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export const useEventHandler = () => {
-  const { setAnimateOut, userAvatar } = useMiniApp();
+  const { setAnimateOut, fid } = useMiniApp();
   const router = useRouter();
 
   useEffect(() => {
     if (typeof window !== undefined) {
       EventBus.on(
         "share",
-        async (score: number) => await shareCast(userAvatar, score),
+        async (score: number) => await shareCast(fid, score),
       );
       EventBus.on("play-game", () => setAnimateOut(true));
       EventBus.on("game-over", () => setAnimateOut(false));

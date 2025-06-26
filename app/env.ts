@@ -14,6 +14,7 @@ export const env = createEnv({
     MAX_HEARTS: z.coerce.number().default(5),
     REDIS_URL: z.string().url(),
     REDIS_TOKEN: z.string(),
+    NEYNAR_API_KEY: z.string(),
   },
   /*
    * Environment variables available on the client (and server).
@@ -72,5 +73,6 @@ export const env = createEnv({
     MAX_HEARTS: process.env.MAX_HEARTS,
     REDIS_URL: process.env.REDIS_URL,
     REDIS_TOKEN: process.env.REDIS_TOKEN,
+    NEYNAR_API_KEY: process.env.NEYNAR_API_KEY,
   },
 });

@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 import { APP_URL } from "@/config/constants";
+import { fetchFarcasterUser } from "@/lib/neynar";
 import { loadGoogleFont, loadImage } from "@/utils/og-utils";
 import { ImageResponse } from "next/og";
 
@@ -25,17 +26,19 @@ export async function GET(
     params,
   }: {
     params: Promise<{
-      avatar: string;
+      fid: number;
       score: string;
     }>;
   },
 ) {
   try {
     // Extract the ID from the route parameters
-    const { avatar, score } = await params;
+    const { fid, score } = await params;
 
     // Load the logo image from the public directory
-    const avatarImage = await loadImage(avatar);
+    const farcasterUser = await fetchFarcasterUser(fid);
+    const avatarUrl = farcasterUser?.pfp_url;
+    const avatarImage = await loadImage(avatarUrl!);
     const logoImage = await loadImage(`${APP_URL}/cast.png`);
 
     // Load and prepare the custom font with the text to be rendered

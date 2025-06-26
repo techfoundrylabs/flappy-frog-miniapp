@@ -2,18 +2,13 @@ import { shareCast } from "@/lib/event-bus/event-actions";
 import { Share2 } from "lucide-react";
 
 interface UserStatsProps {
-  avatar: string | undefined;
+  fid: number | undefined;
   score: number | undefined;
   rank: number | undefined;
   attempts: number | undefined;
 }
 
-export const UserStats = ({
-  avatar,
-  score,
-  rank,
-  attempts,
-}: UserStatsProps) => {
+export const UserStats = ({ fid, score, rank, attempts }: UserStatsProps) => {
   const realScore = score ?? 0;
   const realRank = typeof rank === "number" && rank >= 0 ? rank + 1 : -1;
   const realAttempts = attempts ?? 0;
@@ -32,11 +27,7 @@ export const UserStats = ({
 
             <button
               onClick={() =>
-                shareCast(
-                  avatar,
-                  realScore,
-                  realRank >= 0 ? realRank : undefined,
-                )
+                shareCast(fid, realScore, realRank >= 0 ? realRank : undefined)
               }
               className="bg-blue-500/50 hover:bg-blue-500/70 text-white p-2 rounded-lg transition-colors"
               title="Share Current Score"
