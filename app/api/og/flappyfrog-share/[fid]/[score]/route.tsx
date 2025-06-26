@@ -38,7 +38,7 @@ export async function GET(
     // Load the logo image from the public directory
     const farcasterUser = await fetchFarcasterUser(fid);
     const avatarUrl = farcasterUser?.pfp_url;
-    const userName = farcasterUser?.display_name;
+    const userName = farcasterUser?.username;
     const logoImage = await loadImage(`${APP_URL}/cast.png`);
 
     // Load and prepare the custom font with the text to be rendered
@@ -80,9 +80,17 @@ export async function GET(
               flexDirection: "column",
               gap: 20,
               fontFamily: "PressStart2P",
+              fontSize: 20,
             }}
           >
-            <div style={{ display: "flex", gap: 5 }}>
+            <div
+              style={{
+                display: "flex",
+                gap: 5,
+                alignItems: "center",
+                justifyItems: "center",
+              }}
+            >
               <img
                 src={avatarUrl}
                 style={{
@@ -101,7 +109,7 @@ export async function GET(
                 {userName}
               </span>
             </div>
-            <div style={{ display: "flex", fontSize: 20 }}>
+            <div style={{ display: "flex" }}>
               <span
                 style={{
                   color: "#BBE5F8",
