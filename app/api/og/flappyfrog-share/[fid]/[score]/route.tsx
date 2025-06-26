@@ -43,7 +43,7 @@ export async function GET(
     // Load and prepare the custom font with the text to be rendered
     const fontData = await loadGoogleFont(
       "Press+Start+2P",
-      "ABCDEFGHIKLMNOPQRSTUVXYZ0123456789",
+      "ABCDEFGHIKLMNOPQRSTUVXYZ0123456789:",
     );
 
     // Generate and return the image response with the composed elements
@@ -72,8 +72,8 @@ export async function GET(
           <div
             style={{
               position: "absolute",
-              top: 40,
-              left: 50,
+              top: 10,
+              left: 10,
               textAlign: "center",
               display: "flex",
               flexDirection: "column",
@@ -84,14 +84,14 @@ export async function GET(
             <img
               src={avatarUrl}
               style={{
-                width: 80,
-                height: 80,
+                width: 70,
+                height: 70,
                 borderRadius: "50%",
                 objectFit: "cover",
                 border: "4px solid white",
               }}
             />
-            <div style={{ display: "flex", fontSize: 28 }}>
+            <div style={{ display: "flex", fontSize: 20 }}>
               <span
                 style={{
                   color: "#BBE5F8",
