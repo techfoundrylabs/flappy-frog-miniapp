@@ -14,12 +14,16 @@ const appUrl = APP_URL;
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ fid: number; score: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  params: Promise<{ slugs: string[] }>;
 }): Promise<Metadata> {
-  const { fid, score } = await params;
+  const { slugs } = await params;
 
-  const imageUrl = new URL(`${appUrl}/api/og/flappyfrog-share/${fid}/${score}`);
+  const imageUrl =
+    slugs.length === 2
+      ? new URL(`${appUrl}/api/og/share/score/${slugs[0]}/${slugs[1]}`)
+      : new URL(
+          `${appUrl}/api/og/share/rank/${slugs[0]}/${slugs[1]}/${slugs[2]}`,
+        );
 
   const frame = {
     version: VERSION,

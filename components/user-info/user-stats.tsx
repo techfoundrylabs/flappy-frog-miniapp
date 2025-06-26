@@ -1,4 +1,4 @@
-import { shareCast } from "@/lib/event-bus/event-actions";
+import { shareCastRank } from "@/lib/event-bus/event-actions";
 import { Share2 } from "lucide-react";
 
 interface UserStatsProps {
@@ -24,16 +24,15 @@ export const UserStats = ({ fid, score, rank, attempts }: UserStatsProps) => {
               <p className="text-lg  text-yellow-400">{realScore}</p>
               <p className="text-blue-200 text-[10px]">Current Score</p>
             </div>
-
-            <button
-              onClick={() =>
-                shareCast(fid, realScore, realRank >= 0 ? realRank : undefined)
-              }
-              className="bg-blue-500/50 hover:bg-blue-500/70 text-white p-2 rounded-lg transition-colors"
-              title="Share Current Score"
-            >
-              <Share2 className="w-5 h-5" />
-            </button>
+            {realRank > 0 && realScore > 0 ? (
+              <button
+                onClick={() => shareCastRank(fid, realScore, realRank)}
+                className="bg-blue-500/50 hover:bg-blue-500/70 text-white p-2 rounded-lg transition-colors"
+                title="Share Current Score"
+              >
+                <Share2 className="w-5 h-5" />
+              </button>
+            ) : null}
           </div>
         </div>
 

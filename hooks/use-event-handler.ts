@@ -1,5 +1,5 @@
 import { EventBus } from "@/lib/event-bus";
-import { shareCast } from "@/lib/event-bus/event-actions";
+import { shareCastPoint } from "@/lib/event-bus/event-actions";
 import { useMiniApp } from "@/providers/mini-app-provider";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -12,7 +12,7 @@ export const useEventHandler = () => {
     if (typeof window !== undefined) {
       EventBus.on(
         "share",
-        async (score: number) => await shareCast(fid, score),
+        async (score: number) => await shareCastPoint(fid, score),
       );
       EventBus.on("play-game", () => setAnimateOut(true));
       EventBus.on("game-over", () => setAnimateOut(false));

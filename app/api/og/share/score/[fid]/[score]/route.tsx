@@ -39,7 +39,7 @@ export async function GET(
     const farcasterUser = await fetchFarcasterUser(fid);
     const avatarUrl = farcasterUser?.pfp_url;
     const userName = farcasterUser?.username;
-    const logoImage = await loadImage(`${APP_URL}/cast.png`);
+    const logoImage = await loadImage(`${APP_URL}/cast-point.png`);
 
     // Load and prepare the custom font with the text to be rendered
     const fontData = await loadGoogleFont(
