@@ -38,11 +38,13 @@ export async function GET(
     // Load the logo image from the public directory
     const farcasterUser = await fetchFarcasterUser(fid);
     const avatarUrl = farcasterUser?.pfp_url;
-    const avatarImage = await loadImage(avatarUrl!);
     const logoImage = await loadImage(`${APP_URL}/cast.png`);
 
     // Load and prepare the custom font with the text to be rendered
-    const fontData = await loadGoogleFont("Press+Start+2P", "SCORE" + score);
+    const fontData = await loadGoogleFont(
+      "Press+Start+2P",
+      "ABCDEFGHIKLMNOPQRSTUVXYZ0123456789",
+    );
 
     // Generate and return the image response with the composed elements
     return new ImageResponse(
@@ -72,37 +74,31 @@ export async function GET(
               position: "absolute",
               top: 40,
               left: 50,
-              color: "#BBE5F8",
-              fontSize: 28,
-              fontFamily: "PressStart2P",
               textAlign: "center",
               display: "flex",
+              flexDirection: "column",
+              fontFamily: "PressStart2P",
             }}
           >
-            <img
-              src={`data:image/png;base64,${Buffer.from(avatarImage).toString(
-                "base64",
-              )}`}
+            <span
               style={{
-                width: 60,
-                height: 60,
+                color: "#BBE5F8",
+                fontSize: 28,
+              }}
+            >
+              SCORE
+            </span>
+            <span style={{ color: "#EE9200", fontSize: 40 }}> {score}</span>
+            <img
+              src={avatarUrl}
+              style={{
+                width: 80,
+                height: 80,
+                borderRadius: "50%",
+                objectFit: "cover",
+                border: "4px solid white",
               }}
             />
-            SCORE
-          </div>
-          <div
-            style={{
-              position: "absolute",
-              top: 80,
-              left: 50,
-              color: "#EE9200",
-              fontSize: 40,
-              fontFamily: "PressStart2P",
-              textAlign: "center",
-              display: "flex",
-            }}
-          >
-            {score}
           </div>
         </div>
       ),

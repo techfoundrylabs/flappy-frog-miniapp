@@ -22,5 +22,5 @@ export const useEventHandler = () => {
         EventBus.removeAllListeners();
       };
     }
-  }, [router, setAnimateOut]);
+  }, [fid, router, setAnimateOut]);
 };

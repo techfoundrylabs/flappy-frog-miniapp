@@ -17,8 +17,13 @@ export async function loadGoogleFont(font: string, text: string) {
   throw new Error("failed to load font data");
 }
 
-export async function loadImage(url: string): Promise<ArrayBuffer> {
-  const logoImageRes = await fetch(url);
+export async function loadImage(url: string | undefined): Promise<ArrayBuffer> {
+  if (!url) throw new Error("Failed to find url");
+  const logoImageRes = await fetch(url, {
+    headers: {
+      "User-Agent": "Mozilla/5.0 (compatible; OGImageBot/1.0)",
+    },
+  });
 
   if (!logoImageRes.ok) {
     throw new Error(`Failed to fetch logo image: ${logoImageRes.statusText}`);
