@@ -77,18 +77,10 @@ export async function GET(
               textAlign: "center",
               display: "flex",
               flexDirection: "column",
+              gap: 20,
               fontFamily: "PressStart2P",
             }}
           >
-            <span
-              style={{
-                color: "#BBE5F8",
-                fontSize: 28,
-              }}
-            >
-              SCORE
-            </span>
-            <span style={{ color: "#EE9200", fontSize: 40 }}> {score}</span>
             <img
               src={avatarUrl}
               style={{
@@ -99,6 +91,16 @@ export async function GET(
                 border: "4px solid white",
               }}
             />
+            <div style={{ fontSize: 28 }}>
+              <span
+                style={{
+                  color: "#BBE5F8",
+                }}
+              >
+                SCORE: 
+              </span>
+              <span style={{ color: "#EE9200" }}> {score}</span>
+            </div>
           </div>
         </div>
       ),
