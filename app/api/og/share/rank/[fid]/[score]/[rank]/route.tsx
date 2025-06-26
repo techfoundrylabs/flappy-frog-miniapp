@@ -40,7 +40,7 @@ export async function GET(
     const farcasterUser = await fetchFarcasterUser(fid);
     const avatarUrl = farcasterUser?.pfp_url;
     const userName = farcasterUser?.username;
-    const logoImage = await loadImage(`${APP_URL}/cast-ranking.jpg`);
+    const logoImage = await loadImage(`${APP_URL}/cast-ranking.png`);
 
     // Load and prepare the custom font with the text to be rendered
     const fontData = await loadGoogleFont(
@@ -74,7 +74,7 @@ export async function GET(
           <div
             style={{
               position: "absolute",
-              bottom: 40,
+              bottom: 80,
               right: 20,
               textAlign: "center",
               display: "flex",
