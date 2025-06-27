@@ -38,7 +38,7 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
           private pipeSpeed: number = 230;
           private pipeSpacing: number = 350;
           private heartText: Phaser.GameObjects.BitmapText | null = null;
-          private hearts: number = 0;
+          private hearts: number = -1;
           private nextPipeX: number = 0;
           private personalRecord: Phaser.Physics.Arcade.Sprite | null = null;
           private shareButton: Phaser.GameObjects.Rectangle | null = null;
@@ -285,7 +285,7 @@ export function FlappyFrog({ fid, displayName, avatar }: FlappyFrogProps) {
                 (this.game.config.width as number) * 0.5,
                 (this.game.config.height as number) * 0.5 - 35,
                 "letters",
-                "TAP TO PLAY",
+                `${this.hearts >= 0 ? "TAP TO PLAY" : "LOADING"}`,
                 14,
               )
               .setOrigin(0.5)
