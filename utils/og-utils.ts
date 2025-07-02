@@ -31,3 +31,10 @@ export async function loadImage(url: string | undefined): Promise<ArrayBuffer> {
 
   return await logoImageRes.arrayBuffer();
 }
+
+export async function loadFont(fontName = "Press+Start+2P") {
+  return await loadGoogleFont(
+    fontName,
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIKLMNOPQRSTUVXYZ0123456789:",
+  );
+}

@@ -2,7 +2,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { APP_URL } from "@/config/constants";
 import { fetchFarcasterUser } from "@/lib/neynar";
-import { loadGoogleFont, loadImage } from "@/utils/og-utils";
+import { loadFont, loadImage } from "@/utils/og-utils";
 import { ImageResponse } from "next/og";
 
 // Force dynamic rendering to ensure fresh image generation on each request
@@ -42,10 +42,7 @@ export async function GET(
     const logoImage = await loadImage(`${APP_URL}/cast-point.png`);
 
     // Load and prepare the custom font with the text to be rendered
-    const fontData = await loadGoogleFont(
-      "Press+Start+2P",
-      "abcdefghijklmnopqrstuvwxyzABCDEFGHIKLMNOPQRSTUVXYZ0123456789:",
-    );
+    const fontData = await loadFont();
 
     // Generate and return the image response with the composed elements
     return new ImageResponse(
