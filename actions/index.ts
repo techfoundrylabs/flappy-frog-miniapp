@@ -29,7 +29,7 @@ export interface UserRankScoreAttempts extends UserRankScore {
   attempts: number;
 }
 
-export type TopPlayer = Player[];
+export type TopPlayers = Player[];
 
 const MAX_USER_HEARTS = env.MAX_HEARTS;
 const LEADERBOARD_LIMIT = 10;
@@ -89,9 +89,9 @@ export const setScoreInLeaderboard = async (
   }
 };
 
-export const getTopPlayers = async () => {
+export const getTopPlayers = async (limit = LEADERBOARD_LIMIT) => {
   try {
-    const nthTopPlayers = await getNthTopPlayers(LEADERBOARD_LIMIT);
+    const nthTopPlayers = await getNthTopPlayers(limit);
     return nthTopPlayers!.reduce(
       (previousValue, currentValue, currentIndex) => {
         if (currentIndex % 2 === 0) {
@@ -109,7 +109,7 @@ export const getTopPlayers = async () => {
         return previousValue;
       },
       [],
-    ) as TopPlayer;
+    ) as TopPlayers;
   } catch (error) {
     console.error(error);
   }

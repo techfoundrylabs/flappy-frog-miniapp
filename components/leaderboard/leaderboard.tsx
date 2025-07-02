@@ -1,12 +1,12 @@
 "use client";
-import { TopPlayer } from "@/actions";
+import { TopPlayers } from "@/actions";
 import { useMiniApp } from "@/providers/mini-app-provider";
 import { useViewProfile } from "@coinbase/onchainkit/minikit";
 import { /* Medal, Award, */ Crown } from "lucide-react";
 import Image from "next/image";
 
 interface LeaderboardProps {
-  topPlayers: TopPlayer | undefined;
+  topPlayers: TopPlayers | undefined;
 }
 
 const getRankIcon = (rank: number) => {
