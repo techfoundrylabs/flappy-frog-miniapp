@@ -11,7 +11,7 @@ interface TemplateLayoutProps {
   children: ReactNode;
 }
 
-const FLAPPY_FROG_LANDING_URL = "https://flappyfrog.xyz";
+//const FLAPPY_FROG_LANDING_URL = "https://flappyfrog.xyz";
 
 const Template = ({ children }: TemplateLayoutProps) => {
   const { clientFid } = useMiniApp();
