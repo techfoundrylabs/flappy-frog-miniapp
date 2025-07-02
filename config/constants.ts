@@ -16,6 +16,8 @@ export const MAX_HEARTS = env.NEXT_PUBLIC_MAX_HEARTS;
 export const TREASURY_CONTRACT_ADDRESS =
   env.NEXT_PUBLIC_TREASURY_CONTRACT_ADDRESS;
 
+export const CRON_SECRET = env.CRON_SECRET;
+
 export const IS_MAINNET = NETWORK === "mainnet";
 
 export const MINIAPP_METADATA_DESCRIPTION =
