@@ -18,6 +18,7 @@ interface MiniAppContextParam {
   animateOut: boolean;
   isFrameReady: boolean;
   fid: number | undefined;
+  clientFid: number | undefined;
   userName: string | undefined;
   address: `0x${string}` | undefined;
   chainExplorer: string;
@@ -105,11 +106,13 @@ export const MiniAppProvider = ({ children }: MiniAppProviderProps) => {
   const fid = context?.user.fid;
   const userName = context?.user.username;
   const userAvatar = context?.user.pfpUrl;
+  const clientFid = context?.client.clientFid;
 
   const value = {
     animateOut,
     isFrameReady,
     fid,
+    clientFid,
     userName,
     address,
     chainName,
