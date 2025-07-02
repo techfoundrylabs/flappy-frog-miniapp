@@ -14,7 +14,7 @@ export const env = createEnv({
     REDIS_URL: z.string().url(),
     REDIS_TOKEN: z.string(),
     NEYNAR_API_KEY: z.string(),
-    CRON_SECRET: z.string().length(64),
+    CRON_SECRET: z.string(),
   },
   /*
    * Environment variables available on the client (and server).

@@ -1,4 +1,5 @@
 import { getTopPlayers, TopPlayers } from "@/actions";
+import { env } from "@/app/env";
 import { IS_MAINNET, TREASURY_CONTRACT_ADDRESS } from "@/config/constants";
 import { abi } from "@/lib/chain/abi/treasury-pool-abi";
 import { fetchFarcasterUser } from "@/lib/neynar";
@@ -10,7 +11,7 @@ import { base, baseSepolia } from "viem/chains";
 export const GET = async (request: Request) => {
   try {
     const authHeader = request.headers.get("authorization");
-    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    if (authHeader !== `Bearer ${env.CRON_SECRET}`) {
       return new Response("Unauthorized", {
         status: 401,
       });
