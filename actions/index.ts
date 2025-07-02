@@ -1,6 +1,6 @@
 "use server";
 
-import { env } from "@/app/env";
+import { MAX_HEARTS } from "@/config/constants";
 import {
   getUserGamePlay,
   setTTL,
@@ -31,7 +31,7 @@ export interface UserRankScoreAttempts extends UserRankScore {
 
 export type TopPlayers = Player[];
 
-const MAX_USER_HEARTS = env.MAX_HEARTS;
+const MAX_USER_HEARTS = MAX_HEARTS;
 const LEADERBOARD_LIMIT = 10;
 
 export const initGame = async (fid: number) => {
